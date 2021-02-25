@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">hw_1</string>
+    <string name="btnToLoadActivityStr">Activity_Two</string>
+    <string name="btnLoadStr">DOWNLOAD</string>
 </resources>
