@@ -37,30 +37,33 @@ class ActivityTwo : AppCompatActivity() {
         localBroadcastManager.registerReceiver(localBroadcastReceiver, intentFilter)
 
         binding.btnLoadData.setOnClickListener {
-                val intentForService = Intent(applicationContext, LoadContactService::class.java)
-                startService(intentForService)
+            val intentForService = Intent(applicationContext, LoadContactService::class.java)
+            startService(intentForService)
         }
     }
 
     @Suppress("DEPRECATION")
     class LoadContactService() : IntentService("") {
         override fun onHandleIntent(intent: Intent?) {
-            val contacts = getContacts()
+            ContactsHolder.contacts=getContacts()
             Log.i("info_hw1", "Service was worked")
             val intentForReceiver = Intent(LOADED_CONTACTS_ACTION)
-            intentForReceiver.putExtra(DATA_CONTACTS_KEY, contacts[1])
+            intentForReceiver.putExtra(DATA_CONTACTS_KEY, "DONE")
             LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intentForReceiver)
+
         }
 
-        private fun getContacts(): MutableList<String> {
-
+        private fun getContacts(): MutableList<ContactsData>? {
+            var contacts:MutableList<ContactsData>?=null
             val cursor =
                 contentResolver.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null)
-            val contacts: MutableList<String> = mutableListOf("")
-
             if (cursor != null) {
                 while (cursor.moveToNext()) {
-                    contacts.add(cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY)))
+                    val name =
+                        cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY))
+                    val number =
+                        cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY))
+                    contacts?.add(ContactsData(name, number))
                 }
                 cursor.close()
             }

@@ -26,6 +26,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val binding =
             DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
+
         getPermission()
         binding.btnToLoadActivity.setOnClickListener {
             if (readContactGranted) {
@@ -73,7 +74,8 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == REQUEST_CODE_ACTIVITY_TWO) {
             if (resultCode == Activity.RESULT_OK) {
                 val someData = data?.getStringExtra(DATA_CONTACTS_KEY)
-                Toast.makeText(this, someData, Toast.LENGTH_LONG).show()
+                var name= ContactsHolder.contacts?.get(0)?.name
+                Toast.makeText(this, name, Toast.LENGTH_LONG).show()
             }
         }
     }
