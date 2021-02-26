@@ -16,6 +16,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.example.hw_1.ContactsHolder.contacts
 import com.example.hw_1.databinding.ActivityTwoBinding
 
 
@@ -45,7 +46,7 @@ class ActivityTwo : AppCompatActivity() {
     @Suppress("DEPRECATION")
     class LoadContactService() : IntentService("") {
         override fun onHandleIntent(intent: Intent?) {
-            ContactsHolder.contacts=getContacts()
+            getContacts()
             Log.i("info_hw1", "Service was worked")
             val intentForReceiver = Intent(LOADED_CONTACTS_ACTION)
             intentForReceiver.putExtra(DATA_CONTACTS_KEY, "DONE")
@@ -53,8 +54,7 @@ class ActivityTwo : AppCompatActivity() {
 
         }
 
-        private fun getContacts(): MutableList<ContactsData>? {
-            var contacts:MutableList<ContactsData>?=null
+        private fun getContacts(): MutableList<ContactsData> {
             val cursor =
                 contentResolver.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null)
             if (cursor != null) {
@@ -63,7 +63,7 @@ class ActivityTwo : AppCompatActivity() {
                         cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY))
                     val number =
                         cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY))
-                    contacts?.add(ContactsData(name, number))
+                    ContactsHolder.contacts.add(ContactsData(name, number))
                 }
                 cursor.close()
             }
