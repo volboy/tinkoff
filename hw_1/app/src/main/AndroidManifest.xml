@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.hw_1">
 
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -21,8 +23,7 @@
 
         <service
             android:name=".ActivityTwo$LoadContactService"
-            android:enabled="true"
-             />
+            android:enabled="true" />
 
         <receiver
             android:name=".ActivityTwo$LocalBroadcastReceiver"
