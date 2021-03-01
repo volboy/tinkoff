@@ -7,10 +7,12 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.hw_1.databinding.ActivityMainBinding
 
 const val REQUEST_CODE_ACTIVITY_TWO = 1
@@ -21,13 +23,14 @@ const val DATA_CONTACTS_KEY = "DATA_CONTACTS_KEY"
 class MainActivity : AppCompatActivity() {
 
     var readContactGranted = false
+    lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding =
+        binding =
             DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
-
         getPermission()
+        getContacts()
         binding.btnToLoadActivity.setOnClickListener {
             if (readContactGranted) {
                 val intent = Intent(this, ActivityTwo::class.java)
@@ -37,6 +40,13 @@ class MainActivity : AppCompatActivity() {
                     .show()
                 getPermission()
             }
+        }
+    }
+
+    private fun getContacts() {
+        binding.recyclerView.layoutManager = LinearLayoutManager(applicationContext)
+        if (ContactsHolder.contacts.isNotEmpty()) {
+            binding.recyclerView.adapter = ContactItemAdapter(ContactsHolder.contacts)
         }
     }
 
@@ -74,8 +84,9 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == REQUEST_CODE_ACTIVITY_TWO) {
             if (resultCode == Activity.RESULT_OK) {
                 val someData = data?.getStringExtra(DATA_CONTACTS_KEY)
-                var name= ContactsHolder.contacts?.get(0)?.name
+                var name = ContactsHolder.contacts?.get(0)?.name
                 Toast.makeText(this, name, Toast.LENGTH_LONG).show()
+                getContacts()
             }
         }
     }
