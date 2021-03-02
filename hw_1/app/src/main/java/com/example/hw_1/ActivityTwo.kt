@@ -8,6 +8,8 @@ import android.content.Intent
 import android.content.IntentFilter
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.ResultReceiver
 import android.provider.ContactsContract
 import android.util.Log
 import androidx.databinding.DataBindingUtil
@@ -43,7 +45,6 @@ class ActivityTwo : AppCompatActivity() {
     class LoadContactService() : IntentService("") {
         override fun onHandleIntent(intent: Intent?) {
             getContacts()
-            Log.i("info_hw1", "Service was worked")
             val intentForReceiver = Intent(LOADED_CONTACTS_ACTION)
             intentForReceiver.putExtra(DATA_CONTACTS_KEY, "DONE")
             LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intentForReceiver)
@@ -51,32 +52,46 @@ class ActivityTwo : AppCompatActivity() {
         }
 
         private fun getContacts(): MutableList<ContactsData> {
-            var name: String = ""
-            var number: String = ""
-            var cursorName =
-                contentResolver.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null)
-            var cursorNumber =
-                contentResolver.query(
-                    ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                    null,
-                    null,
-                    null,
-                    null
-                )
-            if (cursorName != null && cursorNumber != null) {
-                while (cursorName.moveToNext()) {
-                    name =
-                        cursorName.getString(cursorName.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME))
-                }
-                while (cursorName.moveToNext()) {
-                    number =
-                        cursorName.getString(cursorName.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
-                }
-                ContactsHolder.contacts.add(ContactsData(name, number))
-                cursorName.close()
-                cursorNumber.close()
-            }
+            var id: String
+            var name: String
+            var number = "Номер отсутствует"
+            var hasNumber: Int
 
+            if (contacts.isNotEmpty()) contacts.clear()
+
+            val cursor =
+                contentResolver.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null)
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID))
+                    name =
+                        cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME))
+                    hasNumber =
+                        cursor.getInt(cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))
+                    if (hasNumber > 0) {
+                        val cursorNumber =
+                            contentResolver.query(
+                                ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                                null,
+                                ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
+                                arrayOf(id),
+                                null
+                            )
+                        if (cursorNumber != null && cursorNumber.moveToFirst()) {
+                            number =
+                                cursorNumber.getString(cursorNumber.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
+                            cursorNumber.close()
+                        }
+
+                    }
+                    if (name.isNotEmpty() && number.isNotEmpty())
+                        contacts.add(ContactsData(name, number))
+
+                } while (cursor.moveToNext())
+                cursor.close()
+
+
+            }
             return contacts
         }
     }
@@ -90,7 +105,6 @@ class ActivityTwo : AppCompatActivity() {
                 intent?.getStringExtra(DATA_CONTACTS_KEY)
             )
             setResult(Activity.RESULT_OK, intentForMainActivity)
-            Log.i("info_hw1", "BroadcastReceiver was worked")
             finish()
 
         }
@@ -98,7 +112,7 @@ class ActivityTwo : AppCompatActivity() {
 
     override fun onDestroy() {
         LocalBroadcastManager.getInstance(applicationContext)
-            .unregisterReceiver(localBroadcastReceiver);
+            .unregisterReceiver(localBroadcastReceiver)
         super.onDestroy()
 
     }

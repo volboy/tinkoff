@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding =
-            DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
+            DataBindingUtil.setContentView(this, R.layout.activity_main)
         getPermission()
         getContacts()
         binding.btnToLoadActivity.setOnClickListener {
@@ -43,6 +43,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+
     private fun getContacts() {
         binding.recyclerView.layoutManager = LinearLayoutManager(applicationContext)
         if (ContactsHolder.contacts.isNotEmpty()) {
@@ -55,7 +56,7 @@ class MainActivity : AppCompatActivity() {
             ContextCompat.checkSelfPermission(
                 applicationContext,
                 READ_CONTACTS
-            );
+            )
         if (readContactPermission == PackageManager.PERMISSION_GRANTED) {
             readContactGranted = true
         } else {
@@ -74,7 +75,7 @@ class MainActivity : AppCompatActivity() {
     ) {
         if (requestCode == 1) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                readContactGranted = true;
+                readContactGranted = true
             }
         }
     }
@@ -83,10 +84,14 @@ class MainActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE_ACTIVITY_TWO) {
             if (resultCode == Activity.RESULT_OK) {
-                val someData = data?.getStringExtra(DATA_CONTACTS_KEY)
-                var name = ContactsHolder.contacts?.get(0)?.name
-                Toast.makeText(this, name, Toast.LENGTH_LONG).show()
-                getContacts()
+                if (data?.getStringExtra(DATA_CONTACTS_KEY).equals("DONE")) {
+                    getContacts()
+                } else {
+                    Toast.makeText(applicationContext, "Контакты не загрузились", Toast.LENGTH_LONG)
+                        .show()
+                }
+            } else {
+                Toast.makeText(applicationContext, "Что-то пошло не так", Toast.LENGTH_LONG).show()
             }
         }
     }
