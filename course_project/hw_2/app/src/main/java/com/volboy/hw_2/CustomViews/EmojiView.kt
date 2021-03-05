@@ -3,9 +3,10 @@ package com.volboy.hw_2.CustomViews
 import android.content.Context
 import android.graphics.*
 import android.graphics.drawable.Drawable
-import android.graphics.drawable.shapes.RoundRectShape
 import android.util.AttributeSet
+import android.view.MotionEvent
 import android.view.View
+import androidx.core.content.res.ResourcesCompat.getColor
 import com.volboy.hw_2.R
 
 
@@ -21,7 +22,7 @@ class EmojiView @JvmOverloads constructor(
         textAlign = Paint.Align.LEFT
     }
     private val textPaint = Paint().apply {
-        color = Color.BLACK
+        color = Color.WHITE
         textAlign = Paint.Align.RIGHT
     }
 
@@ -151,12 +152,21 @@ class EmojiView @JvmOverloads constructor(
         canvas.restoreToCount(canvasCount)
     }
 
-    override fun onCreateDrawableState(extraSpace: Int): IntArray {
-        val drawableState=super.onCreateDrawableState(extraSpace +1 )
-        if (isSelected){
+    /*override fun onCreateDrawableState(extraSpace: Int): IntArray {
+        val drawableState = super.onCreateDrawableState(extraSpace + 1)
+
+        if (isSelected) {
             mergeDrawableStates(drawableState, DRAWABLES_STATE)
         }
-        return super.onCreateDrawableState(extraSpace)
+
+        return drawableState
+    }*/
+
+    override fun performClick(): Boolean {
+        isSelected = !isSelected
+        if (isSelected) mRoundRectPaint.color= getColor(resources, R.color.ev_selected,null ) else
+            mRoundRectPaint.color= getColor(resources, R.color.ev_unselected,null )
+        return super.performClick()
     }
 
     companion object {
