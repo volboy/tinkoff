@@ -7,9 +7,13 @@
     tools:context=".MainActivity">
 
     <com.volboy.hw_2.CustomViews.EmojiView
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:background="@drawable/emodji_view_state"
         app:ev_emoji="0x1F606"
-        app:ev_text="0" />
+        app:ev_text="123"
+        app:ev_text_size="50sp"
+        />
 
 </FrameLayout>
