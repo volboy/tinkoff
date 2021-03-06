@@ -1,4 +1,4 @@
-package com.volboy.hw_2.CustomViews
+package com.volboy.hw_2.customviews
 
 import android.content.Context
 import android.content.res.Resources
