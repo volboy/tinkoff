@@ -1,5 +1,6 @@
 package com.volboy.hw_2.customviews
 
+import android.R.attr
 import android.content.Context
 import android.graphics.*
 import android.graphics.drawable.Drawable
@@ -15,19 +16,18 @@ class EmojiView @JvmOverloads constructor(
     defStyleAttr: Int = 0,
     defStyleRes: Int = 0
 ) : View(context, attrs, defStyleAttr, defStyleRes) {
-
+    private var emojiPoint = PointF()
+    private var mRoundRectPoint = RectF()
+    private var radiusRect = 0.0f
+    private val emojiBounds = Rect()
     private val emojiPaint = Paint().apply {
         color = getColor(resources, R.color.ev_text_color, null)
         textAlign = Paint.Align.CENTER
-
     }
-
-
     private val mRoundRectPaint = Paint().apply {
         color = getColor(resources, R.color.ev_unselected, null)
-        style = Paint.Style.FILL_AND_STROKE
+        style = Paint.Style.STROKE
     }
-
 
     private var textSize: Int
         get() = emojiPaint.textSize.toInt()
@@ -37,7 +37,6 @@ class EmojiView @JvmOverloads constructor(
                 requestLayout()
             }
         }
-
 
     private var emoji: String = ""
         set(value) {
@@ -53,32 +52,11 @@ class EmojiView @JvmOverloads constructor(
                 requestLayout()
             }
         }
-    private var foregroundDrawable: Drawable? = null
-        set(value) {
-            if (field != value) {
-                field = value
-                invalidate()
-            }
-        }
-    private var emojiPoint = PointF()
-    private var mRoundRectPoint = RectF()
-    private var radiusRect = 0.0f
-    private val emojiBounds = Rect()
-
 
     init {
         context.obtainStyledAttributes(attrs, R.styleable.EmojiView).apply {
-            textSize = getDimensionPixelSize(
-                R.styleable.EmojiView_ev_text_size, context.spToPx(
-                    14F
-                )
-            )
-
-
-            foregroundDrawable = getDrawable(R.styleable.EmojiView_ev_foreground)
-
+            textSize = getDimensionPixelSize(R.styleable.EmojiView_ev_text_size, context.spToPx(14F))
             var emojiCode = getInteger(R.styleable.EmojiView_ev_emoji, 0)
-
             text = getText(R.styleable.EmojiView_ev_text)?.toString() ?: "0"
             if (text == "") text = "0"
             emoji = String(Character.toChars(emojiCode)) + " " + text
@@ -94,9 +72,7 @@ class EmojiView @JvmOverloads constructor(
         val mRoundRectHeight = emojiHeight + paddingBottom + paddingTop + context.dpToPx(9.6f)
         var contentWidth = mRoundRectWidth
         var contentHeight = mRoundRectHeight
-
         val mode = MeasureSpec.getMode(widthMeasureSpec)
-        val specSize = MeasureSpec.getSize(widthMeasureSpec)
         contentWidth = when (mode) {
             MeasureSpec.EXACTLY -> widthMeasureSpec
             MeasureSpec.AT_MOST -> contentWidth
@@ -107,7 +83,6 @@ class EmojiView @JvmOverloads constructor(
             MeasureSpec.EXACTLY -> heightMeasureSpec
             MeasureSpec.AT_MOST -> contentHeight
             else -> contentHeight
-
         }
         setMeasuredDimension(contentWidth, contentHeight)
     }
@@ -116,16 +91,8 @@ class EmojiView @JvmOverloads constructor(
         val x = (width / 2).toFloat()
         val y = height / 2f - emojiBounds.centerY()
         emojiPoint.set(x, y)
-
-        mRoundRectPoint.set(
-            0f,
-            height.toFloat(),
-            width.toFloat(),
-            0f
-        )
+        mRoundRectPoint.set(0f, height.toFloat(), width.toFloat(), 0f)
         radiusRect = context.dpToPx(10.0f).toFloat()
-
-
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -135,26 +102,26 @@ class EmojiView @JvmOverloads constructor(
         canvas.restoreToCount(canvasCount)
     }
 
-    /* override fun onCreateDrawableState(extraSpace: Int): IntArray {
-         val drawableState = super.onCreateDrawableState(extraSpace + 1)
-
-         if (isSelected) {
-             mergeDrawableStates(drawableState, DRAWABLES_STATE)
-         }
-
-         return drawableState
-     }*/
+    override fun onCreateDrawableState(extraSpace: Int): IntArray {
+        val drawableState = super.onCreateDrawableState(extraSpace + 1)
+        if (isSelected) {
+            mergeDrawableStates(drawableState, DRAWABLES_STATE)
+        }
+        return drawableState
+    }
 
     override fun performClick(): Boolean {
         isSelected = !isSelected
-        if (isSelected) mRoundRectPaint.color = getColor(resources, R.color.ev_selected, null) else
-            mRoundRectPaint.color = getColor(resources, R.color.ev_unselected, null)
+        //можно ли было сделать так?
+        /*if (isSelected) mRoundRectPaint.color = getColor(resources, R.color.ev_selected, null) else
+            mRoundRectPaint.color = getColor(resources, R.color.ev_unselected, null)*/
         return super.performClick()
     }
 
     companion object {
         private val DRAWABLES_STATE = IntArray(1) { android.R.attr.state_selected }
     }
+
 
 }
 
