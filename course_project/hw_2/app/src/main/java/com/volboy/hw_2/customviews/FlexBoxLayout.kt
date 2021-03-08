@@ -16,7 +16,6 @@ class FlexBoxLayout @JvmOverloads constructor(
     defStyleRes: Int = 0
 ) : ViewGroup(context, attrs, defStyleAttr, defStyleRes) {
     private val childrenRect = Rect()
-    private val lastEmojiRect = Rect()
     private lateinit var lastEmojiView: EmojiView
 
     init {
@@ -25,19 +24,18 @@ class FlexBoxLayout @JvmOverloads constructor(
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         var currentWidth = 0
-        var currentHeight = 0
+        var currentHeight: Int
         var resultWidth = 0
         var resultHeight = 0
         var countRows = 0
-        var lastEmojiViewWidth=0
-        var lastEmojiViewHeight=0
-
+        var lastEmojiViewWidth: Int
+        var lastEmojiViewHeight: Int
         children.forEach { children ->
             measureChildWithMargins(children, widthMeasureSpec, currentWidth, heightMeasureSpec, resultHeight)
-            var childrenLayoutParams = children.layoutParams as MarginLayoutParams
+            val childrenLayoutParams = children.layoutParams as MarginLayoutParams
             currentWidth += children.measuredWidth + childrenLayoutParams.leftMargin + childrenLayoutParams.rightMargin
             currentHeight = children.measuredHeight + childrenLayoutParams.topMargin + childrenLayoutParams.bottomMargin
-            if (currentWidth >= width) {
+            if (currentWidth >= measuredWidth - children.measuredWidth) {
                 resultWidth = currentWidth
                 currentWidth = 0
                 countRows++
@@ -45,26 +43,22 @@ class FlexBoxLayout @JvmOverloads constructor(
             }
         }
         LayoutInflater.from(context).inflate(R.layout.last_emoji_view, this, true)
-        lastEmojiView=findViewById(R.id.lastEmojiView)
-        val lastEmojiLayoutParams=lastEmojiView.layoutParams as MarginLayoutParams
-        measureChildWithMargins(lastEmojiView, widthMeasureSpec,resultWidth,heightMeasureSpec,resultHeight)
-        lastEmojiViewWidth=lastEmojiView.measuredWidth + lastEmojiLayoutParams.leftMargin + lastEmojiLayoutParams.rightMargin
-        lastEmojiViewHeight=lastEmojiView.measuredHeight + lastEmojiLayoutParams.topMargin + lastEmojiLayoutParams.bottomMargin
-        if (resultWidth+lastEmojiViewWidth>=width){
-            resultHeight+=lastEmojiViewHeight
+        lastEmojiView = findViewById(R.id.lastEmojiView)
+        val lastEmojiLayoutParams = lastEmojiView.layoutParams as MarginLayoutParams
+        measureChildWithMargins(lastEmojiView, widthMeasureSpec, resultWidth, heightMeasureSpec, resultHeight)
+        lastEmojiViewWidth = lastEmojiView.measuredWidth + lastEmojiLayoutParams.leftMargin + lastEmojiLayoutParams.rightMargin
+        lastEmojiViewHeight = lastEmojiView.measuredHeight + lastEmojiLayoutParams.topMargin + lastEmojiLayoutParams.bottomMargin
+        if (resultWidth + lastEmojiViewWidth >= width) {
+            resultHeight += lastEmojiViewHeight
         }
-
-        setMeasuredDimension(
-            resolveSize(resultWidth, widthMeasureSpec),
-            resolveSize(resultHeight, heightMeasureSpec)
-        )
+        setMeasuredDimension(resolveSize(resultWidth, widthMeasureSpec), resolveSize(resultHeight, heightMeasureSpec))
     }
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
         var currentWidth = 0
         var currentHeight = 0
         children.forEach { children ->
-            var childrenLayoutParams = children.layoutParams as MarginLayoutParams
+            val childrenLayoutParams = children.layoutParams as MarginLayoutParams
             childrenRect.left = childrenLayoutParams.leftMargin + currentWidth
             childrenRect.top = childrenLayoutParams.topMargin + currentHeight
             childrenRect.right = childrenRect.left + children.measuredWidth
@@ -76,16 +70,11 @@ class FlexBoxLayout @JvmOverloads constructor(
             }
             children.layout(childrenRect)
         }
-
     }
 
-    override fun generateDefaultLayoutParams(): LayoutParams = MarginLayoutParams(
-        LayoutParams.MATCH_PARENT,
-        LayoutParams.WRAP_CONTENT
-    )
+    override fun generateDefaultLayoutParams(): LayoutParams = MarginLayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
 
-    override fun generateLayoutParams(attrs: AttributeSet?): LayoutParams =
-        MarginLayoutParams(context, attrs)
+    override fun generateLayoutParams(attrs: AttributeSet?): LayoutParams = MarginLayoutParams(context, attrs)
 
     override fun generateLayoutParams(p: LayoutParams?): LayoutParams = MarginLayoutParams(p)
 

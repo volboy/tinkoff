@@ -9,6 +9,5 @@
         style="@style/EmojiViewStyle"
         android:onClick="clickEmojiiView"
         app:ev_text="+"
-        app:ev_text_size="16sp" />
-
+        app:ev_text_size="16sp"/>
 </merge>

@@ -1,4 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="message_view_width">321dp</dimen>
     <dimen name="header_text_size">14sp</dimen>
+    <dimen name="message_text_size">14sp</dimen>
+    <dimen name="avatar_width">37dp</dimen>
+    <dimen name="avatar_height">37dp</dimen>
+    <dimen name="message_width">199dp</dimen>
+    <dimen name="flexbox_width">275dp</dimen>
+    <dimen name="avatarMarginRight">9dp</dimen>
+    <dimen name="headerMarginTop">8dp</dimen>
+    <dimen name="headerMarginLeft">22dp</dimen>
+    <dimen name="headerMarginBottom">4dp</dimen>
+    <dimen name="messageMarginRight">5dp</dimen>
+    <dimen name="messageMarginBottom">27dp</dimen>
 </resources>

@@ -28,7 +28,6 @@ class EmojiView @JvmOverloads constructor(
         color = getColor(resources, R.color.ev_unselected, null)
         style = Paint.Style.STROKE
     }
-
     private var textSize: Int
         get() = emojiPaint.textSize.toInt()
         set(value) {
@@ -37,7 +36,6 @@ class EmojiView @JvmOverloads constructor(
                 requestLayout()
             }
         }
-
     private var emoji: String = ""
         set(value) {
             if (field != value) {
@@ -45,7 +43,7 @@ class EmojiView @JvmOverloads constructor(
                 requestLayout()
             }
         }
-    private var text: String = "0"
+    private var text: String = DEFAULT_COUNT_REACTIONS
         set(value) {
             if (field != value) {
                 field = value
@@ -55,10 +53,10 @@ class EmojiView @JvmOverloads constructor(
 
     init {
         context.obtainStyledAttributes(attrs, R.styleable.EmojiView).apply {
-            textSize = getDimensionPixelSize(R.styleable.EmojiView_ev_text_size, context.spToPx(14F))
-            var emojiCode = getInteger(R.styleable.EmojiView_ev_emoji, 0)
-            text = getText(R.styleable.EmojiView_ev_text)?.toString() ?: "0"
-            if (text == "") text = "0"
+            textSize = getDimensionPixelSize(R.styleable.EmojiView_ev_text_size, context.spToPx(DEFAULT_FONT_SIZE_PX))
+            var emojiCode = getInteger(R.styleable.EmojiView_ev_emoji, DEFAULT_EMOJI_CODE)
+            text = getText(R.styleable.EmojiView_ev_text)?.toString() ?: DEFAULT_COUNT_REACTIONS
+            if (text == "") text = DEFAULT_COUNT_REACTIONS
             emoji = String(Character.toChars(emojiCode)) + " " + text
             recycle()
         }
@@ -68,17 +66,17 @@ class EmojiView @JvmOverloads constructor(
         emojiPaint.getTextBounds(emoji, 0, emoji.length, emojiBounds)
         val emojiWidth = emojiBounds.width()
         val emojiHeight = emojiBounds.height()
-        val mRoundRectWidth = emojiWidth + paddingLeft + paddingRight + context.dpToPx(18.0f)
-        val mRoundRectHeight = emojiHeight + paddingBottom + paddingTop + context.dpToPx(9.6f)
+        val mRoundRectWidth = emojiWidth + paddingLeft + paddingRight + context.dpToPx(PADDINGS_LEFT_AND_RIGHT)
+        val mRoundRectHeight = emojiHeight + paddingBottom + paddingTop + context.dpToPx(PADDINGS_TOP_AND_BOTTOM)
         var contentWidth = mRoundRectWidth
         var contentHeight = mRoundRectHeight
-        val mode = MeasureSpec.getMode(widthMeasureSpec)
+        var mode = MeasureSpec.getMode(widthMeasureSpec)
         contentWidth = when (mode) {
             MeasureSpec.EXACTLY -> widthMeasureSpec
             MeasureSpec.AT_MOST -> contentWidth
             else -> contentWidth
-
         }
+        mode = MeasureSpec.getMode(heightMeasureSpec)
         contentHeight = when (mode) {
             MeasureSpec.EXACTLY -> heightMeasureSpec
             MeasureSpec.AT_MOST -> contentHeight
@@ -88,11 +86,11 @@ class EmojiView @JvmOverloads constructor(
     }
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
-        val x = (width / 2).toFloat()
-        val y = height / 2f - emojiBounds.centerY()
+        val x = width / 2F
+        val y = height / 2F - emojiBounds.centerY()
         emojiPoint.set(x, y)
-        mRoundRectPoint.set(0f, height.toFloat(), width.toFloat(), 0f)
-        radiusRect = context.dpToPx(10.0f).toFloat()
+        mRoundRectPoint.set(0F, height.toFloat(), width.toFloat(), 0F)
+        radiusRect = context.dpToPx(RADIUS_RECT).toFloat()
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -119,9 +117,13 @@ class EmojiView @JvmOverloads constructor(
     }
 
     companion object {
+        private const val DEFAULT_FONT_SIZE_PX = 14F
+        private const val DEFAULT_EMOJI_CODE = 0
+        private const val DEFAULT_COUNT_REACTIONS = "0"
+        private const val RADIUS_RECT = 10.0F
+        private const val PADDINGS_LEFT_AND_RIGHT = 18.0F
+        private const val PADDINGS_TOP_AND_BOTTOM = 9.6F
         private val DRAWABLES_STATE = IntArray(1) { android.R.attr.state_selected }
     }
-
-
 }
 

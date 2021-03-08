@@ -7,11 +7,11 @@
     tools:context=".MainActivity">
 
     <com.volboy.hw_2.customviews.MessageViewGroup
-        android:layout_width="321dp"
+        android:layout_width="@dimen/message_view_width"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
