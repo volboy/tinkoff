@@ -81,31 +81,26 @@ class MessageViewGroup @JvmOverloads constructor(
         val headerLayoutParams = header.layoutParams as MarginLayoutParams
         val messageLayoutParams = message.layoutParams as MarginLayoutParams
         val flexBoxLayoutParams = flexBoxLayout.layoutParams as MarginLayoutParams
-
         imageAvatarRect.left = imageAvatarLayoutParams.leftMargin
         imageAvatarRect.top = imageAvatarLayoutParams.topMargin
         imageAvatarRect.right = imageAvatarRect.left + imageAvatar.measuredWidth
         imageAvatarRect.bottom = imageAvatarRect.top + imageAvatar.measuredHeight
         imageAvatar.layout(imageAvatarRect)
-
         headerRect.left = headerLayoutParams.leftMargin + imageAvatarRect.right
         headerRect.top = headerLayoutParams.topMargin
         headerRect.right = headerRect.left + header.measuredWidth
         headerRect.bottom = headerRect.top + header.measuredHeight
         header.layout(headerRect)
-
         messageRect.left = headerRect.left
         messageRect.top = messageLayoutParams.topMargin + headerRect.bottom + headerLayoutParams.bottomMargin
         messageRect.right = messageRect.left + message.measuredWidth
         messageRect.bottom = messageRect.top + message.measuredHeight
         message.layout(messageRect)
-
         flexBoxLayoutRect.left = headerRect.left - context.dpToPx(RECT_MARGIN_LEFT)
         flexBoxLayoutRect.top = flexBoxLayoutParams.topMargin + messageRect.bottom + messageLayoutParams.bottomMargin
         flexBoxLayoutRect.right = flexBoxLayoutRect.left + flexBoxLayout.measuredWidth
         flexBoxLayoutRect.bottom = flexBoxLayoutRect.top + flexBoxLayout.measuredHeight
         flexBoxLayout.layout(flexBoxLayoutRect)
-
         mRoundRectPoint.set(
             headerRect.left.toFloat() - context.dpToPx(RECT_MARGIN_LEFT),
             imageAvatar.top.toFloat(),
