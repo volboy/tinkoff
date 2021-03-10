@@ -15,20 +15,13 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.hw_1.databinding.ActivityMainBinding
 
-const val REQUEST_CODE_ACTIVITY_TWO = 1
-const val REQUEST_CODE_PERMISSION = 1
-const val LOADED_CONTACTS_ACTION = "LOADED_CONTACT_ACTION"
-const val DATA_CONTACTS_KEY = "DATA_CONTACTS_KEY"
-
 class MainActivity : AppCompatActivity() {
-
     var readContactGranted = false
     lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding =
-            DataBindingUtil.setContentView(this, R.layout.activity_main)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         getPermission()
         getContacts()
         binding.btnToLoadActivity.setOnClickListener {
@@ -36,13 +29,11 @@ class MainActivity : AppCompatActivity() {
                 val intent = Intent(this, ActivityTwo::class.java)
                 startActivityForResult(intent, REQUEST_CODE_ACTIVITY_TWO)
             } else {
-                Toast.makeText(this, "Необходимо разрешить доступ к контактам", Toast.LENGTH_LONG)
-                    .show()
+                Toast.makeText(this, getString(R.string.contact_permissoin_str), Toast.LENGTH_LONG).show()
                 getPermission()
             }
         }
     }
-
 
     private fun getContacts() {
         binding.recyclerView.layoutManager = LinearLayoutManager(applicationContext)
@@ -60,19 +51,11 @@ class MainActivity : AppCompatActivity() {
         if (readContactPermission == PackageManager.PERMISSION_GRANTED) {
             readContactGranted = true
         } else {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(READ_CONTACTS),
-                REQUEST_CODE_PERMISSION
-            )
+            ActivityCompat.requestPermissions(this, arrayOf(READ_CONTACTS), REQUEST_CODE_PERMISSION)
         }
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         if (requestCode == 1) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 readContactGranted = true
@@ -84,15 +67,19 @@ class MainActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE_ACTIVITY_TWO) {
             if (resultCode == Activity.RESULT_OK) {
-                if (data?.getStringExtra(DATA_CONTACTS_KEY).equals("DONE")) {
+                if (data?.getStringExtra(LoadContactService.DATA_CONTACTS_KEY).equals(getString(R.string.result_ok_str))) {
                     getContacts()
                 } else {
-                    Toast.makeText(applicationContext, "Контакты не загрузились", Toast.LENGTH_LONG)
-                        .show()
+                    Toast.makeText(applicationContext, getString(R.string.contacts_no_loaded_str), Toast.LENGTH_LONG).show()
                 }
             } else {
-                Toast.makeText(applicationContext, "Что-то пошло не так", Toast.LENGTH_LONG).show()
+                Toast.makeText(applicationContext, getString(R.string.error_str), Toast.LENGTH_LONG).show()
             }
         }
+    }
+
+    companion object {
+        const val REQUEST_CODE_ACTIVITY_TWO = 1
+        const val REQUEST_CODE_PERMISSION = 1
     }
 }
