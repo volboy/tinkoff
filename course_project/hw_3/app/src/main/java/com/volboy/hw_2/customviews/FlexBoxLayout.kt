@@ -48,7 +48,7 @@ class FlexBoxLayout @JvmOverloads constructor(
         measureChildWithMargins(lastEmojiView, widthMeasureSpec, resultWidth, heightMeasureSpec, resultHeight)
         lastEmojiViewWidth = lastEmojiView.measuredWidth + lastEmojiLayoutParams.leftMargin + lastEmojiLayoutParams.rightMargin
         lastEmojiViewHeight = lastEmojiView.measuredHeight + lastEmojiLayoutParams.topMargin + lastEmojiLayoutParams.bottomMargin
-        if (resultWidth + lastEmojiViewWidth >= width) {
+        if (resultWidth + lastEmojiViewWidth >= measuredWidth) {
             resultHeight += lastEmojiViewHeight
         }
         setMeasuredDimension(resolveSize(resultWidth, widthMeasureSpec), resolveSize(resultHeight, heightMeasureSpec))
