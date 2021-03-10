@@ -28,14 +28,15 @@ class FlexBoxLayout @JvmOverloads constructor(
         var resultWidth = 0
         var resultHeight = 0
         var countRows = 0
-        var lastEmojiViewWidth: Int
-        var lastEmojiViewHeight: Int
+        val lastEmojiViewWidth: Int
+        val lastEmojiViewHeight: Int
+        val parentWidth=MeasureSpec.getSize(widthMeasureSpec)
         children.forEach { children ->
             measureChildWithMargins(children, widthMeasureSpec, currentWidth, heightMeasureSpec, resultHeight)
             val childrenLayoutParams = children.layoutParams as MarginLayoutParams
             currentWidth += children.measuredWidth + childrenLayoutParams.leftMargin + childrenLayoutParams.rightMargin
             currentHeight = children.measuredHeight + childrenLayoutParams.topMargin + childrenLayoutParams.bottomMargin
-            if (currentWidth >= measuredWidth - children.measuredWidth) {
+            if (currentWidth >= parentWidth - children.measuredWidth) {
                 resultWidth = currentWidth
                 currentWidth = 0
                 countRows++
@@ -48,7 +49,7 @@ class FlexBoxLayout @JvmOverloads constructor(
         measureChildWithMargins(lastEmojiView, widthMeasureSpec, resultWidth, heightMeasureSpec, resultHeight)
         lastEmojiViewWidth = lastEmojiView.measuredWidth + lastEmojiLayoutParams.leftMargin + lastEmojiLayoutParams.rightMargin
         lastEmojiViewHeight = lastEmojiView.measuredHeight + lastEmojiLayoutParams.topMargin + lastEmojiLayoutParams.bottomMargin
-        if (resultWidth + lastEmojiViewWidth >= measuredWidth) {
+        if (resultWidth + lastEmojiViewWidth >= parentWidth) {
             resultHeight += lastEmojiViewHeight
         }
         setMeasuredDimension(resolveSize(resultWidth, widthMeasureSpec), resolveSize(resultHeight, heightMeasureSpec))
