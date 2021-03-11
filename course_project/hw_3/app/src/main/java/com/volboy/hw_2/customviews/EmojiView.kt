@@ -1,9 +1,8 @@
 package com.volboy.hw_2.customviews
 
-import android.R.attr
+
 import android.content.Context
 import android.graphics.*
-import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.View
 import androidx.core.content.res.ResourcesCompat.getColor

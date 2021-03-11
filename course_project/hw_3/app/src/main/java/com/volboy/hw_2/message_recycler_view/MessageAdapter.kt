@@ -1,14 +1,13 @@
-package com.volboy.hw_2
+package com.volboy.hw_2.message_recycler_view
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.view.children
-import androidx.core.view.get
 import androidx.recyclerview.widget.RecyclerView
+import com.volboy.hw_2.R
 import com.volboy.hw_2.databinding.ItemMessageBinding
 
-class MessageAdapter(private val messages: List<String>) : RecyclerView.Adapter<MessageAdapter. MessageItemViewHolder>() {
+class MessageAdapter(private val messages: List<String>) : RecyclerView.Adapter<MessageAdapter.MessageItemViewHolder>() {
     private lateinit var binding: ItemMessageBinding
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageItemViewHolder {
