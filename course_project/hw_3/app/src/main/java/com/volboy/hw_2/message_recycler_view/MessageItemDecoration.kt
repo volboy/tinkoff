@@ -4,7 +4,6 @@ package com.volboy.hw_2.message_recycler_view
 import android.content.Context
 import android.graphics.*
 import android.view.View
-import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.children
 import androidx.recyclerview.widget.RecyclerView
 import com.volboy.hw_2.R
@@ -14,12 +13,12 @@ import com.volboy.hw_2.customviews.spToPx
 class MessageItemDecoration(var divider: String, context: Context) : RecyclerView.ItemDecoration() {
 
     private val dividerPaint = Paint().apply {
-        color = context.resources.getColor(R.color.data_divider_text_color)
+        color = context.resources.getColor(R.color.date_divider_text_color)
         textAlign = Paint.Align.CENTER
         textSize = context.spToPx(14F).toFloat()
     }
     private val mRoundRectPaint = Paint().apply {
-        color = context.resources.getColor(R.color.data_divider_color)
+        color = context.resources.getColor(R.color.date_divider_color)
         style = Paint.Style.FILL_AND_STROKE
     }
     val radiusRect = context.dpToPx(58F).toFloat()

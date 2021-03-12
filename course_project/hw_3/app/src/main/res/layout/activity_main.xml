@@ -15,42 +15,45 @@
         android:paddingStart="10dp"
         android:paddingTop="10dp"
         android:paddingEnd="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/textView"
+        app:layout_constraintBottom_toTopOf="@+id/messageBox"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed"
-        tools:listitem="@layout/item_message"
+        tools:listitem="@layout/out_message_item"
         android:background="@color/recycler_message_background"/>
 
     <EditText
-        android:id="@+id/textView"
+        android:id="@+id/messageBox"
         android:layout_width="334dp"
         android:layout_height="51dp"
         android:layout_marginStart="10dp"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
+        android:background="@drawable/message_box_drw"
+        android:fadeScrollbars="true"
         android:hint="@string/make_message_hint"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recyclerMessage"
-        android:textSize="20dp"
         android:paddingLeft="21dp"
+        android:paddingRight="21dp"
+        android:singleLine="false"
         android:textColor="@color/ev_text_color"
         android:textColorHint="@color/ev_text_color"
-        android:background="@drawable/message_box_drw"/>
+        android:textSize="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/recyclerMessage" />
 
     <ImageButton
-        android:id="@+id/button"
+        android:id="@+id/messageBtn"
         android:layout_width="39dp"
         android:layout_height="39dp"
         android:layout_marginStart="12dp"
         android:layout_marginEnd="16dp"
         android:background="@drawable/message_button_drw"
-        app:layout_constraintBottom_toBottomOf="@+id/textView"
+        app:layout_constraintBottom_toBottomOf="@+id/messageBox"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textView"
-        app:layout_constraintTop_toTopOf="@+id/textView" />
+        app:layout_constraintStart_toEndOf="@+id/messageBox"
+        app:layout_constraintTop_toTopOf="@+id/messageBox" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

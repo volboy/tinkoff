@@ -15,7 +15,7 @@
         app:shapeAppearanceOverlay="@style/circle" />
 
     <TextView
-        android:id="@+id/header_title"
+        android:id="@+id/header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/headerMarginLeft"
@@ -38,7 +38,6 @@
     <com.volboy.hw_2.customviews.FlexBoxLayout
         android:id="@+id/flex_box_layout"
         android:layout_width="@dimen/flexbox_width"
-        android:layout_height="wrap_content">
-    </com.volboy.hw_2.customviews.FlexBoxLayout>
+        android:layout_height="wrap_content"></com.volboy.hw_2.customviews.FlexBoxLayout>
 
 </merge>

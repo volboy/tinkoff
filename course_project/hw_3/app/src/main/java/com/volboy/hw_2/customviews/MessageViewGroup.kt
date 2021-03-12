@@ -39,7 +39,7 @@ class MessageViewGroup @JvmOverloads constructor(
     init {
         LayoutInflater.from(context).inflate(R.layout.message_view_group, this, true)
         imageAvatar = findViewById(R.id.avatar)
-        header = findViewById(R.id.header_title)
+        header = findViewById(R.id.header)
         message = findViewById(R.id.message)
         flexBoxLayout = findViewById(R.id.flex_box_layout)
         setWillNotDraw(false)
