@@ -6,13 +6,13 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.volboy.hw_2.R
 import com.volboy.hw_2.databinding.*
-import com.volboy.hw_2.model.Messege
+import com.volboy.hw_2.model.Message
 
-class MessageAdapter(private val messages: List<Messege>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class MessageAdapter(private val messages: List<Message>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun getItemViewType(position: Int): Int {
         if (position == 0) {
-            return when (messages[position].outMessage) {
+            return when (messages[position].inMessage) {
                 true -> TYPE_IN_MESSAGE_WITH_DATE
                 false -> TYPE_OUT_MESSAGE_WITH_DATE
             }
@@ -20,12 +20,12 @@ class MessageAdapter(private val messages: List<Messege>) : RecyclerView.Adapter
             var prevPosition = position - 1
             if (prevPosition < 0) prevPosition = 0
             if (messages[position].date == messages[prevPosition].date) {
-                return when (messages[position].outMessage) {
+                return when (messages[position].inMessage) {
                     true -> TYPE_IN_MESSAGE
                     false -> TYPE_OUT_MESSAGE
                 }
             } else {
-                return when (messages[position].outMessage) {
+                return when (messages[position].inMessage) {
                     true -> TYPE_IN_MESSAGE_WITH_DATE
                     false -> TYPE_OUT_MESSAGE_WITH_DATE
                 }
@@ -92,7 +92,7 @@ class MessageAdapter(private val messages: List<Messege>) : RecyclerView.Adapter
         var txtHeader: TextView = itemView.findViewById(R.id.header)
         var txtMessage: TextView = itemView.findViewById(R.id.message)
 
-        fun bind(message: Messege) {
+        fun bind(message: Message) {
             txtHeader.text = message.header
             txtMessage.text = message.textMessage
         }
@@ -101,7 +101,7 @@ class MessageAdapter(private val messages: List<Messege>) : RecyclerView.Adapter
     inner class OutMessageItemViewHolder(itemView: ViewGroup) : RecyclerView.ViewHolder(itemView) {
         var txtMessage: TextView = itemView.findViewById(R.id.message)
 
-        fun bind(message: Messege) {
+        fun bind(message: Message) {
             txtMessage.text = message.textMessage
         }
     }
@@ -111,7 +111,7 @@ class MessageAdapter(private val messages: List<Messege>) : RecyclerView.Adapter
         var txtMessage: TextView = itemView.findViewById(R.id.message)
         var txtDate: TextView = itemView.findViewById(R.id.date)
 
-        fun bind(message: Messege) {
+        fun bind(message: Message) {
             txtHeader.text = message.header
             txtMessage.text = message.textMessage
             txtDate.text = message.date
@@ -122,7 +122,7 @@ class MessageAdapter(private val messages: List<Messege>) : RecyclerView.Adapter
         var txtMessage: TextView = itemView.findViewById(R.id.message)
         var txtDate: TextView = itemView.findViewById(R.id.date)
 
-        fun bind(message: Messege) {
+        fun bind(message: Message) {
             txtMessage.text = message.textMessage
             txtDate.text = message.date
         }

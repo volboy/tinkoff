@@ -4,15 +4,14 @@
     android:layout_height="wrap_content"
     android:gravity="end"
     android:orientation="vertical"
-    android:layout_marginTop="16dp">
+    android:layout_marginTop="10dp">
 
     <TextView
         android:id="@+id/date"
         android:layout_width="76dp"
         android:layout_height="22dp"
         android:layout_gravity="center"
-        android:layout_marginTop="2dp"
-        android:layout_marginBottom="3dp"
+        android:layout_marginBottom="19dp"
         android:background="@drawable/date_divider_drw"
         android:paddingTop="2dp"
         android:paddingBottom="3dp"

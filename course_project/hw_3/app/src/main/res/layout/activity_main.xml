@@ -27,7 +27,9 @@
     <EditText
         android:id="@+id/messageBox"
         android:layout_width="334dp"
-        android:layout_height="51dp"
+        android:minHeight="51dp"
+        android:layout_height="wrap_content"
+        android:maxHeight="102dp"
         android:layout_marginStart="10dp"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"

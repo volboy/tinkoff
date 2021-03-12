@@ -3,6 +3,6 @@
     android:id="@+id/inMessageItem"
     android:layout_width="@dimen/message_view_width"
     android:layout_height="wrap_content"
-    android:layout_marginTop="16dp">
+    android:layout_marginTop="10dp">
 
 </com.volboy.hw_2.customviews.MessageViewGroup>
