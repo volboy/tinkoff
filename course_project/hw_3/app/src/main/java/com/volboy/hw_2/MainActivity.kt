@@ -1,9 +1,9 @@
 package com.volboy.hw_2
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.volboy.hw_2.databinding.ActivityMainBinding
 import com.volboy.hw_2.message_recycler_view.MessageAdapter
@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity() {
             sendOutMessage()
         }
         binding.messageBox.setOnKeyListener(View.OnKeyListener { _, keyCode, event ->
-            if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER && binding.messageBox.text.isNotEmpty()) {
+            if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
                 sendOutMessage()
                 return@OnKeyListener true
             }
@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun sendOutMessage() {
-        if (binding.messageBox.text.isNotEmpty()) return
+        if (binding.messageBox.text.isBlank()) return
         newMessageText = binding.messageBox.text.toString()
         messages.add(Message(8, "You", newMessageText, false, "14 Мар"))
         binding.recyclerMessage.adapter?.notifyItemInserted(messages.size - 1)
