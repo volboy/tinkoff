@@ -11,25 +11,11 @@ import com.volboy.hw_2.model.Message
 class MessageAdapter(private val messages: List<Message>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun getItemViewType(position: Int): Int {
-        if (position == 0) {
-            return when (messages[position].inMessage) {
-                true -> TYPE_IN_MESSAGE_WITH_DATE
-                false -> TYPE_OUT_MESSAGE_WITH_DATE
-            }
-        } else {
-            var prevPosition = position - 1
-            if (prevPosition < 0) prevPosition = 0
-            if (messages[position].date == messages[prevPosition].date) {
-                return when (messages[position].inMessage) {
-                    true -> TYPE_IN_MESSAGE
-                    false -> TYPE_OUT_MESSAGE
-                }
-            } else {
-                return when (messages[position].inMessage) {
-                    true -> TYPE_IN_MESSAGE_WITH_DATE
-                    false -> TYPE_OUT_MESSAGE_WITH_DATE
-                }
-            }
+        return when (messages[position].inMessage) {
+            0 -> TYPE_OUT_MESSAGE
+            1 -> TYPE_IN_MESSAGE
+            2 -> TYPE_DATE_DIVIDER
+            else -> TYPE_ERROR
         }
     }
 
@@ -43,17 +29,13 @@ class MessageAdapter(private val messages: List<Message>) : RecyclerView.Adapter
                 val binding = OutMessageItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
                 OutMessageItemViewHolder(binding.root)
             }
-            TYPE_IN_MESSAGE_WITH_DATE -> {
-                val binding = InMessageDateItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-                InMessageDateItemViewHolder(binding.root)
-            }
-            TYPE_OUT_MESSAGE_WITH_DATE -> {
-                val binding = OutMessageDateItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-                OutMessageDateItemViewHolder(binding.root)
+            TYPE_DATE_DIVIDER -> {
+                val binding = DateDividerItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                DateDividerItemViewHolder(binding.root)
             }
             else -> {
-                val binding = OutMessageDateItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-                OutMessageDateItemViewHolder(binding.root)
+                val binding = DateDividerItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                DateDividerItemViewHolder(binding.root)
             }
 
 
@@ -68,12 +50,10 @@ class MessageAdapter(private val messages: List<Message>) : RecyclerView.Adapter
             TYPE_OUT_MESSAGE -> {
                 (holder as OutMessageItemViewHolder).bind(messages[position])
             }
-            TYPE_IN_MESSAGE_WITH_DATE -> {
-                (holder as InMessageDateItemViewHolder).bind(messages[position])
+            TYPE_DATE_DIVIDER -> {
+                (holder as DateDividerItemViewHolder).bind(messages[position])
             }
-            TYPE_OUT_MESSAGE_WITH_DATE -> {
-                (holder as OutMessageDateItemViewHolder).bind(messages[position])
-            }
+
         }
     }
 
@@ -84,8 +64,8 @@ class MessageAdapter(private val messages: List<Message>) : RecyclerView.Adapter
     companion object {
         private const val TYPE_IN_MESSAGE = 0
         private const val TYPE_OUT_MESSAGE = 1
-        private const val TYPE_IN_MESSAGE_WITH_DATE = 2
-        private const val TYPE_OUT_MESSAGE_WITH_DATE = 3
+        private const val TYPE_DATE_DIVIDER = 2
+        private const val TYPE_ERROR = 3
     }
 
     inner class InMessageItemViewHolder(itemView: ViewGroup) : RecyclerView.ViewHolder(itemView) {
@@ -106,26 +86,11 @@ class MessageAdapter(private val messages: List<Message>) : RecyclerView.Adapter
         }
     }
 
-    inner class InMessageDateItemViewHolder(itemView: ViewGroup) : RecyclerView.ViewHolder(itemView) {
-        var txtHeader: TextView = itemView.findViewById(R.id.header)
-        var txtMessage: TextView = itemView.findViewById(R.id.message)
+    inner class DateDividerItemViewHolder(itemView: ViewGroup) : RecyclerView.ViewHolder(itemView) {
         var txtDate: TextView = itemView.findViewById(R.id.date)
 
         fun bind(message: Message) {
-            txtHeader.text = message.header
-            txtMessage.text = message.textMessage
             txtDate.text = message.date
         }
     }
-
-    inner class OutMessageDateItemViewHolder(itemView: ViewGroup) : RecyclerView.ViewHolder(itemView) {
-        var txtMessage: TextView = itemView.findViewById(R.id.message)
-        var txtDate: TextView = itemView.findViewById(R.id.date)
-
-        fun bind(message: Message) {
-            txtMessage.text = message.textMessage
-            txtDate.text = message.date
-        }
-    }
-
 }

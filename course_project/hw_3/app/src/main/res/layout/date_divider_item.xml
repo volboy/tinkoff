@@ -20,10 +20,4 @@
         android:textColor="@color/date_divider_text_color"
         android:textSize="14sp" />
 
-    <com.volboy.hw_2.customviews.MessageViewGroup
-        android:id="@+id/inMessageItem"
-        android:layout_width="@dimen/message_view_width"
-        android:layout_height="wrap_content">
-    </com.volboy.hw_2.customviews.MessageViewGroup>
-
 </LinearLayout>
