@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_marginTop="16dp">
+
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="76dp"
+        android:layout_height="22dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="3dp"
+        android:background="@drawable/date_divider_drw"
+        android:paddingTop="2dp"
+        android:paddingBottom="3dp"
+        android:text="@string/date_divider_str"
+        android:textAlignment="center"
+        android:textColor="@color/date_divider_text_color"
+        android:textSize="14sp" />
+
+    <com.volboy.hw_2.customviews.MessageViewGroup
+        android:id="@+id/inMessageItem"
+        android:layout_width="@dimen/message_view_width"
+        android:layout_height="wrap_content">
+    </com.volboy.hw_2.customviews.MessageViewGroup>
+
+</LinearLayout>

@@ -5,21 +5,31 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.volboy.hw_2.R
-import com.volboy.hw_2.databinding.DateDividerItemBinding
-import com.volboy.hw_2.databinding.InMessageItemBinding
-import com.volboy.hw_2.databinding.OutMessageItemBinding
+import com.volboy.hw_2.databinding.*
 import com.volboy.hw_2.model.Messege
 
 class MessageAdapter(private val messages: List<Messege>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun getItemViewType(position: Int): Int {
-        var nextPosition=position+1
-        if (nextPosition==messages.size) nextPosition=messages.size-1
-        if (messages[position].date!=messages[nextPosition].date)
-            return TYPE_DIVIDER
-        return when (messages[position].outMessage) {
-            true -> TYPE_IN_MESSAGE
-            false -> TYPE_OUT_MESSAGE
+        if (position == 0) {
+            return when (messages[position].outMessage) {
+                true -> TYPE_IN_MESSAGE_WITH_DATE
+                false -> TYPE_OUT_MESSAGE_WITH_DATE
+            }
+        } else {
+            var prevPosition = position - 1
+            if (prevPosition < 0) prevPosition = 0
+            if (messages[position].date == messages[prevPosition].date) {
+                return when (messages[position].outMessage) {
+                    true -> TYPE_IN_MESSAGE
+                    false -> TYPE_OUT_MESSAGE
+                }
+            } else {
+                return when (messages[position].outMessage) {
+                    true -> TYPE_IN_MESSAGE_WITH_DATE
+                    false -> TYPE_OUT_MESSAGE_WITH_DATE
+                }
+            }
         }
     }
 
@@ -33,28 +43,36 @@ class MessageAdapter(private val messages: List<Messege>) : RecyclerView.Adapter
                 val binding = OutMessageItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
                 OutMessageItemViewHolder(binding.root)
             }
-            TYPE_DIVIDER -> {
-                val binding = DateDividerItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-                DividerItemViewHolder(binding.root)
+            TYPE_IN_MESSAGE_WITH_DATE -> {
+                val binding = InMessageDateItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                InMessageDateItemViewHolder(binding.root)
+            }
+            TYPE_OUT_MESSAGE_WITH_DATE -> {
+                val binding = OutMessageDateItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                OutMessageDateItemViewHolder(binding.root)
             }
             else -> {
-                val binding = DateDividerItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-                DividerItemViewHolder(binding.root)
+                val binding = OutMessageDateItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                OutMessageDateItemViewHolder(binding.root)
             }
+
+
         }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (getItemViewType(position)) {
             TYPE_IN_MESSAGE -> {
-                (holder as InMessageItemViewHolder).txtHeader.text = messages[position].header
-                holder.txtMessage.text = messages[position].textMessage
+                (holder as InMessageItemViewHolder).bind(messages[position])
             }
             TYPE_OUT_MESSAGE -> {
-                (holder as OutMessageItemViewHolder).txtMessage.text = messages[position].textMessage
+                (holder as OutMessageItemViewHolder).bind(messages[position])
             }
-            TYPE_DIVIDER -> {
-                (holder as DividerItemViewHolder).txtDate.text = messages[position].date
+            TYPE_IN_MESSAGE_WITH_DATE -> {
+                (holder as InMessageDateItemViewHolder).bind(messages[position])
+            }
+            TYPE_OUT_MESSAGE_WITH_DATE -> {
+                (holder as OutMessageDateItemViewHolder).bind(messages[position])
             }
         }
     }
@@ -66,19 +84,48 @@ class MessageAdapter(private val messages: List<Messege>) : RecyclerView.Adapter
     companion object {
         private const val TYPE_IN_MESSAGE = 0
         private const val TYPE_OUT_MESSAGE = 1
-        private const val TYPE_DIVIDER = 2
+        private const val TYPE_IN_MESSAGE_WITH_DATE = 2
+        private const val TYPE_OUT_MESSAGE_WITH_DATE = 3
     }
 
     inner class InMessageItemViewHolder(itemView: ViewGroup) : RecyclerView.ViewHolder(itemView) {
         var txtHeader: TextView = itemView.findViewById(R.id.header)
         var txtMessage: TextView = itemView.findViewById(R.id.message)
+
+        fun bind(message: Messege) {
+            txtHeader.text = message.header
+            txtMessage.text = message.textMessage
+        }
     }
 
     inner class OutMessageItemViewHolder(itemView: ViewGroup) : RecyclerView.ViewHolder(itemView) {
         var txtMessage: TextView = itemView.findViewById(R.id.message)
+
+        fun bind(message: Messege) {
+            txtMessage.text = message.textMessage
+        }
     }
 
-    inner class DividerItemViewHolder(itemView: ViewGroup) : RecyclerView.ViewHolder(itemView) {
+    inner class InMessageDateItemViewHolder(itemView: ViewGroup) : RecyclerView.ViewHolder(itemView) {
+        var txtHeader: TextView = itemView.findViewById(R.id.header)
+        var txtMessage: TextView = itemView.findViewById(R.id.message)
         var txtDate: TextView = itemView.findViewById(R.id.date)
+
+        fun bind(message: Messege) {
+            txtHeader.text = message.header
+            txtMessage.text = message.textMessage
+            txtDate.text = message.date
+        }
     }
+
+    inner class OutMessageDateItemViewHolder(itemView: ViewGroup) : RecyclerView.ViewHolder(itemView) {
+        var txtMessage: TextView = itemView.findViewById(R.id.message)
+        var txtDate: TextView = itemView.findViewById(R.id.date)
+
+        fun bind(message: Messege) {
+            txtMessage.text = message.textMessage
+            txtDate.text = message.date
+        }
+    }
+
 }
