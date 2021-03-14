@@ -5,9 +5,10 @@ import com.volboy.hw_2.message_recycler_view.DataUi
 import com.volboy.hw_2.message_recycler_view.TextUi
 import com.volboy.hw_2.message_recycler_view.ViewTyped
 
-class LoaderMessage {
+class LoaderMessage() {
+    private var messages = mutableListOf<Message>()
     fun remoteMessage(): List<ViewTyped> {
-        val messages=mutableListOf(
+        messages = mutableListOf(
             Message(1, "Alice Moore", "Привет", true, "12 Мар", null),
             Message(1, "You", "Привет", false, "12 Мар", null),
             Message(1, "Alice Moore", "Как дела?", true, "12 Мар", null),
@@ -17,6 +18,14 @@ class LoaderMessage {
             Message(1, "You", "Все хорошо", false, "14 Мар", null),
             Message(1, "You", "А у меня новый самолет", false, "14 Мар", null)
         )
+
+        return convertMessage(messages)
+    }
+
+    fun addMessage(newMessage: String?): List<ViewTyped> {
+        if (newMessage != null) {
+            messages.add(Message(1, "You", newMessage, false, "14 Мар", null))
+        }
         return convertMessage(messages)
     }
 

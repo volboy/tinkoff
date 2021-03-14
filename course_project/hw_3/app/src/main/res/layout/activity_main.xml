@@ -53,6 +53,7 @@
         android:layout_marginStart="12dp"
         android:layout_marginEnd="16dp"
         android:background="@drawable/message_button_drw"
+        android:src="@drawable/ic_add_message"
         app:layout_constraintBottom_toBottomOf="@+id/messageBox"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/messageBox"
