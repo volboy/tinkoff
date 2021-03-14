@@ -1,3 +1,10 @@
 package com.volboy.hw_2.model
 
-class Message (val id: Int, val header:String, val textMessage:String, val inMessage:Int, val date:String)
+class Message(
+    val id: Int,
+    val sender: String,
+    val textMessage: String,
+    val inMessage: Boolean,
+    val dateMessage: String,
+    val reactions: List<Reaction>?
+)
