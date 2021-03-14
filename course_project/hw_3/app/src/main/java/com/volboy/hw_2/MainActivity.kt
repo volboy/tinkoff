@@ -9,17 +9,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.volboy.hw_2.databinding.ActivityMainBinding
 import com.volboy.hw_2.message_recycler_view.*
 import com.volboy.hw_2.model.LoaderMessage
-import com.volboy.hw_2.model.Message
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        val clickListener: (View) -> Boolean = {
+        val longClickListener: (View) -> Boolean = {
             Toast.makeText(this, "Wow", Toast.LENGTH_LONG).show()
             true
         }
-        val holderFactory = MessageHolderFactory(clickListener)
+        val holderFactory = MessageHolderFactory(longClickListener)
         val messageAdapter = MessagesAdapter<ViewTyped>(holderFactory)
         val loaderMessage = LoaderMessage() // типа загрузчик сообщений
         super.onCreate(savedInstanceState)
