@@ -40,9 +40,9 @@ class LoaderMessage() {
         var viewTypedList: MutableList<ViewTyped> = mutableListOf()
         messages.forEach { msg ->
             if (msg.inMessage) {
-                viewTypedList.add(TextUi(msg.sender, msg.textMessage, R.layout.in_message_item))
+                viewTypedList.add(TextUi(msg.sender, msg.textMessage, R.layout.in_message_item, msg.id.toString()))
             } else {
-                viewTypedList.add(TextUi(msg.sender, msg.textMessage, R.layout.out_message_item))
+                viewTypedList.add(TextUi(msg.sender, msg.textMessage, R.layout.out_message_item, msg.id.toString()))
             }
         }
         return viewTypedList

@@ -4,7 +4,12 @@ import android.view.View
 import android.widget.TextView
 import com.volboy.course_project.R
 
-class TextUi(val title: String, val message: String, override val viewType: Int = R.layout.in_message_item) : ViewTyped
+class TextUi(
+    val title: String,
+    val message: String,
+    override val viewType: Int = R.layout.in_message_item,
+    override val uid: String = ""
+) : ViewTyped
 
 class MessageViewHolder(view: View, click: (View) -> Boolean) : BaseViewHolder<TextUi>(view) {
     private val title: TextView = view.findViewById(R.id.header)
