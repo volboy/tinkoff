@@ -3,4 +3,6 @@
     <string name="header_str">Darrell Steward</string>
     <string name="message_str">Darrell Stewart is a 6–0, 170-pound Athlete from Houston, TX.</string>
     <string name="simple_header_str">Имя Фамилия</string>
+    <string name="date_divider_str">1 Фев</string>
+    <string name="make_message_hint">Написать</string>
 </resources>
