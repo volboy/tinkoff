@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">hw_1</string>
+    <string name="btnToLoadActivityStr">Activity_Two</string>
+    <string name="btnLoadStr">DOWNLOAD</string>
+    <string name="txtViewNameStr">Имя</string>
+    <string name="txtViewNumberStr">Телефон</string>
+    <string name="no_number_string">Номер отсутствует</string>
+    <string name="contact_permissoin_str">Необходимо разрешить доступ к контактам</string>
+    <string name="contacts_no_loaded_str">Контакты не загрузились</string>
+    <string name="error_str">Что-то пошло не так</string>
+    <string name="result_ok_str">DONE</string>
+</resources>
