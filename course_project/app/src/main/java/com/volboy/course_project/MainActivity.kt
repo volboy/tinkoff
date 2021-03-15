@@ -6,6 +6,8 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.volboy.course_project.databinding.ActivityMainBinding
 import com.volboy.course_project.message_recycler_view.*
 import com.volboy.course_project.model.LoaderMessage
@@ -15,7 +17,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val longClickListener: (View) -> Boolean = {
-            Toast.makeText(this, "Wow", Toast.LENGTH_LONG).show()
+            val dialog = BottomSheetDialog(this)
+            dialog.setContentView(R.layout.bottom_emoji_dialog)
+            dialog.show()
+
             true
         }
         val holderFactory = MessageHolderFactory(longClickListener)
@@ -24,23 +29,23 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        binding.recyclerMessage.layoutManager = LinearLayoutManager(applicationContext)
+        binding.fragmentMessages.recyclerMessage.layoutManager = LinearLayoutManager(applicationContext)
         messageAdapter.items = loaderMessage.remoteMessage()
-        binding.recyclerMessage.adapter = messageAdapter
-        binding.recyclerMessage.scrollToPosition(messageAdapter.items.size - 1)
+        binding.fragmentMessages.recyclerMessage.adapter = messageAdapter
+        binding.fragmentMessages.recyclerMessage.scrollToPosition(messageAdapter.items.size - 1)
 
-        binding.messageBtn.setOnClickListener {
+        binding.fragmentMessages.messageBtn.setOnClickListener {
             loaderMessage.addMessage(getNewMessage())
             messageAdapter.items = loaderMessage.addMessage(getNewMessage())
             messageAdapter.notifyItemChanged(messageAdapter.items.size)
-            binding.recyclerMessage.scrollToPosition(messageAdapter.items.size-1)
+            binding.fragmentMessages.recyclerMessage.scrollToPosition(messageAdapter.items.size-1)
         }
 
-        binding.messageBox.setOnKeyListener(View.OnKeyListener { _, keyCode, event ->
-            if (binding.messageBox.text.isNotEmpty()) {
-                binding.messageBtn.setImageResource(R.drawable.ic_send_message)
+        binding.fragmentMessages.messageBox.setOnKeyListener(View.OnKeyListener { _, keyCode, event ->
+            if (binding.fragmentMessages.messageBox.text.isNotBlank()) {
+                binding.fragmentMessages.messageBtn.setImageResource(R.drawable.ic_send_message)
             } else {
-                binding.messageBtn.setImageResource(R.drawable.ic_add_message)
+                binding.fragmentMessages.messageBtn.setImageResource(R.drawable.ic_add_message)
             }
             if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
                 getNewMessage()
@@ -51,9 +56,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getNewMessage(): String? {
-        val newMessageText = binding.messageBox.text.toString()
+        val newMessageText = binding.fragmentMessages.messageBox.text.toString()
         return if (newMessageText.isNotEmpty()) {
-            binding.messageBox.text.clear()
+            binding.fragmentMessages.messageBox.text.clear()
+            binding.fragmentMessages.messageBtn.setImageResource(R.drawable.ic_add_message)
             newMessageText
         } else {
             null

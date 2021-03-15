@@ -1,62 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/app_background"
     tools:context=".MainActivity">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerMessage"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:paddingStart="10dp"
-        android:paddingTop="10dp"
-        android:paddingEnd="10dp"
-        android:paddingBottom="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/messageBox"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed"
-        tools:listitem="@layout/out_message_item"
-        android:background="@color/recycler_message_background"/>
+    <include
+        android:id="@+id/fragment_messages"
+        layout="@layout/fragment_messages" />
 
-    <EditText
-        android:id="@+id/messageBox"
-        android:layout_width="334dp"
-        android:minHeight="51dp"
-        android:layout_height="wrap_content"
-        android:maxHeight="102dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        android:background="@drawable/message_box_drw"
-        android:fadeScrollbars="true"
-        android:hint="@string/make_message_hint"
-        android:paddingLeft="21dp"
-        android:paddingRight="21dp"
-        android:singleLine="false"
-        android:textColor="@color/ev_text_color"
-        android:textColorHint="@color/ev_text_color"
-        android:textSize="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recyclerMessage" />
-
-    <ImageButton
-        android:id="@+id/messageBtn"
-        android:layout_width="39dp"
-        android:layout_height="39dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginEnd="16dp"
-        android:background="@drawable/message_button_drw"
-        android:src="@drawable/ic_add_message"
-        app:layout_constraintBottom_toBottomOf="@+id/messageBox"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/messageBox"
-        app:layout_constraintTop_toTopOf="@+id/messageBox" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>
