@@ -1,6 +1,8 @@
 package com.volboy.course_project
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.KeyEvent
 import android.view.View
 import android.widget.Toast
@@ -17,10 +19,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val longClickListener: (View) -> Boolean = {
-            val dialog = BottomSheetDialog(this)
-            dialog.setContentView(R.layout.bottom_emoji_dialog)
-            dialog.show()
-
+            EmojiBottomFragment().apply {
+                show(supportFragmentManager, EmojiBottomFragment.TAG)
+            }
             true
         }
         val holderFactory = MessageHolderFactory(longClickListener)
@@ -29,29 +30,27 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        binding.fragmentMessages.recyclerMessage.layoutManager = LinearLayoutManager(applicationContext)
+        binding.fragmentMessages.recyclerMessage.layoutManager =
+            LinearLayoutManager(applicationContext)
         messageAdapter.items = loaderMessage.remoteMessage()
         binding.fragmentMessages.recyclerMessage.adapter = messageAdapter
         binding.fragmentMessages.recyclerMessage.scrollToPosition(messageAdapter.items.size - 1)
 
         binding.fragmentMessages.messageBtn.setOnClickListener {
-            loaderMessage.addMessage(getNewMessage())
             messageAdapter.items = loaderMessage.addMessage(getNewMessage())
-            messageAdapter.notifyItemChanged(messageAdapter.items.size)
-            binding.fragmentMessages.recyclerMessage.scrollToPosition(messageAdapter.items.size-1)
+            binding.fragmentMessages.recyclerMessage.scrollToPosition(messageAdapter.items.size - 1)
         }
 
-        binding.fragmentMessages.messageBox.setOnKeyListener(View.OnKeyListener { _, keyCode, event ->
-            if (binding.fragmentMessages.messageBox.text.isNotBlank()) {
-                binding.fragmentMessages.messageBtn.setImageResource(R.drawable.ic_send_message)
-            } else {
-                binding.fragmentMessages.messageBtn.setImageResource(R.drawable.ic_add_message)
+        binding.fragmentMessages.messageBox.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {}
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if (binding.fragmentMessages.messageBox.text.isNotEmpty()) {
+                    binding.fragmentMessages.messageBtn.setImageResource(R.drawable.ic_send_message)
+                }
             }
-            if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-                getNewMessage()
-                return@OnKeyListener true
-            }
-            false
         })
     }
 

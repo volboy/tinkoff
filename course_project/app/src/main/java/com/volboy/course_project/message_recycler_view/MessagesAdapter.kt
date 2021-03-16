@@ -4,14 +4,11 @@ import androidx.recyclerview.widget.AsyncListDiffer
 
 class MessagesAdapter<T : ViewTyped>(holderFactory: HolderFactory) : BaseAdapter<T>(holderFactory) {
 
-    private val localItems: MutableList<T> =mutableListOf()
-    private val differ=AsyncListDiffer(this, MessageDiffUtilCallback())
+    private val differ = AsyncListDiffer(this, MessageDiffUtilCallback())
 
     override var items: List<T>
-        get() = localItems
+        get() = differ.currentList as List<T>
         set(newItems) {
-            localItems.clear()
-            localItems.addAll(newItems)
-            notifyDataSetChanged()
+            differ.submitList(newItems)
         }
 }
