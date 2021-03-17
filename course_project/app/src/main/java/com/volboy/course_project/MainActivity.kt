@@ -30,6 +30,7 @@ class MainActivity : AppCompatActivity(), EmojiBottomFragment.EmojiEventInterfac
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         binding.fragmentMessages.recyclerMessage.layoutManager =
             LinearLayoutManager(applicationContext)
 
