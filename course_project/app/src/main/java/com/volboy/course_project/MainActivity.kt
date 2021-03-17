@@ -32,8 +32,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         binding.fragmentMessages.recyclerMessage.layoutManager =
             LinearLayoutManager(applicationContext)
-        messageAdapter.items = loaderMessage.remoteMessage()
+
         binding.fragmentMessages.recyclerMessage.adapter = messageAdapter
+        messageAdapter.items = loaderMessage.remoteMessage()
         binding.fragmentMessages.recyclerMessage.scrollToPosition(messageAdapter.items.size - 1)
 
         binding.fragmentMessages.messageBtn.setOnClickListener {

@@ -6,10 +6,9 @@ import com.volboy.course_project.message_recycler_view.TextUi
 import com.volboy.course_project.message_recycler_view.ViewTyped
 
 class LoaderMessage() {
-    private var messages = mutableListOf<Message>()
     private var viewTypedList: MutableList<ViewTyped> = mutableListOf()
     fun remoteMessage(): List<ViewTyped> {
-        messages = mutableListOf(
+        val messages = mutableListOf(
             Message(1, "Alice Moore", "Привет", true, "12 Мар", null),
             Message(2, "You", "Привет", false, "12 Мар", null),
             Message(3, "Alice Moore", "Как дела?", true, "12 Мар", null),
@@ -20,7 +19,9 @@ class LoaderMessage() {
             Message(8, "You", "А у меня новый самолет", false, "14 Мар", null)
         )
 
-        return convertMessage(messages)
+        viewTypedList = convertMessage(messages).toMutableList()
+
+        return viewTypedList
     }
 
     fun addMessage(newMessage: String?): List<ViewTyped> {
@@ -33,20 +34,21 @@ class LoaderMessage() {
     }
 
     private fun convertMessage(messages: MutableList<Message>): List<ViewTyped> {
-        val messageByDate = messages.groupBy { it.dateMessage }
-        return messageByDate.flatMap { (date, messages) ->
-            listOf(DataUi(date, R.layout.date_divider_item, date)) + parseMessages(messages)
+        val messageByDate: Map<String, List<Message>> = messages.groupBy { it.dateMessage }
+        return messageByDate.flatMap { (date, msg) ->
+            listOf(DataUi(date, R.layout.date_divider_item)) + parseMessages(msg)
         }
     }
 
     private fun parseMessages(messages: List<Message>): List<ViewTyped> {
+        val typedList = mutableListOf<ViewTyped>()
         messages.forEach { msg ->
             if (msg.inMessage) {
-                viewTypedList.add(TextUi(msg.sender, msg.textMessage, R.layout.in_message_item, msg.textMessage))
+                typedList.add(TextUi(msg.sender, msg.textMessage, R.layout.in_message_item, msg.textMessage))
             } else {
-                viewTypedList.add(TextUi(msg.sender, msg.textMessage, R.layout.out_message_item, msg.textMessage))
+                typedList.add(TextUi(msg.sender, msg.textMessage, R.layout.out_message_item, msg.textMessage))
             }
         }
-        return viewTypedList
+        return typedList
     }
 }
