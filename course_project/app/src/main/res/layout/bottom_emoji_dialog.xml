@@ -6,10 +6,13 @@
     android:orientation="vertical">
 
     <androidx.recyclerview.widget.RecyclerView
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:paddingTop="40dp"
+        android:background="@color/ev_unselected"
         android:id="@+id/recyclerEmoji"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="346dp"
         app:spanCount="7"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager" />
-
 </FrameLayout>

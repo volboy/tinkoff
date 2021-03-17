@@ -1,9 +1,11 @@
-package com.volboy.course_project.message_recycler_view
+package com.volboy.course_project.emoji_recycler_view
 
 import android.view.View
 import com.volboy.course_project.R
+import com.volboy.course_project.message_recycler_view.BaseViewHolder
+import com.volboy.course_project.message_recycler_view.HolderFactory
 
-class EmojjiHolderFactory(private val click: (View) -> Unit) : HolderFactory() {
+class EmojiHolderFactory(private val click: (View) -> Unit) : HolderFactory() {
     override fun createViewHolder(view: View, viewType: Int): BaseViewHolder<*>? {
         return when (viewType) {
             R.layout.emoji_dialog_item -> EmojiViewHolder(view, click)

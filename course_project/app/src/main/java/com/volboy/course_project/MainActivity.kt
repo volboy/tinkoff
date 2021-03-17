@@ -14,7 +14,7 @@ import com.volboy.course_project.databinding.ActivityMainBinding
 import com.volboy.course_project.message_recycler_view.*
 import com.volboy.course_project.model.LoaderMessage
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), EmojiBottomFragment.EmojiEventInterface {
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,5 +64,9 @@ class MainActivity : AppCompatActivity() {
         } else {
             null
         }
+    }
+
+    override fun emojiClickListener(emoji: String) {
+        Toast.makeText(this, emoji, Toast.LENGTH_SHORT).show()
     }
 }
