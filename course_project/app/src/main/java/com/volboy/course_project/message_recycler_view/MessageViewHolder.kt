@@ -17,8 +17,7 @@ class MessageViewHolder(view: View, click: (View) -> Boolean) : BaseViewHolder<T
     private val title: TextView = view.findViewById(R.id.header)
     private val message: TextView = view.findViewById(R.id.message)
     private val flexBoxLayout: FlexBoxLayout = view.findViewById(R.id.flex_box_layout)
-    private val emojiView: EmojiView = EmojiView(view.context)
-
+    private val emojiView: EmojiView = EmojiView(flexBoxLayout.context)
 
     init {
         view.setOnLongClickListener(click)
@@ -29,7 +28,8 @@ class MessageViewHolder(view: View, click: (View) -> Boolean) : BaseViewHolder<T
         message.text = item.message
         emojiView.emoji=""
         emojiView.text="343434"
-        //flexBoxLayout.addView(emojiView)
+
+
 
     }
 }
