@@ -17,19 +17,14 @@ class MessageViewHolder(view: View, click: (View) -> Boolean) : BaseViewHolder<T
     private val title: TextView = view.findViewById(R.id.header)
     private val message: TextView = view.findViewById(R.id.message)
     private val flexBoxLayout: FlexBoxLayout = view.findViewById(R.id.flex_box_layout)
-    private val emojiView: EmojiView = EmojiView(flexBoxLayout.context)
 
     init {
         view.setOnLongClickListener(click)
+
     }
 
     override fun bind(item: TextUi) {
         title.text = item.title
         message.text = item.message
-        emojiView.emoji=""
-        emojiView.text="343434"
-
-
-
     }
 }

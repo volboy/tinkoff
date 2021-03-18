@@ -18,9 +18,7 @@ class LoaderMessage() {
             Message(7, "You", "Все хорошо", false, "14 Мар", null),
             Message(8, "You", "А у меня новый самолет", false, "14 Мар", null)
         )
-
         viewTypedList = convertMessage(messages).toMutableList()
-
         return viewTypedList
     }
 

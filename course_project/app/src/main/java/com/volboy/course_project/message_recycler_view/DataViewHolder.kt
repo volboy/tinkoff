@@ -7,7 +7,8 @@ import com.volboy.course_project.R
 class DataUi(
     val data: String,
     override val viewType: Int = R.layout.date_divider_item,
-    override val uid: String = "") : ViewTyped
+    override val uid: String = ""
+) : ViewTyped
 
 class DataViewHolder(view: View) : BaseViewHolder<DataUi>(view) {
     private val data: TextView = view.findViewById(R.id.date)

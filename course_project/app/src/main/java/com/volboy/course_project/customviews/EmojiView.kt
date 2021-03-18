@@ -27,7 +27,7 @@ class EmojiView @JvmOverloads constructor(
         color = getColor(resources, R.color.ev_unselected, null)
         style = Paint.Style.STROKE
     }
-    var textSize: Int
+    private var textSize: Int
         get() = emojiPaint.textSize.toInt()
         set(value) {
             if (emojiPaint.textSize.toInt() != value) {
@@ -35,14 +35,14 @@ class EmojiView @JvmOverloads constructor(
                 requestLayout()
             }
         }
-    var emoji: String = ""
+    private var emoji: String = ""
         set(value) {
             if (field != value) {
                 field = value
                 requestLayout()
             }
         }
-    var text: String = DEFAULT_COUNT_REACTIONS
+    private var text: String = DEFAULT_COUNT_REACTIONS
         set(value) {
             if (field != value) {
                 field = value
@@ -53,10 +53,10 @@ class EmojiView @JvmOverloads constructor(
     init {
         context.obtainStyledAttributes(attrs, R.styleable.EmojiView).apply {
             textSize = getDimensionPixelSize(R.styleable.EmojiView_ev_text_size, context.spToPx(DEFAULT_FONT_SIZE_PX))
-            var emojiString = getInteger(R.styleable.EmojiView_ev_emoji, DEFAULT_EMOJI_CODE)
+            var emojiCode = getInteger(R.styleable.EmojiView_ev_emoji, DEFAULT_EMOJI_CODE)
             text = getText(R.styleable.EmojiView_ev_text)?.toString() ?: DEFAULT_COUNT_REACTIONS
             if (text == "") text = DEFAULT_COUNT_REACTIONS
-            emoji = "$emojiString $text"
+            emoji = String(Character.toChars(emojiCode)) + " " + text
             recycle()
         }
     }

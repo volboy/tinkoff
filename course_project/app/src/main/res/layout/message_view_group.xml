@@ -38,6 +38,14 @@
     <com.volboy.course_project.customviews.FlexBoxLayout
         android:id="@+id/flex_box_layout"
         android:layout_width="@dimen/flexbox_width"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content">
+
+        <com.volboy.course_project.customviews.EmojiView
+            style="@style/EmojiViewStyle"
+            app:ev_emoji="0x1f601"
+            app:ev_text="1"
+            app:ev_text_size="14sp" />
+
+    </com.volboy.course_project.customviews.FlexBoxLayout>
 
 </merge>

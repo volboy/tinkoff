@@ -11,7 +11,6 @@ import com.volboy.course_project.databinding.ActivityMainBinding
 import com.volboy.course_project.message_recycler_view.*
 import com.volboy.course_project.model.LoaderMessage
 import com.volboy.course_project.model.Reaction
-import java.lang.StringBuilder
 
 class MainActivity : AppCompatActivity(), EmojiBottomFragment.EmojiEventInterface {
     private lateinit var binding: ActivityMainBinding
@@ -79,7 +78,7 @@ class MainActivity : AppCompatActivity(), EmojiBottomFragment.EmojiEventInterfac
                 r.count = r.count + 1
             }
         }
-        var iterator = reactions.listIterator()
+        val iterator = reactions.listIterator()
         while (iterator.hasNext()) {
             var item = iterator.next()
             if (item.count == 0) {
