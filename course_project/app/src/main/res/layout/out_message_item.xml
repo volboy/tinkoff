@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="10dp"
@@ -25,18 +24,15 @@
         android:paddingBottom="10dp"
         android:text="@string/message_str"
         android:textColor="@color/message_color"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:layout_marginBottom="10dp"/>
 
     <com.volboy.course_project.customviews.FlexBoxLayout
+        android:gravity="end"
         android:id="@+id/flex_box_layout"
         android:layout_width="@dimen/flexbox_width"
         android:layout_height="wrap_content">
 
-        <com.volboy.course_project.customviews.EmojiView
-            style="@style/EmojiViewStyle"
-            app:ev_emoji="0x1f601"
-            app:ev_text="1"
-            app:ev_text_size="14sp" />
     </com.volboy.course_project.customviews.FlexBoxLayout>
 
 </LinearLayout>

@@ -7,7 +7,6 @@
     <com.volboy.course_project.customviews.EmojiView
         android:id="@+id/lastEmojiView"
         style="@style/EmojiViewStyle"
-        android:onClick="clickEmojiiView"
         app:ev_text="+"
         app:ev_text_size="16sp"/>
 </merge>

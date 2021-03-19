@@ -35,14 +35,14 @@ class EmojiView @JvmOverloads constructor(
                 requestLayout()
             }
         }
-    private var emoji: String = ""
+    var emoji: String = ""
         set(value) {
             if (field != value) {
                 field = value
                 requestLayout()
             }
         }
-    private var text: String = DEFAULT_COUNT_REACTIONS
+    var text: String = DEFAULT_COUNT_REACTIONS
         set(value) {
             if (field != value) {
                 field = value
@@ -72,14 +72,14 @@ class EmojiView @JvmOverloads constructor(
         var mode = MeasureSpec.getMode(widthMeasureSpec)
         contentWidth = when (mode) {
             MeasureSpec.EXACTLY -> widthMeasureSpec
-            MeasureSpec.AT_MOST -> contentWidth
-            else -> contentWidth
+            MeasureSpec.AT_MOST -> context.dpToPx(45.0F)
+            else -> context.dpToPx(45.0F)
         }
         mode = MeasureSpec.getMode(heightMeasureSpec)
         contentHeight = when (mode) {
             MeasureSpec.EXACTLY -> heightMeasureSpec
-            MeasureSpec.AT_MOST -> contentHeight
-            else -> contentHeight
+            MeasureSpec.AT_MOST -> context.dpToPx(30.0F)
+            else -> context.dpToPx(30.0F)
         }
         setMeasuredDimension(contentWidth, contentHeight)
     }
@@ -105,14 +105,6 @@ class EmojiView @JvmOverloads constructor(
             mergeDrawableStates(drawableState, DRAWABLES_STATE)
         }
         return drawableState
-    }
-
-    override fun performClick(): Boolean {
-        isSelected = !isSelected
-        //можно ли было сделать так?
-        /*if (isSelected) mRoundRectPaint.color = getColor(resources, R.color.ev_selected, null) else
-            mRoundRectPaint.color = getColor(resources, R.color.ev_unselected, null)*/
-        return super.performClick()
     }
 
     companion object {
