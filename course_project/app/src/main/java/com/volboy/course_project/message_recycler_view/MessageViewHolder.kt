@@ -20,9 +20,13 @@ class TextUi(
 class MessageViewHolder(view: View, click: (View) -> Boolean) : BaseViewHolder<TextUi>(view) {
     private val title: TextView = view.findViewById(R.id.header)
     private val message: TextView = view.findViewById(R.id.message)
+    private var reactions= mutableListOf<Reaction>()
     private val flexBoxLayout: FlexBoxLayout = view.findViewById(R.id.flex_box_layout)
     private val emojiView = EmojiView(flexBoxLayout.context)
     private val context = flexBoxLayout.context
+    private val clickEmoji: (View) -> Unit = { view ->
+        view.isSelected = !view.isSelected
+    }
 
     init {
         view.setOnLongClickListener(click)
@@ -41,10 +45,10 @@ class MessageViewHolder(view: View, click: (View) -> Boolean) : BaseViewHolder<T
             item.reactions.forEach { reaction ->
                 emojiView.text = reaction.count.toString()
                 emojiView.emoji = reaction.emoji
+                emojiView.setOnClickListener(clickEmoji)
                 flexBoxLayout.addView(emojiView)
             }
         }
     }
-
-
 }
+

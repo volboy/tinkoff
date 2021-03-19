@@ -96,7 +96,7 @@ class MainActivity : AppCompatActivity(), EmojiBottomFragment.EmojiEventInterfac
         layoutParams.rightMargin = applicationContext.dpToPx(10F)
         layoutParams.bottomMargin = applicationContext.dpToPx(7F)
         emojiView.setPadding(applicationContext.dpToPx(9F),applicationContext.dpToPx(4.8F),applicationContext.dpToPx(9F), applicationContext.dpToPx(4.8F))
-        emojiView.text = "20"
+        emojiView.text = "1"
         emojiView.emoji = emoji
         emojiView.setBackgroundResource(R.drawable.emodji_view_state)
         emojiView.layoutParams = layoutParams
