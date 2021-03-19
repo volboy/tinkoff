@@ -15,6 +15,7 @@ class EmojiView @JvmOverloads constructor(
     defStyleAttr: Int = 0,
     defStyleRes: Int = 0
 ) : View(context, attrs, defStyleAttr, defStyleRes) {
+    private var resultText = ""
     private var emojiPoint = PointF()
     private var mRoundRectPoint = RectF()
     private var radiusRect = 0.0f
@@ -35,14 +36,14 @@ class EmojiView @JvmOverloads constructor(
                 requestLayout()
             }
         }
-    var emoji: String = ""
+    var emoji: String = DEFAULT_EMOJI_CODE.toString()
         set(value) {
             if (field != value) {
                 field = value
                 requestLayout()
             }
         }
-    var text: String = DEFAULT_COUNT_REACTIONS
+    var text: String = DEFAULT_TEXT
         set(value) {
             if (field != value) {
                 field = value
@@ -54,15 +55,20 @@ class EmojiView @JvmOverloads constructor(
         context.obtainStyledAttributes(attrs, R.styleable.EmojiView).apply {
             textSize = getDimensionPixelSize(R.styleable.EmojiView_ev_text_size, context.spToPx(DEFAULT_FONT_SIZE_PX))
             var emojiCode = getInteger(R.styleable.EmojiView_ev_emoji, DEFAULT_EMOJI_CODE)
-            text = getText(R.styleable.EmojiView_ev_text)?.toString() ?: DEFAULT_COUNT_REACTIONS
-            if (text == "") text = DEFAULT_COUNT_REACTIONS
-            emoji = String(Character.toChars(emojiCode)) + " " + text
+            text = getText(R.styleable.EmojiView_ev_text)?.toString() ?: DEFAULT_TEXT
+            if (text == "") text = DEFAULT_TEXT
+            emoji = String(Character.toChars(emojiCode))
             recycle()
         }
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        emojiPaint.getTextBounds(emoji, 0, emoji.length, emojiBounds)
+        resultText = if (emoji == String(Character.toChars(0))) {
+            text
+        } else {
+            "$emoji $text"
+        }
+        emojiPaint.getTextBounds(resultText, 0, resultText.length, emojiBounds)
         val emojiWidth = emojiBounds.width()
         val emojiHeight = emojiBounds.height()
         val mRoundRectWidth = emojiWidth + paddingLeft + paddingRight + context.dpToPx(PADDINGS_LEFT_AND_RIGHT)
@@ -72,14 +78,14 @@ class EmojiView @JvmOverloads constructor(
         var mode = MeasureSpec.getMode(widthMeasureSpec)
         contentWidth = when (mode) {
             MeasureSpec.EXACTLY -> widthMeasureSpec
-            MeasureSpec.AT_MOST -> context.dpToPx(45.0F)
-            else -> context.dpToPx(45.0F)
+            MeasureSpec.AT_MOST -> contentWidth
+            else -> contentWidth
         }
         mode = MeasureSpec.getMode(heightMeasureSpec)
         contentHeight = when (mode) {
             MeasureSpec.EXACTLY -> heightMeasureSpec
-            MeasureSpec.AT_MOST -> context.dpToPx(30.0F)
-            else -> context.dpToPx(30.0F)
+            MeasureSpec.AT_MOST -> contentHeight
+            else -> contentHeight
         }
         setMeasuredDimension(contentWidth, contentHeight)
     }
@@ -95,7 +101,7 @@ class EmojiView @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas) {
         val canvasCount = canvas.save()
         canvas.drawRoundRect(mRoundRectPoint, radiusRect, radiusRect, mRoundRectPaint)
-        canvas.drawText(emoji, emojiPoint.x, emojiPoint.y, emojiPaint)
+        canvas.drawText(resultText, emojiPoint.x, emojiPoint.y, emojiPaint)
         canvas.restoreToCount(canvasCount)
     }
 
@@ -110,7 +116,7 @@ class EmojiView @JvmOverloads constructor(
     companion object {
         private const val DEFAULT_FONT_SIZE_PX = 14F
         private const val DEFAULT_EMOJI_CODE = 0
-        private const val DEFAULT_COUNT_REACTIONS = "0"
+        private const val DEFAULT_TEXT = ""
         private const val RADIUS_RECT = 10.0F
         private const val PADDINGS_LEFT_AND_RIGHT = 18.0F
         private const val PADDINGS_TOP_AND_BOTTOM = 9.6F

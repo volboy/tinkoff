@@ -28,7 +28,6 @@
         android:layout_marginBottom="10dp"/>
 
     <com.volboy.course_project.customviews.FlexBoxLayout
-        android:gravity="end"
         android:id="@+id/flex_box_layout"
         android:layout_width="@dimen/flexbox_width"
         android:layout_height="wrap_content">

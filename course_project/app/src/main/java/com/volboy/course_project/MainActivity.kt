@@ -4,9 +4,12 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.widget.Toast
+import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.volboy.course_project.customviews.EmojiView
+import com.volboy.course_project.customviews.FlexBoxLayout
+import com.volboy.course_project.customviews.dpToPx
 import com.volboy.course_project.databinding.ActivityMainBinding
 import com.volboy.course_project.message_recycler_view.*
 import com.volboy.course_project.model.LoaderMessage
@@ -14,13 +17,15 @@ import com.volboy.course_project.model.Reaction
 
 class MainActivity : AppCompatActivity(), EmojiBottomFragment.EmojiEventInterface {
     private lateinit var binding: ActivityMainBinding
-    private lateinit var reactions: MutableList<Reaction>
+    private lateinit var reactionsOfMessage: MutableList<Reaction>
+    private lateinit var itemFromMessages: View
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val emj = String(Character.toChars(0x1F60E))
-        reactions = mutableListOf(Reaction(emj, "You", 1))
+        reactionsOfMessage = mutableListOf(Reaction(emj, "You", 1))
 
-        val longClickListener: (View) -> Boolean = {
+        val longClickListener: (View) -> Boolean = { view ->
+            itemFromMessages=view
             EmojiBottomFragment().apply {
                 show(supportFragmentManager, EmojiBottomFragment.TAG)
             }
@@ -65,9 +70,9 @@ class MainActivity : AppCompatActivity(), EmojiBottomFragment.EmojiEventInterfac
     }
 
     override fun emojiClickListener(emoji: String) {
-        var r = reactions.firstOrNull { it.emoji == emoji }
+        var r = reactionsOfMessage.firstOrNull { it.emoji == emoji }
         if (r == null) {
-            reactions.add(Reaction(emoji, "You", 1))
+            reactionsOfMessage.add(Reaction(emoji, "You", 1))
         } else {
             if (r.usersId == "You") {
                 r.count = r.count - 1
@@ -78,14 +83,24 @@ class MainActivity : AppCompatActivity(), EmojiBottomFragment.EmojiEventInterfac
                 r.count = r.count + 1
             }
         }
-        val iterator = reactions.listIterator()
+        val iterator = reactionsOfMessage.listIterator()
         while (iterator.hasNext()) {
             var item = iterator.next()
             if (item.count == 0) {
                 iterator.remove()
             }
         }
-        Toast.makeText(this, reactions.toString(), Toast.LENGTH_LONG).show()
+        val flexBoxLayout: FlexBoxLayout = itemFromMessages.findViewById(R.id.flex_box_layout)
+        val emojiView = EmojiView(flexBoxLayout.context)
+        val layoutParams = FrameLayout.LayoutParams(applicationContext.dpToPx(45F), applicationContext.dpToPx(30F))
+        layoutParams.rightMargin = applicationContext.dpToPx(10F)
+        layoutParams.bottomMargin = applicationContext.dpToPx(7F)
+        emojiView.setPadding(applicationContext.dpToPx(9F),applicationContext.dpToPx(4.8F),applicationContext.dpToPx(9F), applicationContext.dpToPx(4.8F))
+        emojiView.text = "20"
+        emojiView.emoji = emoji
+        emojiView.setBackgroundResource(R.drawable.emodji_view_state)
+        emojiView.layoutParams = layoutParams
+        flexBoxLayout.addView(emojiView)
     }
 }
 

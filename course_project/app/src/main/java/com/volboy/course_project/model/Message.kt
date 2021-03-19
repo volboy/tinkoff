@@ -6,5 +6,5 @@ class Message(
     val textMessage: String,
     val inMessage: Boolean,
     val dateMessage: String,
-    val reactions: List<Reaction>?
+    val reactions: MutableList<Reaction>?
 )
