@@ -17,4 +17,5 @@
     <color name="date_divider_color">#070707</color>
     <color name="date_divider_text_color">#999999</color>
     <color name="message_box_color">#282828</color>
+    <color name="icon_bottom_menu_color">#919191</color>
 </resources>

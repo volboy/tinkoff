@@ -1,4 +1,4 @@
-package com.volboy.course_project
+package com.volboy.course_project.ui
 
 import android.content.Context
 import android.os.Bundle
@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.volboy.course_project.R
 import com.volboy.course_project.databinding.BottomEmojiDialogBinding
 import com.volboy.course_project.emoji_recycler_view.EmojiAdapter
 import com.volboy.course_project.emoji_recycler_view.EmojiUi
