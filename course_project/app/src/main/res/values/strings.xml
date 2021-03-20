@@ -5,4 +5,6 @@
     <string name="simple_header_str">Имя Фамилия</string>
     <string name="date_divider_str">1 Фев</string>
     <string name="make_message_hint">Написать</string>
+    <string name="tab_channels_1">Subscribed</string>
+    <string name="tab_channels_2">All streams</string>
 </resources>

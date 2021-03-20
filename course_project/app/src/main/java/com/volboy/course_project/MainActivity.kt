@@ -1,23 +1,11 @@
 package com.volboy.course_project
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.view.View
-import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.volboy.course_project.R.id
-import com.volboy.course_project.customviews.EmojiView
-import com.volboy.course_project.customviews.FlexBoxLayout
-import com.volboy.course_project.customviews.dpToPx
 import com.volboy.course_project.databinding.ActivityMainBinding
-import com.volboy.course_project.message_recycler_view.*
-import com.volboy.course_project.model.LoaderMessage
-import com.volboy.course_project.model.Reaction
-import com.volboy.course_project.ui.ChannelsFragment
-import com.volboy.course_project.ui.EmojiBottomFragment
+import com.volboy.course_project.ui.channel_fragment.ChannelsFragment
 import com.volboy.course_project.ui.PeopleFragment
 import com.volboy.course_project.ui.ProfileFragment
 
