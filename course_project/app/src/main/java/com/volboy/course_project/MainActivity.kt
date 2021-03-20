@@ -8,6 +8,7 @@ import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.volboy.course_project.R.id
 import com.volboy.course_project.customviews.EmojiView
 import com.volboy.course_project.customviews.FlexBoxLayout
 import com.volboy.course_project.customviews.dpToPx
@@ -30,13 +31,21 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         replaceFragment(channelsFragment)
+        binding.bottomNavigation.setOnNavigationItemSelectedListener {
+            when(it.itemId){
+                id.channels -> replaceFragment(channelsFragment)
+                id.people -> replaceFragment(peopleFragment)
+                id.profile -> replaceFragment(profileFragment)
+            }
+            true
+        }
         setContentView(binding.root)
     }
 
     private fun replaceFragment(fragment: Fragment) {
         if (fragment != null) {
             val transaction = supportFragmentManager.beginTransaction()
-            transaction.replace(R.id.fragment_container, fragment)
+            transaction.replace(id.fragment_container, fragment)
             transaction.commit()
         }
     }
