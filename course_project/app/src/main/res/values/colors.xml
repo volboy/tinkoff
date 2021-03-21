@@ -11,6 +11,9 @@
     <color name="ev_unselected">#1C1C1C</color>
     <color name="ev_text_color">#CCCCCC</color>
     <color name="header_color">#2A9D8F</color>
+    <color name="expand_item_color_one">#2A9D8F</color>
+    <color name="expand_item_color_two">#E9C46A</color>
+    <color name="tab_indicator_color">#219653</color>
     <color name="message_color">#FAFAFA</color>
     <color name="app_background">#1E1E1E</color>
     <color name="recycler_message_background">#121212</color>

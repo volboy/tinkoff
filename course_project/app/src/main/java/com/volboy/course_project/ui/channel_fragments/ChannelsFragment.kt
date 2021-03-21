@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayoutMediator
+import com.volboy.course_project.R
 import com.volboy.course_project.databinding.FragmentChannelsBinding
 
 class ChannelsFragment : Fragment() {
@@ -27,8 +28,8 @@ class ChannelsFragment : Fragment() {
         viewPager.adapter = viewPagerAdapter
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             when (position) {
-                0 -> tab.text = "Subscribe"
-                1 -> tab.text = "All streams"
+                0 -> tab.text = resources.getString(R.string.tab_channels_1)
+                1 -> tab.text = resources.getString(R.string.tab_channels_2)
             }
         }.attach()
     }

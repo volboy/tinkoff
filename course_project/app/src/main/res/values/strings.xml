@@ -7,4 +7,7 @@
     <string name="make_message_hint">Написать</string>
     <string name="tab_channels_1">Subscribed</string>
     <string name="tab_channels_2">All streams</string>
+    <string name="stream_str">#stream</string>
+    <string name="messageCount">" mes"</string>
+    <string name="stream_name">Testing</string>
 </resources>

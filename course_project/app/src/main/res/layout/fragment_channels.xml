@@ -1,12 +1,19 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabs"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:background="@color/app_background"
+        app:tabTextColor="@color/message_color"
+        app:tabSelectedTextColor="@color/message_color"
+        app:tabIndicatorColor="@color/tab_indicator_color"
+        app:tabIndicatorFullWidth="false"
+        app:tabTextAppearance="@style/CustomTabText"/>
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPager"
