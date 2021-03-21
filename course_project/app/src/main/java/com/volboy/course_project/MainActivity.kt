@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.volboy.course_project.R.id
 import com.volboy.course_project.databinding.ActivityMainBinding
-import com.volboy.course_project.ui.channel_fragment.ChannelsFragment
+import com.volboy.course_project.ui.channel_fragments.ChannelsFragment
 import com.volboy.course_project.ui.PeopleFragment
 import com.volboy.course_project.ui.ProfileFragment
 
