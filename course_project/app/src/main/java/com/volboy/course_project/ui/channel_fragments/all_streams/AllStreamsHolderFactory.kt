@@ -14,6 +14,6 @@ class AllStreamsHolderFactory(private val channelsInterface: ChannelsInterface) 
         }
     }
     interface ChannelsInterface{
-        fun getClickedView(view:View, position: Int)
+        fun getClickedView(view:View, position: Int, viewType:Int)
     }
 }

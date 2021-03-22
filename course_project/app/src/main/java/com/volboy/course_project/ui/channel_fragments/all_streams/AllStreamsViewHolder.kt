@@ -23,7 +23,7 @@ class AllStreamsViewHolder(val view: View, private val channelsInterface: AllStr
 
     override fun bind(item: TitleUi) {
         view.setOnClickListener {
-            channelsInterface.getClickedView(view, layoutPosition)
+            channelsInterface.getClickedView(view, adapterPosition, item.viewType)
         }
         title.text = item.title
         count.text = item.count.toString()

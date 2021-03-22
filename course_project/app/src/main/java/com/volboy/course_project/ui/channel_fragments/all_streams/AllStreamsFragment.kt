@@ -52,7 +52,7 @@ class AllStreamsFragment : Fragment(), AllStreamsHolderFactory.ChannelsInterface
 
     }
 
-    override fun getClickedView(view: View, position: Int) {
+    override fun getClickedView(view: View, position: Int, viewType:Int) {
         TODO("Not yet implemented")
     }
 }
