@@ -15,18 +15,21 @@ class TitleUi(
     override val uid: String = ""
 ) : ViewTyped
 
-class AllStreamsViewHolder(view: View, click: (View) -> Unit) : BaseViewHolder<TitleUi>(view) {
+class AllStreamsViewHolder(val view: View, private val channelsInterface: AllStreamsHolderFactory.ChannelsInterface) :
+    BaseViewHolder<TitleUi>(view) {
     private val title: TextView = view.findViewById(R.id.streamText)
-    private val count: TextView=view.findViewById(R.id.messagesCount)
+    private val count: TextView = view.findViewById(R.id.messagesCount)
     private val image: ImageView = view.findViewById(R.id.streamImage)
 
-    init {
-        view.setOnClickListener(click)
-    }
-
     override fun bind(item: TitleUi) {
+        view.setOnClickListener {
+            channelsInterface.getClickedView(view, layoutPosition)
+        }
         title.text = item.title
-        count.text=item.count.toString()
-        item.imageId?.let { image.setImageResource(it) }
+        count.text = item.count.toString()
+        item.imageId?.let {
+            image.setImageResource(it)
+        }
     }
 }
+

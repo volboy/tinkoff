@@ -1,5 +1,6 @@
 package com.volboy.course_project.message_recycler_view
 
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 

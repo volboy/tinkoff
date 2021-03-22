@@ -14,7 +14,7 @@ import com.volboy.course_project.message_recycler_view.TextUi
 import com.volboy.course_project.message_recycler_view.ViewTyped
 import java.io.Serializable
 
-class AllStreamsFragment : Fragment() {
+class AllStreamsFragment : Fragment(), AllStreamsHolderFactory.ChannelsInterface {
     private lateinit var binding: FragmentAllStreamsBinding
     private var typedList = mutableListOf<ViewTyped>()
     private var listStreams = mutableListOf<Serializable>()
@@ -45,10 +45,14 @@ class AllStreamsFragment : Fragment() {
                 }
             }
         }
-        val holderFactory = AllStreamsHolderFactory(clickListener)
+        val holderFactory = AllStreamsHolderFactory(this)
         val commonAdapter = CommonAdapter<ViewTyped>(holderFactory)
         commonAdapter.items = typedList
         binding.rwAllStreams.adapter = commonAdapter
 
+    }
+
+    override fun getClickedView(view: View, position: Int) {
+        TODO("Not yet implemented")
     }
 }

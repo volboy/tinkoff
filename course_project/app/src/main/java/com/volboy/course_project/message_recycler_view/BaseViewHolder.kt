@@ -8,4 +8,5 @@ open class BaseViewHolder<T : ViewTyped>(private val containerView: View) : Recy
     open fun bind(item: T) = Unit
 
     open fun bind(item: T, payload: List<Any>) = Unit
+
 }

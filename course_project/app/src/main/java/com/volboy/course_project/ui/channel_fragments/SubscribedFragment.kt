@@ -10,64 +10,40 @@ import com.volboy.course_project.R
 import com.volboy.course_project.databinding.FragmentSubscribedBinding
 import com.volboy.course_project.message_recycler_view.CommonAdapter
 import com.volboy.course_project.message_recycler_view.ViewTyped
+import com.volboy.course_project.model.LoaderStreams
 import com.volboy.course_project.ui.channel_fragments.all_streams.AllStreamsHolderFactory
 import com.volboy.course_project.ui.channel_fragments.all_streams.TitleUi
 import java.io.Serializable
 
-class SubscribedFragment : Fragment() {
-    private var typedList = mutableListOf<ViewTyped>()
-    private var listStreams = mutableListOf<Serializable>()
-    private var selectedItem = false
+class SubscribedFragment : Fragment(), AllStreamsHolderFactory.ChannelsInterface {
+    private var loaderStreams = LoaderStreams()
     private lateinit var binding: FragmentSubscribedBinding
-    private lateinit var clickListener: (View) -> Unit
+    private lateinit var commonAdapter: CommonAdapter<ViewTyped>
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentSubscribedBinding.inflate(inflater, container, false)
-        listStreams = mutableListOf("#general", Pair("Testing", 1240), "#Desing", "#PR")
-        getStreams()
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        clickListener = { view ->
-            val streamMessage = view.findViewById<ImageView>(R.id.streamImage)
-            view.isSelected = !view.isSelected
-            selectedItem = view.isSelected
-            if (selectedItem) {
-                streamMessage.setImageResource(R.drawable.ic_arrow_up)
-            } else {
-                streamMessage.setImageResource(R.drawable.ic_arrow_down)
-            }
-            getStreams()
-            binding.rwAllStreams.adapter?.notifyDataSetChanged()
-
-        }
-        val holderFactory = AllStreamsHolderFactory(clickListener)
-        val commonAdapter = CommonAdapter<ViewTyped>(holderFactory)
-        commonAdapter.items = typedList
+        val listStreams = loaderStreams.convertStreams(0, false)
+        val holderFactory = AllStreamsHolderFactory(this)
+        commonAdapter = CommonAdapter<ViewTyped>(holderFactory)
         binding.rwAllStreams.adapter = commonAdapter
+        commonAdapter.items = listStreams
+
     }
 
-    private fun getStreams() {
-        typedList.clear()
-        if (selectedItem) {
-            listStreams.forEach { item ->
-                if (item is Pair<*, *>) {
-                    typedList.add(
-                        TitleUi(
-                            item.first.toString(), item.second.toString() + " mes", null,
-                            R.layout.expand_item, item.first.toString()
-                        )
-                    )
-                } else {
-                    typedList.add(TitleUi(item.toString(), null, R.drawable.ic_arrow_down, R.layout.collapse_item, item.toString()))
-                }
-            }
+    override fun getClickedView(view: View, position: Int) {
+        view.isSelected = !view.isSelected
+        commonAdapter.items = loaderStreams.convertStreams(position, view.isSelected)
+        binding.rwAllStreams.adapter = commonAdapter
+        val streamMessage = view.findViewById<ImageView>(R.id.streamImage)
+        if (view.isSelected) {
+            streamMessage.setImageResource(R.drawable.ic_arrow_up)
         } else {
-            listStreams.forEach { item ->
-                if (item !is Pair<*, *>) {
-                    typedList.add(TitleUi(item.toString(), null, R.drawable.ic_arrow_down, R.layout.collapse_item, item.toString()))
-                }
-            }
+            streamMessage.setImageResource(R.drawable.ic_arrow_down)
         }
     }
 }
+
