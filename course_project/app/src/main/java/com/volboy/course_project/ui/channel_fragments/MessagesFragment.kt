@@ -31,9 +31,8 @@ class MessagesFragment : Fragment(), EmojiBottomFragment.EmojiEventInterface {
         reactionsOfMessage = mutableListOf(Reaction(emj, "You", 1))
         val longClickListener: (View) -> Boolean = { view ->
             itemFromMessages = view
-            EmojiBottomFragment().apply {
-                fragmentManager?.let { show(it, EmojiBottomFragment.TAG) }
-            }
+            val emojiBottomFragment=EmojiBottomFragment()
+            emojiBottomFragment.show(parentFragmentManager, emojiBottomFragment.tag)
             true
         }
         val holderFactory = MessageHolderFactory(longClickListener)
@@ -102,7 +101,7 @@ class MessagesFragment : Fragment(), EmojiBottomFragment.EmojiEventInterface {
         )
         emojiView.text = "20"
         emojiView.emoji = emoji
-        emojiView.setBackgroundResource(R.drawable.emodji_view_state)
+        emojiView.setBackgroundResource(R.drawable.emoji_view_state)
         emojiView.layoutParams = layoutParams
         flexBoxLayout.addView(emojiView)
     }

@@ -23,7 +23,7 @@
         <item name="android:paddingBottom">4.8dp</item>
         <item name="android:layout_marginRight">10dp</item>
         <item name="android:layout_marginBottom">7dp</item>
-        <item name="android:background">@drawable/emodji_view_state</item>
+        <item name="android:background">@drawable/emoji_view_state</item>
     </style>
 
     <style name="CustomTabText" parent="@android:style/TextAppearance.Widget.TabWidget">

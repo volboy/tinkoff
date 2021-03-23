@@ -34,7 +34,7 @@ class MessageViewHolder(view: View, click: (View) -> Boolean) : BaseViewHolder<T
         layoutParams.rightMargin = context.dpToPx(10F)
         layoutParams.bottomMargin = context.dpToPx(7F)
         emojiView.setPadding(context.dpToPx(9F), context.dpToPx(4.8F), context.dpToPx(9F), context.dpToPx(4.8F))
-        emojiView.setBackgroundResource(R.drawable.emodji_view_state)
+        emojiView.setBackgroundResource(R.drawable.emoji_view_state)
         emojiView.layoutParams = layoutParams
     }
 

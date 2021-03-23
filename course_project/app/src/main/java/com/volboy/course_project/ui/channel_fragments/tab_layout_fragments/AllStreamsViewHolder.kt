@@ -15,7 +15,7 @@ class TitleUi(
     override val uid: String = ""
 ) : ViewTyped
 
-class AllStreamsViewHolder(val view: View, private val channelsInterface: AllStreamsHolderFactory.ChannelsInterface) :
+class AllStreamsViewHolder(val view: View, private val channelsInterface: uiHolderFactory.ChannelsInterface) :
     BaseViewHolder<TitleUi>(view) {
     private val title: TextView = view.findViewById(R.id.streamText)
     private val count: TextView = view.findViewById(R.id.messagesCount)
