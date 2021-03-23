@@ -10,4 +10,8 @@
     <string name="stream_str">#stream</string>
     <string name="messageCount">" mes"</string>
     <string name="stream_name">Testing</string>
+    <string name="topic_name">Topic: #testing</string>
+    <string name="status_str">In a meeting</string>
+    <string name="status_mode">online</string>
+    <string name="email_str">darell@company.com</string>
 </resources>

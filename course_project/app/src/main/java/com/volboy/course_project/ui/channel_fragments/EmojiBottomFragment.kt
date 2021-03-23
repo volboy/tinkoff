@@ -1,4 +1,4 @@
-package com.volboy.course_project.ui
+package com.volboy.course_project.ui.channel_fragments
 
 import android.content.Context
 import android.os.Bundle

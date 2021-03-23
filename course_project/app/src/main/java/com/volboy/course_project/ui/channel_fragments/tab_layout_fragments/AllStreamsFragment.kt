@@ -1,4 +1,4 @@
-package com.volboy.course_project.ui.channel_fragments.all_streams
+package com.volboy.course_project.ui.channel_fragments.tab_layout_fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,9 +8,7 @@ import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import com.volboy.course_project.R
 import com.volboy.course_project.databinding.FragmentAllStreamsBinding
-import com.volboy.course_project.message_recycler_view.MessageHolderFactory
 import com.volboy.course_project.message_recycler_view.CommonAdapter
-import com.volboy.course_project.message_recycler_view.TextUi
 import com.volboy.course_project.message_recycler_view.ViewTyped
 import java.io.Serializable
 

@@ -2,8 +2,7 @@ package com.volboy.course_project.model
 
 import com.volboy.course_project.R
 import com.volboy.course_project.message_recycler_view.ViewTyped
-import com.volboy.course_project.ui.channel_fragments.all_streams.TitleUi
-import java.io.Serializable
+import com.volboy.course_project.ui.channel_fragments.tab_layout_fragments.TitleUi
 
 class LoaderStreams {
     private lateinit var listStreams: MutableList<Stream>

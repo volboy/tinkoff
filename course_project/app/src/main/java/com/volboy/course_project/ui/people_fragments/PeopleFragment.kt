@@ -1,4 +1,4 @@
-package com.volboy.course_project.ui
+package com.volboy.course_project.ui.people_fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater

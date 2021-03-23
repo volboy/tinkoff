@@ -1,21 +1,16 @@
-package com.volboy.course_project.ui.channel_fragments
+package com.volboy.course_project.ui.channel_fragments.tab_layout_fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import com.volboy.course_project.R
 import com.volboy.course_project.databinding.FragmentSubscribedBinding
 import com.volboy.course_project.message_recycler_view.CommonAdapter
-import com.volboy.course_project.message_recycler_view.CommonDiffUtilCallback
 import com.volboy.course_project.message_recycler_view.ViewTyped
 import com.volboy.course_project.model.LoaderStreams
-import com.volboy.course_project.ui.channel_fragments.all_streams.AllStreamsHolderFactory
-import com.volboy.course_project.ui.channel_fragments.all_streams.TitleUi
-import java.io.Serializable
-import java.net.MalformedURLException
+import com.volboy.course_project.ui.channel_fragments.MessagesFragment
 
 class SubscribedFragment : Fragment(), AllStreamsHolderFactory.ChannelsInterface {
     private var loaderStreams = LoaderStreams()
@@ -44,9 +39,15 @@ class SubscribedFragment : Fragment(), AllStreamsHolderFactory.ChannelsInterface
                 commonAdapter.notifyDataSetChanged()
             }
             R.layout.expand_item -> {
-
+                var messagesFragment = MessagesFragment()
+                val transaction = requireActivity().supportFragmentManager.beginTransaction()
+                transaction.addToBackStack("FromViewPager")
+                transaction.add(R.id.container, messagesFragment)
+                transaction.commit()
             }
         }
+
     }
 }
+
 

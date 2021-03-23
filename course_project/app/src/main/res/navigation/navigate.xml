@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/navigate"
+    app:startDestination="@id/mainFragment">
+
+    <fragment
+        android:id="@+id/messagesFragment"
+        android:name="com.volboy.course_project.ui.channel_fragments.MessagesFragment"
+        android:label="MessagesFragment" />
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.volboy.course_project.ui.MainFragment"
+        android:label="MainFragment" />
+    <fragment
+        android:id="@+id/subscribedFragment2"
+        android:name="com.volboy.course_project.ui.channel_fragments.tab_layout_fragments.SubscribedFragment"
+        android:label="SubscribedFragment" >
+        <action
+            android:id="@+id/action_subscribedFragment2_to_messagesFragment"
+            app:destination="@id/messagesFragment" />
+    </fragment>
+</navigation>

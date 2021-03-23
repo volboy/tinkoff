@@ -1,4 +1,4 @@
-package com.volboy.course_project.ui.channel_fragments.all_streams
+package com.volboy.course_project.ui.channel_fragments.tab_layout_fragments
 
 import android.view.View
 import android.widget.ImageView
