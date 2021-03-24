@@ -4,9 +4,12 @@ import com.volboy.course_project.R
 import com.volboy.course_project.message_recycler_view.DataUi
 import com.volboy.course_project.message_recycler_view.TextUi
 import com.volboy.course_project.message_recycler_view.ViewTyped
+import io.reactivex.Flowable
+import org.reactivestreams.Publisher
 
 class LoaderMessage() {
     private var viewTypedList: MutableList<ViewTyped> = mutableListOf()
+
     fun remoteMessage(): List<ViewTyped> {
         val emoji1 = String(Character.toChars(0x1F60C))
         val emoji2 = String(Character.toChars(0x1F60F))
@@ -20,6 +23,11 @@ class LoaderMessage() {
             Message(7, "You", "Все хорошо", false, "14 Мар", null),
             Message(8, "You", "А у меня новый самолет", false, "14 Мар", null)
         )
+        val observable: Flowable<Message> = Flowable.fromIterable(messages)
+        observable
+            .groupBy {msg -> msg.dateMessage }
+            //.flatMap {msg -> }
+
         viewTypedList = convertMessage(messages).toMutableList()
         return viewTypedList
     }

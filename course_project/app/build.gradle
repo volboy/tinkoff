@@ -45,4 +45,5 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$viewmodel_version"
     implementation 'androidx.navigation:navigation-fragment-ktx:2.3.3'
     implementation 'androidx.navigation:navigation-ui-ktx:2.3.3'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.21'
 }
