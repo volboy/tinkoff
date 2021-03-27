@@ -1,5 +1,6 @@
 package com.volboy.course_project.message_recycler_view
 
+import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.TextView
@@ -39,6 +40,7 @@ class MessageViewHolder(view: View, click: (View) -> Boolean) : BaseViewHolder<T
     }
 
     override fun bind(item: TextUi) {
+        Log.i("MyMes", adapterPosition.toString())
         title.text = item.title
         message.text = item.message
         if (item.reactions != null) {

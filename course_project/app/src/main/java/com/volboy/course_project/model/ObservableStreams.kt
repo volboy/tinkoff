@@ -1,6 +1,5 @@
 package com.volboy.course_project.model
 
-import android.view.View
 import com.volboy.course_project.R
 import com.volboy.course_project.message_recycler_view.ViewTyped
 import com.volboy.course_project.ui.channel_fragments.tab_layout_fragments.TitleUi
@@ -23,7 +22,8 @@ class ObservableStreams {
     private fun viewTypedStreams(streams: List<Stream>): List<ViewTyped> {
         val typedList = mutableListOf<ViewTyped>()
         streams.forEach { item ->
-            typedList.add(TitleUi(item.streamName, item.topics?.size.toString(), item.topics, R.drawable.ic_arrow_down, R.layout.collapse_item, item.streamName))
+            val uid=item.streamName+item.topics?.size
+            typedList.add(TitleUi(item.streamName, item.topics?.size.toString(), item.topics, R.drawable.ic_arrow_down, R.layout.collapse_item, uid))
         }
         return typedList
     }

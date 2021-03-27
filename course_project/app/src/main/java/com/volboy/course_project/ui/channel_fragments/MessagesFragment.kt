@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
 import com.volboy.course_project.R
@@ -20,7 +19,6 @@ import com.volboy.course_project.message_recycler_view.CommonAdapter
 import com.volboy.course_project.message_recycler_view.MessageHolderFactory
 import com.volboy.course_project.message_recycler_view.TextUi
 import com.volboy.course_project.message_recycler_view.ViewTyped
-import com.volboy.course_project.model.LoaderMessage
 import com.volboy.course_project.model.Message
 import com.volboy.course_project.model.ObservableMessages
 import com.volboy.course_project.model.Reaction
@@ -54,8 +52,9 @@ class MessagesFragment : Fragment(), EmojiBottomFragment.EmojiEventInterface {
             { error -> Snackbar.make(binding.root, error.toString(), Snackbar.LENGTH_LONG).show() })
         binding.recyclerMessage.scrollToPosition(messageAdapter.items.size - 1)
         binding.messageBtn.setOnClickListener {
-            messages.add(addMessage(getNewMessage()))
-            messageAdapter.items = messages
+            val newMessages= messages
+            newMessages.add(addMessage(getNewMessage()))
+            messageAdapter.items = newMessages
             binding.recyclerMessage.scrollToPosition(messageAdapter.items.size - 1)
         }
         binding.messageBox.addTextChangedListener(object : TextWatcher {
