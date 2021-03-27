@@ -22,6 +22,8 @@ import com.volboy.course_project.message_recycler_view.ViewTyped
 import com.volboy.course_project.model.Message
 import com.volboy.course_project.model.ObservableMessages
 import com.volboy.course_project.model.Reaction
+import com.volboy.course_project.ui.channel_fragments.tab_layout_fragments.SubscribedFragment
+import com.volboy.course_project.ui.people_fragments.PeopleFragment
 
 class MessagesFragment : Fragment(), EmojiBottomFragment.EmojiEventInterface {
     private lateinit var reactionsOfMessage: MutableList<Reaction>
@@ -52,7 +54,7 @@ class MessagesFragment : Fragment(), EmojiBottomFragment.EmojiEventInterface {
             { error -> Snackbar.make(binding.root, error.toString(), Snackbar.LENGTH_LONG).show() })
         binding.recyclerMessage.scrollToPosition(messageAdapter.items.size - 1)
         binding.messageBtn.setOnClickListener {
-            val newMessages= messages
+            val newMessages = messages
             newMessages.add(addMessage(getNewMessage()))
             messageAdapter.items = newMessages
             binding.recyclerMessage.scrollToPosition(messageAdapter.items.size - 1)
@@ -119,6 +121,8 @@ class MessagesFragment : Fragment(), EmojiBottomFragment.EmojiEventInterface {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val topicName = requireArguments().getString(SubscribedFragment.ARG_TITLE)?.toLowerCase()
+        binding.topicName.text ="Topic: #$topicName"
     }
 
     private fun addMessage(newMessage: String): ViewTyped {

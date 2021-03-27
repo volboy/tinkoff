@@ -12,6 +12,9 @@ import com.volboy.course_project.message_recycler_view.CommonAdapter
 import com.volboy.course_project.message_recycler_view.ViewTyped
 import com.volboy.course_project.model.ObservableStreams
 import com.volboy.course_project.ui.channel_fragments.MessagesFragment
+import com.volboy.course_project.ui.people_fragments.DetailsPeopleFragment
+import com.volboy.course_project.ui.people_fragments.PeopleFragment
+import com.volboy.course_project.ui.people_fragments.PeopleUi
 
 class SubscribedFragment : Fragment(), UiHolderFactory.ChannelsInterface {
     private val loaderStreams = ObservableStreams()
@@ -57,7 +60,7 @@ class SubscribedFragment : Fragment(), UiHolderFactory.ChannelsInterface {
                     var topicSize = item.topics?.size
                     topics?.forEach { _ ->
                         topicSize = topicSize?.minus(1)
-                        items.removeAt(position + topicSize!!+1)
+                        items.removeAt(position + topicSize!! + 1)
                     }
                 }
                 commonAdapter.items = items
@@ -65,13 +68,19 @@ class SubscribedFragment : Fragment(), UiHolderFactory.ChannelsInterface {
             }
             R.layout.expand_item -> {
                 val messagesFragment = MessagesFragment()
+                val arguments = Bundle()
+                arguments.putString(ARG_TITLE, item.title)
+                messagesFragment.arguments = arguments
                 val transaction = requireActivity().supportFragmentManager.beginTransaction()
-                //transaction.addToBackStack("FromSubscribedFragment")
+                transaction.addToBackStack("FromSubscribedFragment")
                 transaction.add(R.id.container, messagesFragment)
-                transaction.commitNow()
+                transaction.commit()
             }
         }
+    }
 
+    companion object {
+        const val ARG_TITLE = "title"
     }
 }
 
