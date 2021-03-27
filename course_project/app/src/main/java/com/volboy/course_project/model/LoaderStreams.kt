@@ -19,7 +19,7 @@ class LoaderStreams {
     fun convertStreams(): MutableList<ViewTyped> {
         loadStreams()
         listStreams.forEach { item ->
-            typedList.add(TitleUi(item.streamName, null, R.drawable.ic_arrow_down, R.layout.collapse_item, item.streamName))
+            typedList.add(TitleUi(item.streamName, null, item.topics,R.drawable.ic_arrow_down, R.layout.collapse_item, item.streamName))
 
         }
         return typedList
@@ -29,15 +29,15 @@ class LoaderStreams {
         val itemInPosition = listStreams[position]
         if (isSelected) {
             typedList.removeAt(position)
-            typedList.add(position, TitleUi(itemInPosition.streamName, null, R.drawable.ic_arrow_up, R.layout.collapse_item, itemInPosition.streamName))
+            typedList.add(position, TitleUi(itemInPosition.streamName, null, null, R.drawable.ic_arrow_up, R.layout.collapse_item, itemInPosition.streamName))
             if (itemInPosition.topics != null) {
                 itemInPosition.topics.forEach { topic ->
-                    typedList.add(TitleUi(topic.first, topic.second.toString() + " mes", null, R.layout.expand_item, topic.first))
+                  //  typedList.add(TitleUi(topic.first, topic.second.toString() + " mes", null, R.layout.expand_item, topic.first.))
                 }
             }
         } else {
             typedList.removeAt(position)
-            typedList.add(position, TitleUi(itemInPosition.streamName, null, R.drawable.ic_arrow_down, R.layout.collapse_item, itemInPosition.streamName))
+            typedList.add(position, TitleUi(itemInPosition.streamName, null, null, R.drawable.ic_arrow_down, R.layout.collapse_item, itemInPosition.streamName))
             if (itemInPosition.topics != null) {
                 itemInPosition.topics.forEach { _ ->
                     typedList.removeAt(position + 1)

@@ -21,7 +21,7 @@ class AllStreamsFragment : Fragment(), uiHolderFactory.ChannelsInterface {
         listStreams = mutableListOf("#general", Pair("Testing", 1240), Pair("Bruh", 24), "#Development", "#Desing", "#PR")
         listStreams.forEach { item ->
             if (item !is Pair<*, *>) {
-                typedList.add(TitleUi(item.toString(), null, R.drawable.ic_arrow_down, R.layout.collapse_item, item.toString()))
+               // typedList.add(TitleUi(item.toString(), null, R.drawable.ic_arrow_down, R.layout.collapse_item, item.toString()))
             }
         }
         return binding.root

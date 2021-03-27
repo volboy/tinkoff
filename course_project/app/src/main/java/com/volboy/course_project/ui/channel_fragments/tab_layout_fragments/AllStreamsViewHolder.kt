@@ -10,6 +10,7 @@ import com.volboy.course_project.message_recycler_view.ViewTyped
 class TitleUi(
     val title: String,
     val count: String?,
+    val topics: List<Pair<String, Int>>?,
     val imageId: Int?,
     override val viewType: Int = R.layout.collapse_item,
     override val uid: String = ""

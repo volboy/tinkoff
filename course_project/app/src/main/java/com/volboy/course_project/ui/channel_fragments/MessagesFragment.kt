@@ -7,7 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.google.android.material.snackbar.Snackbar
 import com.volboy.course_project.R
 import com.volboy.course_project.customviews.EmojiView
 import com.volboy.course_project.customviews.FlexBoxLayout
@@ -16,12 +18,16 @@ import com.volboy.course_project.customviews.dpToPx
 import com.volboy.course_project.databinding.FragmentMessagesBinding
 import com.volboy.course_project.message_recycler_view.CommonAdapter
 import com.volboy.course_project.message_recycler_view.MessageHolderFactory
+import com.volboy.course_project.message_recycler_view.TextUi
 import com.volboy.course_project.message_recycler_view.ViewTyped
 import com.volboy.course_project.model.LoaderMessage
+import com.volboy.course_project.model.Message
+import com.volboy.course_project.model.ObservableMessages
 import com.volboy.course_project.model.Reaction
 
 class MessagesFragment : Fragment(), EmojiBottomFragment.EmojiEventInterface {
     private lateinit var reactionsOfMessage: MutableList<Reaction>
+    private lateinit var messages: MutableList<ViewTyped>
     private lateinit var itemFromMessages: View
     private lateinit var binding: FragmentMessagesBinding
 
@@ -31,18 +37,25 @@ class MessagesFragment : Fragment(), EmojiBottomFragment.EmojiEventInterface {
         reactionsOfMessage = mutableListOf(Reaction(emj, "You", 1))
         val longClickListener: (View) -> Boolean = { view ->
             itemFromMessages = view
-            val emojiBottomFragment=EmojiBottomFragment()
+            val emojiBottomFragment = EmojiBottomFragment()
             emojiBottomFragment.show(parentFragmentManager, emojiBottomFragment.tag)
             true
         }
         val holderFactory = MessageHolderFactory(longClickListener)
         val messageAdapter = CommonAdapter<ViewTyped>(holderFactory)
-        val loaderMessage = LoaderMessage() // типа загрузчик сообщений
+        val loaderMessage = ObservableMessages() // типа загрузчик сообщений
         binding.recyclerMessage.adapter = messageAdapter
-        messageAdapter.items = loaderMessage.remoteMessage()
+
+        val observableMessages = loaderMessage.getMessages().subscribe(
+            { item ->
+                messages = item as MutableList<ViewTyped>
+                messageAdapter.items = messages
+            },
+            { error -> Snackbar.make(binding.root, error.toString(), Snackbar.LENGTH_LONG).show() })
         binding.recyclerMessage.scrollToPosition(messageAdapter.items.size - 1)
         binding.messageBtn.setOnClickListener {
-            messageAdapter.items = loaderMessage.addMessage(getNewMessage())
+            messages.add(addMessage(getNewMessage()))
+            messageAdapter.items = messages
             binding.recyclerMessage.scrollToPosition(messageAdapter.items.size - 1)
         }
         binding.messageBox.addTextChangedListener(object : TextWatcher {
@@ -58,14 +71,14 @@ class MessagesFragment : Fragment(), EmojiBottomFragment.EmojiEventInterface {
         return binding.root
     }
 
-    private fun getNewMessage(): String? {
+    private fun getNewMessage(): String {
         val newMessageText = binding.messageBox.text.toString()
         return if (newMessageText.isNotEmpty()) {
             binding.messageBox.text.clear()
             binding.messageBtn.setImageResource(R.drawable.ic_add_message)
             newMessageText
         } else {
-            null
+            ""
         }
     }
 
@@ -107,6 +120,11 @@ class MessagesFragment : Fragment(), EmojiBottomFragment.EmojiEventInterface {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    }
+
+    private fun addMessage(newMessage: String): ViewTyped {
+        val msg = Message(9, "You", newMessage, false, "14 Мар", null)
+        return TextUi(msg.sender, msg.textMessage, null, R.layout.out_message_item, msg.textMessage)
     }
 }
 
