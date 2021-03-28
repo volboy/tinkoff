@@ -12,9 +12,6 @@ import com.volboy.course_project.message_recycler_view.CommonAdapter
 import com.volboy.course_project.message_recycler_view.ViewTyped
 import com.volboy.course_project.model.ObservableStreams
 import com.volboy.course_project.ui.channel_fragments.MessagesFragment
-import com.volboy.course_project.ui.people_fragments.DetailsPeopleFragment
-import com.volboy.course_project.ui.people_fragments.PeopleFragment
-import com.volboy.course_project.ui.people_fragments.PeopleUi
 
 class SubscribedFragment : Fragment(), UiHolderFactory.ChannelsInterface {
     private val loaderStreams = ObservableStreams()
@@ -47,12 +44,12 @@ class SubscribedFragment : Fragment(), UiHolderFactory.ChannelsInterface {
         val topics = item.topics
         view.isSelected = !view.isSelected
         when (viewType) {
-            R.layout.collapse_item -> {
+            R.layout.item_collapse -> {
                 if (view.isSelected) {
                     item.imageId = R.drawable.ic_arrow_up
                     item.uid = "UP"
                     topics?.forEach { topic ->
-                        items.add(position + 1, TitleUi(topic.first, topic.second.toString() + " mes", null, 0, R.layout.expand_item, topic.first))
+                        items.add(position + 1, TitleUi(topic.first, topic.second.toString() + " mes", null, 0, R.layout.item_expand, topic.first))
                     }
                 } else {
                     item.imageId = R.drawable.ic_arrow_down
@@ -66,7 +63,7 @@ class SubscribedFragment : Fragment(), UiHolderFactory.ChannelsInterface {
                 commonAdapter.items = items
                 commonAdapter.notifyDataSetChanged()
             }
-            R.layout.expand_item -> {
+            R.layout.item_expand -> {
                 val messagesFragment = MessagesFragment()
                 val arguments = Bundle()
                 arguments.putString(ARG_TITLE, item.title)

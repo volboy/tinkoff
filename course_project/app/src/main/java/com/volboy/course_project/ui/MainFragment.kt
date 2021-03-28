@@ -6,12 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.volboy.course_project.R
-import com.volboy.course_project.databinding.MainFragmentBinding
+import com.volboy.course_project.databinding.FragmentMainBinding
 import com.volboy.course_project.ui.channel_fragments.ChannelsFragment
 import com.volboy.course_project.ui.people_fragments.PeopleFragment
 
 class MainFragment : Fragment() {
-    private lateinit var binding: MainFragmentBinding
+    private lateinit var binding: FragmentMainBinding
     private val channelsFragment = ChannelsFragment()
     private val peopleFragment = PeopleFragment()
     private val profileFragment = ProfileFragment()
@@ -21,7 +21,7 @@ class MainFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = MainFragmentBinding.inflate(inflater, container, false)
+        binding = FragmentMainBinding.inflate(inflater, container, false)
         return binding.root
     }
 

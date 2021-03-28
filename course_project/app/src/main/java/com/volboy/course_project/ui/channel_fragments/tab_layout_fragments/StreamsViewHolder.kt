@@ -14,7 +14,7 @@ class TitleUi(
     val count: String?,
     val topics: List<Pair<String, Int>>?,
     var imageId: Int,
-    override val viewType: Int = R.layout.collapse_item,
+    override val viewType: Int = R.layout.item_collapse,
     override var uid: String = ""
 ) : ViewTyped
 
@@ -30,7 +30,7 @@ class AllStreamsViewHolder(val view: View, private val channelsInterface: UiHold
         view.setOnClickListener {
             channelsInterface.getClickedView(view, adapterPosition, item.viewType)
         }
-        if (adapterPosition % 2 == 0 && item.viewType == R.layout.expand_item) {
+        if (adapterPosition % 2 == 0 && item.viewType == R.layout.item_expand) {
             parentView.setBackgroundColor(color)
         }
         title.text = item.title

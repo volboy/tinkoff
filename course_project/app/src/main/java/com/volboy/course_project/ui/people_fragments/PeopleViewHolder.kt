@@ -12,7 +12,7 @@ class PeopleUi(
     val name: String,
     val email: String?,
     val imageId: Int,
-    override val viewType: Int = R.layout.people_list_item,
+    override val viewType: Int = R.layout.item_people_list,
     override val uid: String = ""
 ) : ViewTyped
 

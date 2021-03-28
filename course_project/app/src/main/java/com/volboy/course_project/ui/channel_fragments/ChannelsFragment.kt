@@ -1,9 +1,10 @@
 package com.volboy.course_project.ui.channel_fragments
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.widget.SearchView
+import android.widget.Toast
+import android.widget.Toolbar
 import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayoutMediator
 import com.volboy.course_project.R
@@ -14,6 +15,24 @@ class ChannelsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.action_bar_menu, menu)
+        val search = menu.findItem(R.id.menu_search)
+        val searchView = search.actionView as SearchView
+        searchView.queryHint = "Search"
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+            override fun onQueryTextChange(newText: String?): Boolean {
+                Toast.makeText(activity, newText, Toast.LENGTH_SHORT).show()
+                return true
+            }
+        })
+        super.onCreateOptionsMenu(menu, inflater)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -22,6 +41,7 @@ class ChannelsFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        requireActivity().actionBar?.setDisplayShowTitleEnabled(false)
         val tabLayout = binding.tabs
         val viewPager = binding.viewPager
         val viewPagerAdapter = ChannelsFragmentAdapter(this)

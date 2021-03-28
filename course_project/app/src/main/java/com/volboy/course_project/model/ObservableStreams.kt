@@ -23,7 +23,7 @@ class ObservableStreams {
         val typedList = mutableListOf<ViewTyped>()
         streams.forEach { item ->
             val uid=item.streamName+item.topics?.size
-            typedList.add(TitleUi(item.streamName, item.topics?.size.toString(), item.topics, R.drawable.ic_arrow_down, R.layout.collapse_item, uid))
+            typedList.add(TitleUi(item.streamName, item.topics?.size.toString(), item.topics, R.drawable.ic_arrow_down, R.layout.item_collapse, uid))
         }
         return typedList
     }

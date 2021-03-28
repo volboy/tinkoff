@@ -15,6 +15,7 @@ class MainActivity : AppCompatActivity() {
             val transaction = supportFragmentManager.beginTransaction()
             transaction.replace(R.id.container, mainFragment)
             transaction.commit()
+        supportActionBar?.setDisplayShowTitleEnabled(false)
         setContentView(binding.root)
     }
 }

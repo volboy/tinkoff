@@ -23,7 +23,6 @@ import com.volboy.course_project.model.Message
 import com.volboy.course_project.model.ObservableMessages
 import com.volboy.course_project.model.Reaction
 import com.volboy.course_project.ui.channel_fragments.tab_layout_fragments.SubscribedFragment
-import com.volboy.course_project.ui.people_fragments.PeopleFragment
 
 class MessagesFragment : Fragment(), EmojiBottomFragment.EmojiEventInterface {
     private lateinit var reactionsOfMessage: MutableList<Reaction>
@@ -127,7 +126,7 @@ class MessagesFragment : Fragment(), EmojiBottomFragment.EmojiEventInterface {
 
     private fun addMessage(newMessage: String): ViewTyped {
         val msg = Message(9, "You", newMessage, false, "14 Мар", null)
-        return TextUi(msg.sender, msg.textMessage, null, R.layout.out_message_item, msg.textMessage)
+        return TextUi(msg.sender, msg.textMessage, null, R.layout.item_out_message, msg.textMessage)
     }
 }
 

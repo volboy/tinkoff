@@ -8,17 +8,17 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.volboy.course_project.R
-import com.volboy.course_project.databinding.BottomEmojiDialogBinding
+import com.volboy.course_project.databinding.DialogBottomEmojiBinding
 import com.volboy.course_project.emoji_recycler_view.EmojiAdapter
 import com.volboy.course_project.emoji_recycler_view.EmojiUi
 import com.volboy.course_project.emoji_recycler_view.EmojiHolderFactory
 import com.volboy.course_project.message_recycler_view.*
 
 class EmojiBottomFragment : BottomSheetDialogFragment() {
-    private lateinit var binding: BottomEmojiDialogBinding
+    private lateinit var binding: DialogBottomEmojiBinding
     lateinit var emojiEventInterface: EmojiEventInterface
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = BottomEmojiDialogBinding.inflate(inflater, container, false)
+        binding = DialogBottomEmojiBinding.inflate(inflater, container, false)
         val clickListener: (View) -> Unit = { view ->
             val emojiText = view.findViewById<TextView>(R.id.emoji)
             emojiEventInterface.emojiClickListener(emojiText.text.toString())

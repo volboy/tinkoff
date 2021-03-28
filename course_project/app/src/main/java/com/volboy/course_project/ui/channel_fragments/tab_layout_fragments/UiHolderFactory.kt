@@ -9,9 +9,9 @@ import com.volboy.course_project.ui.people_fragments.PeopleViewHolder
 class UiHolderFactory(private val channelsInterface: ChannelsInterface) : HolderFactory() {
     override fun createViewHolder(view: View, viewType: Int): BaseViewHolder<*>? {
         return when (viewType) {
-            R.layout.collapse_item -> AllStreamsViewHolder(view, channelsInterface )
-            R.layout.expand_item -> AllStreamsViewHolder(view, channelsInterface)
-            R.layout.people_list_item -> PeopleViewHolder(view, channelsInterface)
+            R.layout.item_collapse -> AllStreamsViewHolder(view, channelsInterface )
+            R.layout.item_expand -> AllStreamsViewHolder(view, channelsInterface)
+            R.layout.item_people_list -> PeopleViewHolder(view, channelsInterface)
             else -> null
         }
     }

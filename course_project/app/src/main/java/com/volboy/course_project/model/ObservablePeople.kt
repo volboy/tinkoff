@@ -2,7 +2,6 @@ package com.volboy.course_project.model
 
 import com.volboy.course_project.R
 import com.volboy.course_project.message_recycler_view.ViewTyped
-import com.volboy.course_project.ui.channel_fragments.tab_layout_fragments.TitleUi
 import com.volboy.course_project.ui.people_fragments.PeopleUi
 import io.reactivex.Single
 
@@ -22,7 +21,7 @@ class ObservablePeople {
     private fun viewTypedPeople(streams: List<People>): List<ViewTyped> {
         val typedList = mutableListOf<ViewTyped>()
         streams.forEach { item ->
-            typedList.add(PeopleUi(item.name, item.email, item.imageId, R.layout.people_list_item, item.name))
+            typedList.add(PeopleUi(item.name, item.email, item.imageId, R.layout.item_people_list, item.name))
         }
         return typedList
     }

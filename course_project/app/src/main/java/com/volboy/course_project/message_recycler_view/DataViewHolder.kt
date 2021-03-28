@@ -6,7 +6,7 @@ import com.volboy.course_project.R
 
 class DataUi(
     val data: String,
-    override val viewType: Int = R.layout.date_divider_item,
+    override val viewType: Int = R.layout.item_date_divider,
     override val uid: String = ""
 ) : ViewTyped
 

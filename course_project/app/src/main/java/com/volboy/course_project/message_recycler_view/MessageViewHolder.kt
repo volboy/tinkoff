@@ -14,7 +14,7 @@ class TextUi(
     val title: String,
     val message: String,
     val reactions: List<Reaction>?,
-    override val viewType: Int = R.layout.in_message_item,
+    override val viewType: Int = R.layout.item_in_message,
     override val uid: String = ""
 ) : ViewTyped
 

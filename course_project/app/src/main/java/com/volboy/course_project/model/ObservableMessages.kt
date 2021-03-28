@@ -30,7 +30,7 @@ class ObservableMessages() {
     private fun groupedMessages(messages: List<Message>): List<ViewTyped> {
         val messageByDate: Map<String, List<Message>> = messages.groupBy { it.dateMessage }
         return messageByDate.flatMap { (date, msg) ->
-            listOf(DataUi(date, R.layout.date_divider_item)) + viewTypedMessages(msg)
+            listOf(DataUi(date, R.layout.item_date_divider)) + viewTypedMessages(msg)
         }
     }
 
@@ -38,9 +38,9 @@ class ObservableMessages() {
         val typedList = mutableListOf<ViewTyped>()
         messages.forEach { msg ->
             if (msg.inMessage) {
-                typedList.add(TextUi(msg.sender, msg.textMessage, msg.reactions, R.layout.in_message_item, msg.textMessage))
+                typedList.add(TextUi(msg.sender, msg.textMessage, msg.reactions, R.layout.item_in_message, msg.textMessage))
             } else {
-                typedList.add(TextUi(msg.sender, msg.textMessage, msg.reactions, R.layout.out_message_item, msg.textMessage))
+                typedList.add(TextUi(msg.sender, msg.textMessage, msg.reactions, R.layout.item_out_message, msg.textMessage))
             }
         }
         return typedList
