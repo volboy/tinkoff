@@ -5,6 +5,7 @@ import android.view.*
 import android.widget.SearchView
 import android.widget.Toast
 import android.widget.Toolbar
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayoutMediator
 import com.volboy.course_project.R
@@ -15,6 +16,8 @@ class ChannelsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val mActionBar = (requireActivity() as AppCompatActivity).supportActionBar;
+        mActionBar?.show()
         setHasOptionsMenu(true)
     }
 

@@ -22,7 +22,8 @@
             android:layout_height="wrap_content"
             android:hint="@string/search_str"
             android:textColorHint="@color/white"
-            android:textSize="22sp" />
+            android:textSize="22sp"
+            android:textColor="@color/white"/>
 
         <ImageButton
             android:id="@+id/searchButton"

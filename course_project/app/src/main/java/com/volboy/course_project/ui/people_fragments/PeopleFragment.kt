@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
 import com.volboy.course_project.R
@@ -20,6 +21,8 @@ class PeopleFragment : Fragment(), UiHolderFactory.ChannelsInterface {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentPeopleBinding.inflate(inflater, container, false)
+        val mActionBar = (requireActivity() as AppCompatActivity).supportActionBar;
+        mActionBar?.show()
         return binding.root
     }
 
