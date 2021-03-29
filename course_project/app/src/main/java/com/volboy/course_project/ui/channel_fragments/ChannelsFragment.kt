@@ -18,7 +18,7 @@ class ChannelsFragment : Fragment() {
         setHasOptionsMenu(true)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+    /*override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.action_bar_menu, menu)
         val search = menu.findItem(R.id.menu_search)
         val searchView = search.actionView as SearchView
@@ -33,7 +33,7 @@ class ChannelsFragment : Fragment() {
             }
         })
         super.onCreateOptionsMenu(menu, inflater)
-    }
+    }*/
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentChannelsBinding.inflate(inflater, container, false)

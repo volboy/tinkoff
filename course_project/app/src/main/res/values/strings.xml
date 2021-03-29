@@ -15,5 +15,5 @@
     <string name="status_mode">online</string>
     <string name="email_str">darell@company.com</string>
     <string name="log_out_str">Log out</string>
-    <string name="search_str">Search</string>
+    <string name="search_str">Search...</string>
 </resources>
