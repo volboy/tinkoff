@@ -8,6 +8,7 @@ import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayoutMediator
+import com.volboy.course_project.MainActivity
 import com.volboy.course_project.R
 import com.volboy.course_project.databinding.FragmentChannelsBinding
 
@@ -20,23 +21,6 @@ class ChannelsFragment : Fragment() {
         mActionBar?.show()
         setHasOptionsMenu(true)
     }
-
-    /*override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.action_bar_menu, menu)
-        val search = menu.findItem(R.id.menu_search)
-        val searchView = search.actionView as SearchView
-        searchView.queryHint = "Search"
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                return false
-            }
-            override fun onQueryTextChange(newText: String?): Boolean {
-                Toast.makeText(activity, newText, Toast.LENGTH_SHORT).show()
-                return true
-            }
-        })
-        super.onCreateOptionsMenu(menu, inflater)
-    }*/
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentChannelsBinding.inflate(inflater, container, false)
