@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
-import com.volboy.course_project.FragmentsCallBack
 import com.volboy.course_project.R
 import com.volboy.course_project.databinding.FragmentStreamsBinding
 import com.volboy.course_project.message_recycler_view.CommonAdapter
@@ -25,18 +24,10 @@ class StreamsFragment : Fragment(), UiHolderFactory.ChannelsInterface {
     private var listStreams = listOf<ViewTyped>()
     private lateinit var commonAdapter: CommonAdapter<ViewTyped>
     private lateinit var searchText: Observable<String>
-    private lateinit var fragmentsCallBack:FragmentsCallBack
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentStreamsBinding.inflate(inflater, container, false)
         return binding.root
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        if (context is FragmentsCallBack){
-            fragmentsCallBack= context
-        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

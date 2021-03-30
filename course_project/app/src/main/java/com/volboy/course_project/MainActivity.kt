@@ -11,7 +11,7 @@ import com.volboy.course_project.ui.MainFragment
 import com.volboy.course_project.ui.channel_fragments.tab_layout_fragments.TitleUi
 import io.reactivex.Observable
 
-class MainActivity : AppCompatActivity(), FragmentsCallBack {
+class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val mainFragment = MainFragment()
 
@@ -24,39 +24,6 @@ class MainActivity : AppCompatActivity(), FragmentsCallBack {
         transaction.replace(R.id.container, mainFragment)
         transaction.commit()
         setContentView(binding.root)
-    }
-
-    override fun searchToolbar(list: List<ViewTyped>): List<ViewTyped> {
-        var outputList = listOf<ViewTyped>()
-        var searchText: Observable<String>
-        val searchEdit = binding.searchEditText
-        searchEdit.addTextChangedListener { text ->
-            searchText = Observable.create { emitter ->
-                emitter.onNext(text.toString())
-            }
-            searchText
-                .filter { inputText -> inputText.isNotEmpty() }
-                .filter { inputText -> inputText[0] != ' ' }
-                .distinctUntilChanged()
-                .subscribe(
-                    { inputText ->
-                        val filteredStreams = list.filter { stream ->
-                            val item = stream as TitleUi
-                            item.title.contains(inputText)
-                        }
-                        if (filteredStreams.isEmpty()) {
-                            outputList = listOf(TitleUi("Ничего не найдено", null, null, 0, R.layout.item_collapse, ""))
-                        } else {
-                            outputList = filteredStreams
-                        }
-                    },
-                    { error -> Toast.makeText(applicationContext, error.message, Toast.LENGTH_SHORT).show() }
-                )
-            if (text.isNullOrEmpty()) {
-                outputList = list
-            }
-        }
-        return outputList
     }
 }
 
