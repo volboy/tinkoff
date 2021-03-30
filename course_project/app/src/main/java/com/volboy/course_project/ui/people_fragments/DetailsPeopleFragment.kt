@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.volboy.course_project.databinding.FragmentPeoplesDetailBinding
 import com.volboy.course_project.ui.people_fragments.PeopleFragment.Companion.ARG_IMAGE
@@ -15,6 +16,8 @@ class DetailsPeopleFragment : Fragment() {
         binding = FragmentPeoplesDetailBinding.inflate(inflater, container, false)
         binding.profileName.text=requireArguments().getString(ARG_NAME)
         binding.profileImage.setImageResource(requireArguments().getInt(ARG_IMAGE))
+        val mActionBar = (requireActivity() as AppCompatActivity).supportActionBar;
+        mActionBar?.hide()
         return binding.root
     }
 

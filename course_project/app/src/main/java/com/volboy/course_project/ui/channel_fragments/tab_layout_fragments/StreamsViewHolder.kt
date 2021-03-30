@@ -24,14 +24,17 @@ class AllStreamsViewHolder(val view: View, private val channelsInterface: UiHold
     private val count: TextView = view.findViewById(R.id.messagesCount)
     private val image: ImageView = view.findViewById(R.id.streamImage)
     private val parentView: LinearLayout = view.findViewById(R.id.parentView)
-    private val color= ResourcesCompat.getColor(view.resources, R.color.expand_item_color_two, null)
+    private val color1= ResourcesCompat.getColor(view.resources, R.color.expand_item_color_two, null)
+    private val color2= ResourcesCompat.getColor(view.resources, R.color.expand_item_color_one, null)
 
     override fun bind(item: TitleUi) {
         view.setOnClickListener {
             channelsInterface.getClickedView(view, adapterPosition, item.viewType)
         }
         if (adapterPosition % 2 == 0 && item.viewType == R.layout.item_expand) {
-            parentView.setBackgroundColor(color)
+            parentView.setBackgroundColor(color1)
+        } else if (item.viewType == R.layout.item_expand) {
+            parentView.setBackgroundColor(color2)
         }
         title.text = item.title
         count.text = item.count.toString()

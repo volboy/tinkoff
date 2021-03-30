@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
 import com.volboy.course_project.R
@@ -68,6 +69,8 @@ class MessagesFragment : Fragment(), EmojiBottomFragment.EmojiEventInterface {
                 }
             }
         })
+        val mActionBar = (requireActivity() as AppCompatActivity).supportActionBar;
+        mActionBar?.hide()
         return binding.root
     }
 
