@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
+import com.volboy.course_project.FragmentsCallBack
 import com.volboy.course_project.R
 import com.volboy.course_project.databinding.FragmentSubscribedBinding
 import com.volboy.course_project.message_recycler_view.CommonAdapter
@@ -18,6 +19,7 @@ class SubscribedFragment : Fragment(), UiHolderFactory.ChannelsInterface {
     private var listStreams = listOf<ViewTyped>()
     private lateinit var binding: FragmentSubscribedBinding
     private lateinit var commonAdapter: CommonAdapter<ViewTyped>
+    private lateinit var fragmentsCallBack: FragmentsCallBack
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentSubscribedBinding.inflate(inflater, container, false)
