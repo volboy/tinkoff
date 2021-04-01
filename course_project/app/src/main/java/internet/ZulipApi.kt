@@ -1,12 +1,25 @@
 package internet
 
+import com.volboy.course_project.model.SendedMessage
 import com.volboy.course_project.model.StreamJSON
 import retrofit2.Call
+import retrofit2.http.Field
+import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
+import retrofit2.http.POST
 
 interface ZulipApi {
     @GET("streams?json=true")
     fun getStreams(): Call<StreamJSON>
+
+    @POST("messages")
+    @FormUrlEncoded
+    fun sendMessage(
+        @Field("type") type: String,
+        @Field("to") to: String,
+        @Field("content") content: String,
+        @Field("topic") topic: String
+    ):Call<SendedMessage>
 
 /*    @GET("0?json=true")
     fun getPosts():Call<Stream>

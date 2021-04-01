@@ -17,6 +17,7 @@ import com.volboy.course_project.databinding.FragmentStreamsBinding
 import com.volboy.course_project.message_recycler_view.CommonAdapter
 import com.volboy.course_project.message_recycler_view.ViewTyped
 import com.volboy.course_project.model.ObservableStreams
+import com.volboy.course_project.model.SendedMessage
 import com.volboy.course_project.model.StreamJSON
 import com.volboy.course_project.model.StreamsJSON
 import internet.ZulipApi
@@ -86,6 +87,7 @@ class StreamsFragment : Fragment(), UiHolderFactory.ChannelsInterface {
     }
 
     override fun getClickedView(view: View, position: Int, viewType: Int) {
+        sendMessage()
         val items: MutableList<ViewTyped> = commonAdapter.items.toMutableList()
         val item = items[position] as TitleUi
         val topics = item.topics
@@ -126,6 +128,22 @@ class StreamsFragment : Fragment(), UiHolderFactory.ChannelsInterface {
             }
 
             override fun onFailure(call: Call<StreamJSON>, t: Throwable) {
+                Toast.makeText(context, t.message, Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private fun sendMessage() {
+        App.instance.zulipApi.sendMessage("stream", "general", "Hello from Volgograd)", "test_topic").enqueue(object : Callback<SendedMessage> {
+            override fun onResponse(call: Call<SendedMessage>, response: Response<SendedMessage>) {
+                if (response.isSuccessful) {
+                    Toast.makeText(context, " $response.code()", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(context, " $response.code()", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            override fun onFailure(call: Call<SendedMessage>, t: Throwable) {
                 Toast.makeText(context, t.message, Toast.LENGTH_LONG).show();
             }
         });
