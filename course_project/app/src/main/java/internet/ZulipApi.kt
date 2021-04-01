@@ -1,13 +1,12 @@
 package internet
 
-import com.volboy.course_project.model.Stream
+import com.volboy.course_project.model.StreamJSON
 import retrofit2.Call
 import retrofit2.http.GET
-import retrofit2.http.Path
 
-interface ZulipService {
+interface ZulipApi {
     @GET("streams?json=true")
-    fun getPost(): Call<Stream>
+    fun getStreams(): Call<StreamJSON>
 
 /*    @GET("0?json=true")
     fun getPosts():Call<Stream>

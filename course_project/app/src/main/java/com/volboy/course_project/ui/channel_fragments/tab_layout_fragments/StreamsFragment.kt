@@ -11,12 +11,19 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
+import com.volboy.course_project.App
 import com.volboy.course_project.R
 import com.volboy.course_project.databinding.FragmentStreamsBinding
 import com.volboy.course_project.message_recycler_view.CommonAdapter
 import com.volboy.course_project.message_recycler_view.ViewTyped
 import com.volboy.course_project.model.ObservableStreams
+import com.volboy.course_project.model.StreamJSON
+import com.volboy.course_project.model.StreamsJSON
+import internet.ZulipApi
 import io.reactivex.Observable
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class StreamsFragment : Fragment(), UiHolderFactory.ChannelsInterface {
     private lateinit var binding: FragmentStreamsBinding
@@ -30,7 +37,12 @@ class StreamsFragment : Fragment(), UiHolderFactory.ChannelsInterface {
         return binding.root
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        getStreams()
         val holderFactory = UiHolderFactory(this)
         commonAdapter = CommonAdapter(holderFactory)
         val observableStreams = loaderStreams.getStreams().subscribe(
@@ -51,7 +63,7 @@ class StreamsFragment : Fragment(), UiHolderFactory.ChannelsInterface {
             }
             searchText
                 .filter { inputText -> inputText.isNotEmpty() }
-                .filter { inputText -> inputText[0]!=' '}
+                .filter { inputText -> inputText[0] != ' ' }
                 .distinctUntilChanged()
                 .subscribe(
                     { inputText ->
@@ -67,7 +79,7 @@ class StreamsFragment : Fragment(), UiHolderFactory.ChannelsInterface {
                     },
                     { error -> Toast.makeText(requireContext(), error.message, Toast.LENGTH_SHORT).show() }
                 )
-            if (text.isNullOrEmpty()){
+            if (text.isNullOrEmpty()) {
                 commonAdapter.items = listStreams
             }
         }
@@ -99,5 +111,23 @@ class StreamsFragment : Fragment(), UiHolderFactory.ChannelsInterface {
                 commonAdapter.notifyDataSetChanged()
             }
         }
+    }
+
+    private fun getStreams() {
+        App.instance.zulipApi.getStreams().enqueue(object : Callback<StreamJSON> {
+            override fun onResponse(call: Call<StreamJSON>, response: Response<StreamJSON>) {
+                if (response.isSuccessful) {
+                    Toast.makeText(context, " $response.code()", Toast.LENGTH_LONG).show();
+                    val streamsJsonList = mutableListOf<StreamJSON>()
+                    response.body()?.let { streamsJsonList.add(it) }
+                } else {
+                    Toast.makeText(context, Toast.LENGTH_LONG, response.code()).show();
+                }
+            }
+
+            override fun onFailure(call: Call<StreamJSON>, t: Throwable) {
+                Toast.makeText(context, t.message, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }
