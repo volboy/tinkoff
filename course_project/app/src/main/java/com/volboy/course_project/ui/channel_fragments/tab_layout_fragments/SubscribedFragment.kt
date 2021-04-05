@@ -1,6 +1,7 @@
 package com.volboy.course_project.ui.channel_fragments.tab_layout_fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,38 +10,39 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
-import com.google.android.material.snackbar.Snackbar
+import com.volboy.course_project.App
 import com.volboy.course_project.R
 import com.volboy.course_project.databinding.FragmentSubscribedBinding
 import com.volboy.course_project.message_recycler_view.CommonAdapter
 import com.volboy.course_project.message_recycler_view.ViewTyped
 import com.volboy.course_project.model.ObservableStreams
-import com.volboy.course_project.ui.channel_fragments.MessagesFragment
+import com.volboy.course_project.model.SendedMessage
 import io.reactivex.Observable
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class SubscribedFragment : Fragment(), UiHolderFactory.ChannelsInterface {
-    private val loaderStreams = ObservableStreams()
-    private var listStreams = listOf<ViewTyped>()
     private lateinit var binding: FragmentSubscribedBinding
+    private lateinit var loaderStreams: ObservableStreams
+    private var listStreams = listOf<ViewTyped>()
     private lateinit var commonAdapter: CommonAdapter<ViewTyped>
     private lateinit var searchText: Observable<String>
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentSubscribedBinding.inflate(inflater, container, false)
+        loaderStreams = ObservableStreams(requireContext())
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val holderFactory = UiHolderFactory(this)
         commonAdapter = CommonAdapter(holderFactory)
-        val observableStreams = loaderStreams.getStreams().subscribe(
-            { item ->
-                listStreams = item
-                commonAdapter.items = listStreams
-            },
-            { error -> Snackbar.make(binding.root, error.toString(), Snackbar.LENGTH_LONG).show() }
+        val streams = loaderStreams.getRemoteStreams()
+        val disposableStreams = streams.subscribe(
+            { result -> commonAdapter.items = result },
+            { error -> Toast.makeText(context, "Ошибка ${error.message}", Toast.LENGTH_LONG).show(); Log.d("ZULIP", error.message.toString()) }
         )
-        commonAdapter.items = listStreams
         binding.rwAllStreams.adapter = commonAdapter
         val mActionBar = (requireActivity() as AppCompatActivity).supportActionBar;
         mActionBar?.show()
@@ -51,7 +53,7 @@ class SubscribedFragment : Fragment(), UiHolderFactory.ChannelsInterface {
             }
             searchText
                 .filter { inputText -> inputText.isNotEmpty() }
-                .filter { inputText -> inputText[0]!=' '}
+                .filter { inputText -> inputText[0] != ' ' }
                 .distinctUntilChanged()
                 .subscribe(
                     { inputText ->
@@ -67,13 +69,14 @@ class SubscribedFragment : Fragment(), UiHolderFactory.ChannelsInterface {
                     },
                     { error -> Toast.makeText(requireContext(), error.message, Toast.LENGTH_SHORT).show() }
                 )
-            if (text.isNullOrEmpty()){
+            if (text.isNullOrEmpty()) {
                 commonAdapter.items = listStreams
             }
         }
     }
 
     override fun getClickedView(view: View, position: Int, viewType: Int) {
+        sendMessage()
         val items: MutableList<ViewTyped> = commonAdapter.items.toMutableList()
         val item = items[position] as TitleUi
         val topics = item.topics
@@ -98,22 +101,26 @@ class SubscribedFragment : Fragment(), UiHolderFactory.ChannelsInterface {
                 commonAdapter.items = items
                 commonAdapter.notifyDataSetChanged()
             }
-            R.layout.item_expand -> {
-                val messagesFragment = MessagesFragment()
-                val arguments = Bundle()
-                arguments.putString(ARG_TITLE, item.title)
-                messagesFragment.arguments = arguments
-                val transaction = requireActivity().supportFragmentManager.beginTransaction()
-                transaction.addToBackStack("FromSubscribedFragment")
-                transaction.add(R.id.container, messagesFragment)
-                transaction.commit()
-            }
         }
+    }
+
+    private fun sendMessage() {
+        App.instance.zulipApi.sendMessage("stream", "general", "Hello from Volgograd)", "test_topic").enqueue(object : Callback<SendedMessage> {
+            override fun onResponse(call: Call<SendedMessage>, response: Response<SendedMessage>) {
+                if (response.isSuccessful) {
+                    Toast.makeText(context, " $response.code()", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(context, " $response.code()", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            override fun onFailure(call: Call<SendedMessage>, t: Throwable) {
+                Toast.makeText(context, t.message, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     companion object {
         const val ARG_TITLE = "title"
     }
 }
-
-
