@@ -12,7 +12,8 @@ import com.volboy.course_project.model.TopicJSON
 
 class TitleUi(
     val title: String,
-    val count: String?,
+    var count: Int=0,
+    var isSelected: Boolean,
     var topics: List<TopicJSON>?,
     var imageId: Int,
     override val viewType: Int = R.layout.item_collapse,
@@ -25,8 +26,8 @@ class AllStreamsViewHolder(val view: View, private val channelsInterface: UiHold
     private val count: TextView = view.findViewById(R.id.messagesCount)
     private val image: ImageView = view.findViewById(R.id.streamImage)
     private val parentView: LinearLayout = view.findViewById(R.id.parentView)
-    private val color1= ResourcesCompat.getColor(view.resources, R.color.expand_item_color_two, null)
-    private val color2= ResourcesCompat.getColor(view.resources, R.color.expand_item_color_one, null)
+    private val color1 = ResourcesCompat.getColor(view.resources, R.color.expand_item_color_two, null)
+    private val color2 = ResourcesCompat.getColor(view.resources, R.color.expand_item_color_one, null)
 
     override fun bind(item: TitleUi) {
         view.setOnClickListener {

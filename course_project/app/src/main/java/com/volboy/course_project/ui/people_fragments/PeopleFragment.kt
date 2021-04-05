@@ -22,7 +22,7 @@ import io.reactivex.Observable
 class PeopleFragment : Fragment(), UiHolderFactory.ChannelsInterface {
     private lateinit var binding: FragmentPeopleBinding
     private var listPeople = mutableListOf<ViewTyped>()
-    private val loaderPeople=ObservablePeople()
+    private val loaderPeople = ObservablePeople()
     private lateinit var searchText: Observable<String>
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -55,7 +55,7 @@ class PeopleFragment : Fragment(), UiHolderFactory.ChannelsInterface {
             }
             searchText
                 .filter { inputText -> inputText.isNotEmpty() }
-                .filter { inputText -> inputText[0]!=' '}
+                .filter { inputText -> inputText[0] != ' ' }
                 .distinctUntilChanged()
                 .subscribe(
                     { inputText ->
@@ -64,14 +64,14 @@ class PeopleFragment : Fragment(), UiHolderFactory.ChannelsInterface {
                             item.name.contains(inputText)
                         }
                         if (filteredStreams.isEmpty()) {
-                            commonAdapter.items = listOf(TitleUi("Ничего не найдено", null, null, 0, R.layout.item_collapse, ""))
+                            commonAdapter.items = listOf(TitleUi("Ничего не найдено", 0, false, null, 0, R.layout.item_collapse, ""))
                         } else {
                             commonAdapter.items = filteredStreams
                         }
                     },
                     { error -> Toast.makeText(requireContext(), error.message, Toast.LENGTH_SHORT).show() }
                 )
-            if (text.isNullOrEmpty()){
+            if (text.isNullOrEmpty()) {
                 commonAdapter.items = listPeople
             }
         }
@@ -81,11 +81,11 @@ class PeopleFragment : Fragment(), UiHolderFactory.ChannelsInterface {
     override fun getClickedView(view: View, position: Int, viewType: Int) {
         val detailsPeopleFragment = DetailsPeopleFragment()
         val arguments = Bundle()
-        var man=listPeople[position] as PeopleUi
+        var man = listPeople[position] as PeopleUi
         arguments.putString(ARG_NAME, man.name)
         arguments.putString(ARG_EMAIL, man.email)
         arguments.putInt(ARG_IMAGE, man.imageId)
-        detailsPeopleFragment.arguments=arguments
+        detailsPeopleFragment.arguments = arguments
         val transaction = requireActivity().supportFragmentManager.beginTransaction()
         transaction.addToBackStack("FromPeopleFragment")
         transaction.add(R.id.container, detailsPeopleFragment)

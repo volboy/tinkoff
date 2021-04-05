@@ -10,17 +10,14 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
-import com.volboy.course_project.App
 import com.volboy.course_project.R
 import com.volboy.course_project.databinding.FragmentSubscribedBinding
 import com.volboy.course_project.message_recycler_view.CommonAdapter
 import com.volboy.course_project.message_recycler_view.ViewTyped
 import com.volboy.course_project.model.LoaderStreams
-import com.volboy.course_project.model.SendedMessage
+import com.volboy.course_project.ui.channel_fragments.MessagesFragment
 import io.reactivex.Observable
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+
 
 class SubscribedFragment : Fragment(), UiHolderFactory.ChannelsInterface {
     private lateinit var binding: FragmentSubscribedBinding
@@ -68,7 +65,12 @@ class SubscribedFragment : Fragment(), UiHolderFactory.ChannelsInterface {
                             item.title.contains(inputText)
                         }
                         if (filteredStreams.isEmpty()) {
-                            commonAdapter.items = listOf(TitleUi("Ничего не найдено", null, null, 0, R.layout.item_collapse, ""))
+                            commonAdapter.items = listOf(
+                                TitleUi(
+                                    "Ничего не найдено", 0, false, null, 0,
+                                    R.layout.item_collapse, ""
+                                )
+                            )
                         } else {
                             commonAdapter.items = filteredStreams
                         }
@@ -82,57 +84,54 @@ class SubscribedFragment : Fragment(), UiHolderFactory.ChannelsInterface {
     }
 
     override fun getClickedView(view: View, position: Int, viewType: Int) {
-        /*sendMessage()*/
-        val items: MutableList<ViewTyped> = commonAdapter.items.toMutableList()
-        val item = items[position] as TitleUi
-        val topics = item.topics
-        view.isSelected = !view.isSelected
+        val oldStreamsList: MutableList<ViewTyped> = commonAdapter.items.toMutableList()
+        var topicsOfStream = mutableListOf<ViewTyped>()
+        val clickedStream = oldStreamsList[position] as TitleUi
+        clickedStream.isSelected = !clickedStream.isSelected
         when (viewType) {
             R.layout.item_collapse -> {
-                if (view.isSelected) {
-                    item.imageId = R.drawable.ic_arrow_up
-                    val topic=loaderStreams.getTopicsOfStreams(item.uid.toInt())
+                if (clickedStream.isSelected) {
+                    topicsOfStream.clear()
+                    clickedStream.imageId = R.drawable.ic_arrow_up
+                    val topic = loaderStreams.getTopicsOfStreams(clickedStream.uid.toInt())
                     val disposableStreams = topic.subscribe(
                         { result ->
-                            item.topics = result.topics
+                            topicsOfStream = result
+                            clickedStream.count = topicsOfStream.size
+                            oldStreamsList.removeAt(position)
+                            oldStreamsList.add(position, clickedStream)
+                            oldStreamsList.addAll(position + 1, topicsOfStream)
+                            commonAdapter.items = oldStreamsList
+                            commonAdapter.notifyItemChanged(position)
                         },
                         { error ->
                             Toast.makeText(context, "Ошибка ${error.message}", Toast.LENGTH_LONG).show()
                             Log.d("ZULIP", error.message.toString())
                         }
                     )
-                    topics?.forEach { topic ->
-                        items.add(position + 1, TitleUi(topic.name, topic.max_id.toString() + " mes", null, 0, R.layout.item_expand, topic.name))
-                    }
                 } else {
-                    item.imageId = R.drawable.ic_arrow_down
-                    var topicSize = item.topics?.size
-                    topics?.forEach { _ ->
-                        topicSize = topicSize?.minus(1)
-                        items.removeAt(position + topicSize!! + 1)
+                    clickedStream.imageId = R.drawable.ic_arrow_down
+                    oldStreamsList.removeAt(position)
+                    oldStreamsList.add(position, clickedStream)
+                    for (i: Int in clickedStream.count downTo 1) {
+                        oldStreamsList.removeAt(position + i)
                     }
+                    commonAdapter.items = oldStreamsList
+                    commonAdapter.notifyItemChanged(position)
                 }
-                commonAdapter.items = items
-                commonAdapter.notifyDataSetChanged()
+            }
+            R.layout.item_expand -> {
+                val messagesFragment = MessagesFragment()
+                val arguments = Bundle()
+                arguments.putString(ARG_TITLE, (commonAdapter.items[position] as TitleUi).title)
+                messagesFragment.arguments = arguments
+                val transaction = requireActivity().supportFragmentManager.beginTransaction()
+                transaction.addToBackStack("FromSubscribedFragment")
+                transaction.add(R.id.container, messagesFragment)
+                transaction.commit()
             }
         }
     }
-
-   /* private fun sendMessage() {
-        App.instance.zulipApi.sendMessage("stream", "general", "Hello from Volgograd)", "test_topic").enqueue(object : Callback<SendedMessage> {
-            override fun onResponse(call: Call<SendedMessage>, response: Response<SendedMessage>) {
-                if (response.isSuccessful) {
-                    Toast.makeText(context, " $response.code()", Toast.LENGTH_LONG).show();
-                } else {
-                    Toast.makeText(context, " $response.code()", Toast.LENGTH_LONG).show();
-                }
-            }
-
-            override fun onFailure(call: Call<SendedMessage>, t: Throwable) {
-                Toast.makeText(context, t.message, Toast.LENGTH_LONG).show();
-            }
-        });
-    }*/
 
     companion object {
         const val ARG_TITLE = "title"

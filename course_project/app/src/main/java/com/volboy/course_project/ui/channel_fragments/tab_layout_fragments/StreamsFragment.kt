@@ -53,7 +53,12 @@ class StreamsFragment : Fragment(), UiHolderFactory.ChannelsInterface {
                             item.title.contains(inputText)
                         }
                         if (filteredStreams.isEmpty()) {
-                            commonAdapter.items = listOf(TitleUi("Ничего не найдено", null, null, 0, R.layout.item_collapse, ""))
+                            commonAdapter.items = listOf(
+                                TitleUi(
+                                    "Ничего не найдено", 0, false, null, 0,
+                                    R.layout.item_collapse, ""
+                                )
+                            )
                         } else {
                             commonAdapter.items = filteredStreams
                         }
@@ -77,7 +82,12 @@ class StreamsFragment : Fragment(), UiHolderFactory.ChannelsInterface {
                 if (view.isSelected) {
                     item.imageId = R.drawable.ic_arrow_up
                     topics?.forEach { topic ->
-                        items.add(position + 1, TitleUi(topic.name, topic.max_id.toString() + " mes", null, 0, R.layout.item_expand, topic.name))
+                        items.add(
+                            position + 1, TitleUi(
+                                topic.name, 0, false, null,
+                                0, R.layout.item_expand, topic.name
+                            )
+                        )
                     }
                 } else {
                     item.imageId = R.drawable.ic_arrow_down
