@@ -8,14 +8,15 @@ import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
 import com.volboy.course_project.message_recycler_view.BaseViewHolder
 import com.volboy.course_project.message_recycler_view.ViewTyped
+import com.volboy.course_project.model.TopicJSON
 
 class TitleUi(
     val title: String,
     val count: String?,
-    val topics: List<Pair<String, Int>>?,
+    var topics: List<TopicJSON>?,
     var imageId: Int,
     override val viewType: Int = R.layout.item_collapse,
-    override var uid: String = ""
+    override var uid: String
 ) : ViewTyped
 
 class AllStreamsViewHolder(val view: View, private val channelsInterface: UiHolderFactory.ChannelsInterface) :

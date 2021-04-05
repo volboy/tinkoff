@@ -14,24 +14,20 @@ import com.volboy.course_project.R
 import com.volboy.course_project.databinding.FragmentStreamsBinding
 import com.volboy.course_project.message_recycler_view.CommonAdapter
 import com.volboy.course_project.message_recycler_view.ViewTyped
-import com.volboy.course_project.model.ObservableStreams
+import com.volboy.course_project.model.LoaderStreams
 import io.reactivex.Observable
 
 class StreamsFragment : Fragment(), UiHolderFactory.ChannelsInterface {
     private lateinit var binding: FragmentStreamsBinding
-    private lateinit var loaderStreams: ObservableStreams
+    private lateinit var loaderStreams: LoaderStreams
     private var listStreams = listOf<ViewTyped>()
     private lateinit var commonAdapter: CommonAdapter<ViewTyped>
     private lateinit var searchText: Observable<String>
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentStreamsBinding.inflate(inflater, container, false)
-        loaderStreams = ObservableStreams(requireContext())
+        loaderStreams = LoaderStreams(requireContext())
         return binding.root
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -80,9 +76,8 @@ class StreamsFragment : Fragment(), UiHolderFactory.ChannelsInterface {
             R.layout.item_collapse -> {
                 if (view.isSelected) {
                     item.imageId = R.drawable.ic_arrow_up
-                    item.uid = "UP"
                     topics?.forEach { topic ->
-                        items.add(position + 1, TitleUi(topic.first, topic.second.toString() + " mes", null, 0, R.layout.item_expand, topic.first))
+                        items.add(position + 1, TitleUi(topic.name, topic.max_id.toString() + " mes", null, 0, R.layout.item_expand, topic.name))
                     }
                 } else {
                     item.imageId = R.drawable.ic_arrow_down

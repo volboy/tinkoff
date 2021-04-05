@@ -15,7 +15,7 @@ import com.volboy.course_project.R
 import com.volboy.course_project.databinding.FragmentSubscribedBinding
 import com.volboy.course_project.message_recycler_view.CommonAdapter
 import com.volboy.course_project.message_recycler_view.ViewTyped
-import com.volboy.course_project.model.ObservableStreams
+import com.volboy.course_project.model.LoaderStreams
 import com.volboy.course_project.model.SendedMessage
 import io.reactivex.Observable
 import retrofit2.Call
@@ -24,14 +24,14 @@ import retrofit2.Response
 
 class SubscribedFragment : Fragment(), UiHolderFactory.ChannelsInterface {
     private lateinit var binding: FragmentSubscribedBinding
-    private lateinit var loaderStreams: ObservableStreams
+    private lateinit var loaderStreams: LoaderStreams
     private var listStreams = listOf<ViewTyped>()
     private lateinit var commonAdapter: CommonAdapter<ViewTyped>
     private lateinit var searchText: Observable<String>
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentSubscribedBinding.inflate(inflater, container, false)
-        loaderStreams = ObservableStreams(requireContext())
+        loaderStreams = LoaderStreams(requireContext())
         return binding.root
     }
 
@@ -40,8 +40,14 @@ class SubscribedFragment : Fragment(), UiHolderFactory.ChannelsInterface {
         commonAdapter = CommonAdapter(holderFactory)
         val streams = loaderStreams.getRemoteStreams()
         val disposableStreams = streams.subscribe(
-            { result -> commonAdapter.items = result },
-            { error -> Toast.makeText(context, "Ошибка ${error.message}", Toast.LENGTH_LONG).show(); Log.d("ZULIP", error.message.toString()) }
+            { result ->
+                commonAdapter.items = result
+                listStreams = result
+            },
+            { error ->
+                Toast.makeText(context, "Ошибка ${error.message}", Toast.LENGTH_LONG).show()
+                Log.d("ZULIP", error.message.toString())
+            }
         )
         binding.rwAllStreams.adapter = commonAdapter
         val mActionBar = (requireActivity() as AppCompatActivity).supportActionBar;
@@ -76,7 +82,7 @@ class SubscribedFragment : Fragment(), UiHolderFactory.ChannelsInterface {
     }
 
     override fun getClickedView(view: View, position: Int, viewType: Int) {
-        sendMessage()
+        /*sendMessage()*/
         val items: MutableList<ViewTyped> = commonAdapter.items.toMutableList()
         val item = items[position] as TitleUi
         val topics = item.topics
@@ -85,13 +91,21 @@ class SubscribedFragment : Fragment(), UiHolderFactory.ChannelsInterface {
             R.layout.item_collapse -> {
                 if (view.isSelected) {
                     item.imageId = R.drawable.ic_arrow_up
-                    item.uid = "UP"
+                    val topic=loaderStreams.getTopicsOfStreams(item.uid.toInt())
+                    val disposableStreams = topic.subscribe(
+                        { result ->
+                            item.topics = result.topics
+                        },
+                        { error ->
+                            Toast.makeText(context, "Ошибка ${error.message}", Toast.LENGTH_LONG).show()
+                            Log.d("ZULIP", error.message.toString())
+                        }
+                    )
                     topics?.forEach { topic ->
-                        items.add(position + 1, TitleUi(topic.first, topic.second.toString() + " mes", null, 0, R.layout.item_expand, topic.first))
+                        items.add(position + 1, TitleUi(topic.name, topic.max_id.toString() + " mes", null, 0, R.layout.item_expand, topic.name))
                     }
                 } else {
                     item.imageId = R.drawable.ic_arrow_down
-                    item.uid = "DOWN"
                     var topicSize = item.topics?.size
                     topics?.forEach { _ ->
                         topicSize = topicSize?.minus(1)
@@ -104,7 +118,7 @@ class SubscribedFragment : Fragment(), UiHolderFactory.ChannelsInterface {
         }
     }
 
-    private fun sendMessage() {
+   /* private fun sendMessage() {
         App.instance.zulipApi.sendMessage("stream", "general", "Hello from Volgograd)", "test_topic").enqueue(object : Callback<SendedMessage> {
             override fun onResponse(call: Call<SendedMessage>, response: Response<SendedMessage>) {
                 if (response.isSuccessful) {
@@ -118,7 +132,7 @@ class SubscribedFragment : Fragment(), UiHolderFactory.ChannelsInterface {
                 Toast.makeText(context, t.message, Toast.LENGTH_LONG).show();
             }
         });
-    }
+    }*/
 
     companion object {
         const val ARG_TITLE = "title"

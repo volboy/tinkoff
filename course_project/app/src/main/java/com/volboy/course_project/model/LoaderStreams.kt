@@ -1,6 +1,8 @@
 package com.volboy.course_project.model
 
 import android.content.Context
+import android.util.Log
+import android.widget.Toast
 import com.volboy.course_project.App
 import com.volboy.course_project.R
 import com.volboy.course_project.message_recycler_view.ViewTyped
@@ -9,14 +11,13 @@ import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
-class ObservableStreams(val context: Context) {
-
+class LoaderStreams(val context: Context) {
 
     private fun viewTypedStreams(streamsJSON: List<StreamJSON>): MutableList<ViewTyped> {
         val viewTypedList = mutableListOf<ViewTyped>()
         streamsJSON.forEach { streams ->
             val uid = streams.stream_id.toString()
-            viewTypedList.add(TitleUi(streams.name.toString(), null, null, R.drawable.ic_arrow_down, R.layout.item_collapse, uid))
+            viewTypedList.add(TitleUi(streams.name, null, null, R.drawable.ic_arrow_down, R.layout.item_collapse, uid))
         }
         return viewTypedList
     }
@@ -26,6 +27,12 @@ class ObservableStreams(val context: Context) {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .map { response -> viewTypedStreams(response.streams) }
+    }
+
+    fun getTopicsOfStreams(id: Int): Single<TopicResponse> {
+        return App.instance.zulipApi.getStreamsTopics(id)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
     }
 }
 
