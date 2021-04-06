@@ -3,7 +3,7 @@ package com.volboy.course_project.model
 class Narrow(val operator: String, val operand: String)
 
 class MessageResponse(
-    val anchor: Int,
+    val anchor: Long,
     val found_newest: Boolean,
     val found_oldest: Boolean,
     val history_limited: Boolean,

@@ -25,6 +25,7 @@ class SubscribedFragment : Fragment(), UiHolderFactory.ChannelsInterface {
     private var listStreams = listOf<ViewTyped>()
     private lateinit var commonAdapter: CommonAdapter<ViewTyped>
     private lateinit var searchText: Observable<String>
+    private var streamName = ""
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentSubscribedBinding.inflate(inflater, container, false)
@@ -90,6 +91,7 @@ class SubscribedFragment : Fragment(), UiHolderFactory.ChannelsInterface {
         clickedStream.isSelected = !clickedStream.isSelected
         when (viewType) {
             R.layout.item_collapse -> {
+                streamName = clickedStream.title
                 if (clickedStream.isSelected) {
                     topicsOfStream.clear()
                     clickedStream.imageId = R.drawable.ic_arrow_up
@@ -123,7 +125,8 @@ class SubscribedFragment : Fragment(), UiHolderFactory.ChannelsInterface {
             R.layout.item_expand -> {
                 val messagesFragment = MessagesFragment()
                 val arguments = Bundle()
-                arguments.putString(ARG_TITLE, (commonAdapter.items[position] as TitleUi).title)
+                arguments.putString(ARG_TOPIC, (commonAdapter.items[position] as TitleUi).title)
+                arguments.putString(ARG_STREAM, streamName)
                 messagesFragment.arguments = arguments
                 val transaction = requireActivity().supportFragmentManager.beginTransaction()
                 transaction.addToBackStack("FromSubscribedFragment")
@@ -134,6 +137,7 @@ class SubscribedFragment : Fragment(), UiHolderFactory.ChannelsInterface {
     }
 
     companion object {
-        const val ARG_TITLE = "title"
+        const val ARG_TOPIC = "topic"
+        const val ARG_STREAM = "stream"
     }
 }

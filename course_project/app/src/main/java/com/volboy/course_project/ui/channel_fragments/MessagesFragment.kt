@@ -126,19 +126,22 @@ class MessagesFragment : Fragment(), EmojiBottomFragment.EmojiEventInterface {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val topicName = requireArguments().getString(SubscribedFragment.ARG_TITLE)?.toLowerCase()
-        binding.topicName.text = "Topic: #$topicName"
+        val topicName = requireArguments().getString(SubscribedFragment.ARG_TOPIC)
+        val streamName = requireArguments().getString(SubscribedFragment.ARG_STREAM)
+        binding.topicName.text = "Topic: #${topicName?.toLowerCase()}"
         val loader = Loader()
-        val messages = loader.getMessages()
-        val disposableMessages = messages.subscribe(
-            { result ->
-                val result = result
-            },
-            { error ->
-                Toast.makeText(context, "Ошибка ${error.message}", Toast.LENGTH_LONG).show()
-                Log.d("ZULIP", error.message.toString())
-            }
-        )
+        if (streamName != null && topicName != null) {
+            val messages = loader.getMessages(streamName, topicName)
+            val disposableMessages = messages.subscribe(
+                { result ->
+                    val result = result
+                },
+                { error ->
+                    Toast.makeText(context, "Ошибка ${error.message}", Toast.LENGTH_LONG).show()
+                    Log.d("ZULIP", error.message.toString())
+                }
+            )
+        }
     }
 
     private fun addMessage(newMessage: String): ViewTyped {

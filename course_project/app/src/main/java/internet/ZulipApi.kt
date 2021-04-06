@@ -16,6 +16,6 @@ interface ZulipApi {
         @Query("anchor") anchor: String,
         @Query("num_before") num_before: Int,
         @Query("num_after") num_after: Int,
-        @Query("narrow[]") narrow: Array<Map<String, String>>
+        @Query("narrow") narrow: String
     ): Single<MessageResponse>
 }

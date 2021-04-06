@@ -1,5 +1,6 @@
 package com.volboy.course_project.model
 
+import com.google.gson.Gson
 import com.volboy.course_project.App
 import com.volboy.course_project.R
 import com.volboy.course_project.message_recycler_view.DataUi
@@ -26,8 +27,11 @@ class Loader() {
             .map { response -> viewTypedTopics(response.topics) }
     }
 
-    fun getMessages(): Single<List<ViewTyped>> {
-        return App.instance.zulipApi.getMessages("newest", 100, 0, arrayOf(mapOf("stream" to "general"), mapOf("topic" to "test_topic")))
+    fun getMessages(streamName: String, topicName: String): Single<List<ViewTyped>> {
+        val narrows = listOf<Narrow>(Narrow("stream", streamName), Narrow("topic", topicName))
+        val gson = Gson()
+        val narrowsJSON = gson.toJson(narrows)
+        return App.instance.zulipApi.getMessages("newest", 100, 0, narrowsJSON)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .map { response -> groupedMessages(response.messages) }
