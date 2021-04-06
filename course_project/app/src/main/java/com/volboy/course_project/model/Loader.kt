@@ -1,6 +1,5 @@
 package com.volboy.course_project.model
 
-import android.content.Context
 import com.volboy.course_project.App
 import com.volboy.course_project.R
 import com.volboy.course_project.message_recycler_view.DataUi
@@ -28,7 +27,7 @@ class Loader() {
     }
 
     fun getMessages(): Single<List<ViewTyped>> {
-        return App.instance.zulipApi.getMessages("newest", 100, 0, arrayOf(mapOf("Test" to "stream")))
+        return App.instance.zulipApi.getMessages("newest", 100, 0, arrayOf(mapOf("stream" to "general"), mapOf("topic" to "test_topic")))
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .map { response -> groupedMessages(response.messages) }

@@ -1,6 +1,6 @@
 package com.volboy.course_project.model
 
-class Narrow(operator: String, operand: String)
+class Narrow(val operator: String, val operand: String)
 
 class MessageResponse(
     val anchor: Int,
