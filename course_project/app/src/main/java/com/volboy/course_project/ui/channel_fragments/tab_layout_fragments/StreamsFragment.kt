@@ -1,7 +1,7 @@
 package com.volboy.course_project.ui.channel_fragments.tab_layout_fragments
 
-import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,26 +14,38 @@ import com.volboy.course_project.R
 import com.volboy.course_project.databinding.FragmentStreamsBinding
 import com.volboy.course_project.message_recycler_view.CommonAdapter
 import com.volboy.course_project.message_recycler_view.ViewTyped
-import com.volboy.course_project.model.LoaderStreams
+import com.volboy.course_project.model.Loader
+import com.volboy.course_project.ui.channel_fragments.MessagesFragment
 import io.reactivex.Observable
+
 
 class StreamsFragment : Fragment(), UiHolderFactory.ChannelsInterface {
     private lateinit var binding: FragmentStreamsBinding
-    private lateinit var loaderStreams: LoaderStreams
+    private lateinit var loader: Loader
     private var listStreams = listOf<ViewTyped>()
     private lateinit var commonAdapter: CommonAdapter<ViewTyped>
     private lateinit var searchText: Observable<String>
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentStreamsBinding.inflate(inflater, container, false)
-        loaderStreams = LoaderStreams(requireContext())
+        loader = Loader()
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val holderFactory = UiHolderFactory(this)
         commonAdapter = CommonAdapter(holderFactory)
-        commonAdapter.items = listStreams
+        val streams = loader.getRemoteStreams()
+        val disposableStreams = streams.subscribe(
+            { result ->
+                commonAdapter.items = result
+                listStreams = result
+            },
+            { error ->
+                Toast.makeText(context, "Ошибка ${error.message}", Toast.LENGTH_LONG).show()
+                Log.d("ZULIP", error.message.toString())
+            }
+        )
         binding.rwAllStreams.adapter = commonAdapter
         val mActionBar = (requireActivity() as AppCompatActivity).supportActionBar;
         mActionBar?.show()
@@ -72,51 +84,56 @@ class StreamsFragment : Fragment(), UiHolderFactory.ChannelsInterface {
     }
 
     override fun getClickedView(view: View, position: Int, viewType: Int) {
-        /* sendMessage()*/
-        val items: MutableList<ViewTyped> = commonAdapter.items.toMutableList()
-        val item = items[position] as TitleUi
-        val topics = item.topics
-        view.isSelected = !view.isSelected
+        val oldStreamsList: MutableList<ViewTyped> = commonAdapter.items.toMutableList()
+        var topicsOfStream = mutableListOf<ViewTyped>()
+        val clickedStream = oldStreamsList[position] as TitleUi
+        clickedStream.isSelected = !clickedStream.isSelected
         when (viewType) {
             R.layout.item_collapse -> {
-                if (view.isSelected) {
-                    item.imageId = R.drawable.ic_arrow_up
-                    topics?.forEach { topic ->
-                        items.add(
-                            position + 1, TitleUi(
-                                topic.name, 0, false, null,
-                                0, R.layout.item_expand, topic.name
-                            )
-                        )
-                    }
+                if (clickedStream.isSelected) {
+                    topicsOfStream.clear()
+                    clickedStream.imageId = R.drawable.ic_arrow_up
+                    val topic = loader.getTopicsOfStreams(clickedStream.uid.toInt())
+                    val disposableStreams = topic.subscribe(
+                        { result ->
+                            topicsOfStream = result
+                            clickedStream.count = topicsOfStream.size
+                            oldStreamsList.removeAt(position)
+                            oldStreamsList.add(position, clickedStream)
+                            oldStreamsList.addAll(position + 1, topicsOfStream)
+                            commonAdapter.items = oldStreamsList
+                            commonAdapter.notifyItemChanged(position)
+                        },
+                        { error ->
+                            Toast.makeText(context, "Ошибка ${error.message}", Toast.LENGTH_LONG).show()
+                            Log.d("ZULIP", error.message.toString())
+                        }
+                    )
                 } else {
-                    item.imageId = R.drawable.ic_arrow_down
-                    item.uid = "DOWN"
-                    var topicSize = item.topics?.size
-                    topics?.forEach { _ ->
-                        topicSize = topicSize?.minus(1)
-                        items.removeAt(position + topicSize!! + 1)
+                    clickedStream.imageId = R.drawable.ic_arrow_down
+                    oldStreamsList.removeAt(position)
+                    oldStreamsList.add(position, clickedStream)
+                    for (i: Int in clickedStream.count downTo 1) {
+                        oldStreamsList.removeAt(position + i)
                     }
+                    commonAdapter.items = oldStreamsList
+                    commonAdapter.notifyItemChanged(position)
                 }
-                commonAdapter.items = items
-                commonAdapter.notifyDataSetChanged()
+            }
+            R.layout.item_expand -> {
+                val messagesFragment = MessagesFragment()
+                val arguments = Bundle()
+                arguments.putString(ARG_TITLE, (commonAdapter.items[position] as TitleUi).title)
+                messagesFragment.arguments = arguments
+                val transaction = requireActivity().supportFragmentManager.beginTransaction()
+                transaction.addToBackStack("FromSubscribedFragment")
+                transaction.add(R.id.container, messagesFragment)
+                transaction.commit()
             }
         }
     }
 
-    /* private fun sendMessage() {
-         App.instance.zulipApi.sendMessage("stream", "general", "Hello from Volgograd)", "test_topic").enqueue(object : Callback<SendedMessage> {
-             override fun onResponse(call: Call<SendedMessage>, response: Response<SendedMessage>) {
-                 if (response.isSuccessful) {
-                     Toast.makeText(context, " $response.code()", Toast.LENGTH_LONG).show();
-                 } else {
-                     Toast.makeText(context, " $response.code()", Toast.LENGTH_LONG).show();
-                 }
-             }
-
-             override fun onFailure(call: Call<SendedMessage>, t: Throwable) {
-                 Toast.makeText(context, t.message, Toast.LENGTH_LONG).show();
-             }
-         });
-     }*/
+    companion object {
+        const val ARG_TITLE = "title"
+    }
 }

@@ -3,10 +3,12 @@ package com.volboy.course_project.ui.channel_fragments
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
@@ -20,6 +22,7 @@ import com.volboy.course_project.message_recycler_view.CommonAdapter
 import com.volboy.course_project.message_recycler_view.MessageHolderFactory
 import com.volboy.course_project.message_recycler_view.TextUi
 import com.volboy.course_project.message_recycler_view.ViewTyped
+import com.volboy.course_project.model.Loader
 import com.volboy.course_project.model.Message
 import com.volboy.course_project.model.ObservableMessages
 import com.volboy.course_project.model.Reaction
@@ -124,7 +127,18 @@ class MessagesFragment : Fragment(), EmojiBottomFragment.EmojiEventInterface {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val topicName = requireArguments().getString(SubscribedFragment.ARG_TITLE)?.toLowerCase()
-        binding.topicName.text ="Topic: #$topicName"
+        binding.topicName.text = "Topic: #$topicName"
+        val loader = Loader()
+        val messages = loader.getMessages()
+        val disposableMessages = messages.subscribe(
+            { result ->
+                val result = result
+            },
+            { error ->
+                Toast.makeText(context, "Ошибка ${error.message}", Toast.LENGTH_LONG).show()
+                Log.d("ZULIP", error.message.toString())
+            }
+        )
     }
 
     private fun addMessage(newMessage: String): ViewTyped {

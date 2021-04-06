@@ -14,28 +14,28 @@ import com.volboy.course_project.R
 import com.volboy.course_project.databinding.FragmentSubscribedBinding
 import com.volboy.course_project.message_recycler_view.CommonAdapter
 import com.volboy.course_project.message_recycler_view.ViewTyped
-import com.volboy.course_project.model.LoaderStreams
+import com.volboy.course_project.model.Loader
 import com.volboy.course_project.ui.channel_fragments.MessagesFragment
 import io.reactivex.Observable
 
 
 class SubscribedFragment : Fragment(), UiHolderFactory.ChannelsInterface {
     private lateinit var binding: FragmentSubscribedBinding
-    private lateinit var loaderStreams: LoaderStreams
+    private lateinit var loader: Loader
     private var listStreams = listOf<ViewTyped>()
     private lateinit var commonAdapter: CommonAdapter<ViewTyped>
     private lateinit var searchText: Observable<String>
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentSubscribedBinding.inflate(inflater, container, false)
-        loaderStreams = LoaderStreams(requireContext())
+        loader = Loader()
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val holderFactory = UiHolderFactory(this)
         commonAdapter = CommonAdapter(holderFactory)
-        val streams = loaderStreams.getRemoteStreams()
+        val streams = loader.getRemoteStreams()
         val disposableStreams = streams.subscribe(
             { result ->
                 commonAdapter.items = result
@@ -93,7 +93,7 @@ class SubscribedFragment : Fragment(), UiHolderFactory.ChannelsInterface {
                 if (clickedStream.isSelected) {
                     topicsOfStream.clear()
                     clickedStream.imageId = R.drawable.ic_arrow_up
-                    val topic = loaderStreams.getTopicsOfStreams(clickedStream.uid.toInt())
+                    val topic = loader.getTopicsOfStreams(clickedStream.uid.toInt())
                     val disposableStreams = topic.subscribe(
                         { result ->
                             topicsOfStream = result
