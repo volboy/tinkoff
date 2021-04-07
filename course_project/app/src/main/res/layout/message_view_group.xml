@@ -12,7 +12,7 @@
         android:layout_height="@dimen/avatar_height"
         android:scaleType="centerCrop"
         android:src="@drawable/darell_steward"
-        app:shapeAppearanceOverlay="@style/circle" />
+        app:shapeAppearanceOverlay="@style/CircleImageView" />
 
     <TextView
         android:id="@+id/header"
@@ -34,12 +34,4 @@
         android:text="@string/message_str"
         android:textColor="@color/message_color"
         android:textSize="@dimen/message_text_size" />
-
-    <com.volboy.course_project.customviews.FlexBoxLayout
-        android:id="@+id/flex_box_layout"
-        android:layout_width="@dimen/flexbox_width"
-        android:layout_height="wrap_content">
-
-    </com.volboy.course_project.customviews.FlexBoxLayout>
-
 </merge>

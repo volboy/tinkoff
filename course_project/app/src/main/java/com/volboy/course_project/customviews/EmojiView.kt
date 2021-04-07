@@ -1,13 +1,11 @@
 package com.volboy.course_project.customviews
 
-
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
 import androidx.core.content.res.ResourcesCompat.getColor
 import com.volboy.course_project.R
-
 
 class EmojiView @JvmOverloads constructor(
     context: Context,
@@ -54,7 +52,7 @@ class EmojiView @JvmOverloads constructor(
     init {
         context.obtainStyledAttributes(attrs, R.styleable.EmojiView).apply {
             textSize = getDimensionPixelSize(R.styleable.EmojiView_ev_text_size, context.spToPx(DEFAULT_FONT_SIZE_PX))
-            var emojiCode = getInteger(R.styleable.EmojiView_ev_emoji, DEFAULT_EMOJI_CODE)
+            val emojiCode = getInteger(R.styleable.EmojiView_ev_emoji, DEFAULT_EMOJI_CODE)
             text = getText(R.styleable.EmojiView_ev_text)?.toString() ?: DEFAULT_TEXT
             if (text == "") text = DEFAULT_TEXT
             emoji = String(Character.toChars(emojiCode))
@@ -77,13 +75,13 @@ class EmojiView @JvmOverloads constructor(
         var contentHeight = mRoundRectHeight
         var mode = MeasureSpec.getMode(widthMeasureSpec)
         contentWidth = when (mode) {
-            MeasureSpec.EXACTLY -> widthMeasureSpec
+            MeasureSpec.EXACTLY -> MeasureSpec.getSize(widthMeasureSpec)
             MeasureSpec.AT_MOST -> contentWidth
             else -> contentWidth
         }
         mode = MeasureSpec.getMode(heightMeasureSpec)
         contentHeight = when (mode) {
-            MeasureSpec.EXACTLY -> heightMeasureSpec
+            MeasureSpec.EXACTLY -> MeasureSpec.getSize(heightMeasureSpec)
             MeasureSpec.AT_MOST -> contentHeight
             else -> contentHeight
         }

@@ -4,6 +4,7 @@ import com.google.gson.Gson
 import com.volboy.course_project.App
 import com.volboy.course_project.R
 import com.volboy.course_project.message_recycler_view.DataUi
+import com.volboy.course_project.message_recycler_view.ReactionsUi
 import com.volboy.course_project.message_recycler_view.TextUi
 import com.volboy.course_project.message_recycler_view.ViewTyped
 import com.volboy.course_project.ui.channel_fragments.tab_layout_fragments.TitleUi
@@ -68,9 +69,11 @@ class Loader() {
         val viewTypedList = mutableListOf<ViewTyped>()
         messagesJSON.forEach { msg ->
             if (!msg.is_me_message) {
-                viewTypedList.add(TextUi(msg.sender_full_name, msg.content, null, R.layout.item_in_message, msg.id.toString()))
+                viewTypedList.add(TextUi(msg.sender_full_name, msg.content, R.layout.item_in_message, msg.id.toString()))
+                viewTypedList.add(ReactionsUi(msg.reactions, R.layout.item_messages_reactions, msg.id.toString()))
             } else {
-                viewTypedList.add(TextUi("You", msg.content, null, R.layout.item_out_message, msg.id.toString()))
+                viewTypedList.add(TextUi("You", msg.content, R.layout.item_out_message, msg.id.toString()))
+                viewTypedList.add(ReactionsUi(msg.reactions, R.layout.item_messages_reactions_out, msg.id.toString()))
             }
         }
         return viewTypedList
@@ -78,7 +81,7 @@ class Loader() {
 
     private fun getDateTime(seconds: Long): String {
         val formatter = SimpleDateFormat("dd/MM", Locale.getDefault())
-        return formatter.format(seconds*1000)
+        return formatter.format(seconds * 1000)
     }
 }
 

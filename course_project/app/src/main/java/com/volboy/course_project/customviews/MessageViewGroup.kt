@@ -25,11 +25,9 @@ class MessageViewGroup @JvmOverloads constructor(
     private val imageAvatar: ImageView
     private val header: TextView
     private val message: TextView
-    private val flexBoxLayout: FlexBoxLayout
     private val imageAvatarRect = Rect()
     private val headerRect = Rect()
     private val messageRect = Rect()
-    private val flexBoxLayoutRect = Rect()
     private var mRoundRectPoint = RectF()
     private val mRoundRectPaint = Paint().apply {
         color = ResourcesCompat.getColor(resources, R.color.ev_unselected, null)
@@ -41,7 +39,6 @@ class MessageViewGroup @JvmOverloads constructor(
         imageAvatar = findViewById(R.id.avatar)
         header = findViewById(R.id.header)
         message = findViewById(R.id.message)
-        flexBoxLayout = findViewById(R.id.flex_box_layout)
         setWillNotDraw(false)
     }
 
@@ -50,13 +47,11 @@ class MessageViewGroup @JvmOverloads constructor(
         val widthResult: Int
         val headerHeight: Int
         val messageHeight: Int
-        val flexBoxLayoutHeight: Int
         val imageAvatarWidth: Int
         val messageWidth: Int
         val imageAvatarLayoutParams = imageAvatar.layoutParams as MarginLayoutParams
         val headerLayoutParams = header.layoutParams as MarginLayoutParams
         val messageLayoutParams = message.layoutParams as MarginLayoutParams
-        val flexBoxLayoutParams = flexBoxLayout.layoutParams as MarginLayoutParams
         //обмеряем аватарку
         measureChildWithMargins(imageAvatar, widthMeasureSpec, 0, heightMeasureSpec, 0)
         imageAvatarWidth = imageAvatar.measuredWidth + imageAvatarLayoutParams.leftMargin + imageAvatarLayoutParams.rightMargin
@@ -67,12 +62,9 @@ class MessageViewGroup @JvmOverloads constructor(
         measureChildWithMargins(message, widthMeasureSpec, imageAvatarWidth, heightMeasureSpec, headerHeight)
         messageWidth = message.measuredWidth + messageLayoutParams.leftMargin + messageLayoutParams.rightMargin
         messageHeight = message.measuredHeight + messageLayoutParams.topMargin + messageLayoutParams.bottomMargin
-        //обмеряем flexBoxLayout
-        measureChildWithMargins(flexBoxLayout, widthMeasureSpec, imageAvatarWidth, heightMeasureSpec, headerHeight + messageHeight)
-        flexBoxLayoutHeight = flexBoxLayout.measuredHeight + flexBoxLayoutParams.topMargin + flexBoxLayoutParams.bottomMargin
         //итого ширина и высота
         widthResult = imageAvatarWidth + messageWidth
-        heightResult = headerHeight + messageHeight + flexBoxLayoutHeight
+        heightResult = headerHeight + messageHeight
         setMeasuredDimension(resolveSize(widthResult, widthMeasureSpec), resolveSize(heightResult, heightMeasureSpec))
     }
 
@@ -80,7 +72,6 @@ class MessageViewGroup @JvmOverloads constructor(
         val imageAvatarLayoutParams = imageAvatar.layoutParams as MarginLayoutParams
         val headerLayoutParams = header.layoutParams as MarginLayoutParams
         val messageLayoutParams = message.layoutParams as MarginLayoutParams
-        val flexBoxLayoutParams = flexBoxLayout.layoutParams as MarginLayoutParams
         imageAvatarRect.left = imageAvatarLayoutParams.leftMargin
         imageAvatarRect.top = imageAvatarLayoutParams.topMargin
         imageAvatarRect.right = imageAvatarRect.left + imageAvatar.measuredWidth
@@ -96,11 +87,6 @@ class MessageViewGroup @JvmOverloads constructor(
         messageRect.right = messageRect.left + message.measuredWidth
         messageRect.bottom = messageRect.top + message.measuredHeight
         message.layout(messageRect)
-        flexBoxLayoutRect.left = headerRect.left - context.dpToPx(RECT_MARGIN_LEFT)
-        flexBoxLayoutRect.top = flexBoxLayoutParams.topMargin + messageRect.bottom + messageLayoutParams.bottomMargin
-        flexBoxLayoutRect.right = flexBoxLayoutRect.left + flexBoxLayout.measuredWidth
-        flexBoxLayoutRect.bottom = flexBoxLayoutRect.top + flexBoxLayout.measuredHeight
-        flexBoxLayout.layout(flexBoxLayoutRect)
         mRoundRectPoint.set(
             headerRect.left.toFloat() - context.dpToPx(RECT_MARGIN_LEFT),
             imageAvatar.top.toFloat(),

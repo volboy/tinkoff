@@ -17,13 +17,14 @@
     <style name="EmojiViewStyle">
         <item name="android:layout_width">45dp</item>
         <item name="android:layout_height">30dp</item>
-        <item name="android:paddingLeft">9dp</item>
-        <item name="android:paddingTop">4.8dp</item>
-        <item name="android:paddingRight">9dp</item>
-        <item name="android:paddingBottom">4.8dp</item>
+        <item name="fontFamily">cursive</item>
         <item name="android:layout_marginRight">10dp</item>
         <item name="android:layout_marginBottom">7dp</item>
         <item name="android:background">@drawable/emoji_view_state</item>
+    </style>
+
+    <style name="CircleImageView">
+        <item name="cornerSize">50%</item>
     </style>
 
     <style name="CustomTabText" parent="@android:style/TextAppearance.Widget.TabWidget">
