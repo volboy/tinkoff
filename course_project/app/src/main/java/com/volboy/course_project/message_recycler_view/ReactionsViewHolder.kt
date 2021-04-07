@@ -20,20 +20,20 @@ class ReactionsViewHolder(view: View, private val messageInterface: MessageHolde
     override fun bind(item: ReactionsUi) {
         flexBoxLayout.removeAllViews()
         item.reactions.forEach { reaction ->
-            addView(reaction.emoji_code, reaction.user_id) //не придумал, где сделать это. Знаю, что делать здесь это жесть
+            addView(reaction.emoji_code, 0) //не придумал, где сделать это. Знаю, что делать здесь это жесть
         }
     }
 
     private fun addView(emoji: String, countReactions: Int) {
         val context = flexBoxLayout.context
         val emojiView = EmojiView(context)
-        val layoutParams = FrameLayout.LayoutParams(context.dpToPx(45F), context.dpToPx(30F))
+        val layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, context.dpToPx(30F))
         emojiView.setPadding(context.dpToPx(9F), context.dpToPx(4.8F), context.dpToPx(9F), context.dpToPx(4.8F))
         emojiView.setBackgroundResource(R.drawable.emoji_view_state)
         layoutParams.rightMargin = context.dpToPx(10F)
         layoutParams.bottomMargin = context.dpToPx(7F)
         emojiView.layoutParams = layoutParams
-        emojiView.text = countReactions.toString()
+        //emojiView.text = countReactions.toString()
         emojiView.emoji = emoji
         emojiView.setOnClickListener { messageInterface.getClickedView(emojiView, adapterPosition) }
         flexBoxLayout.addView(emojiView)
