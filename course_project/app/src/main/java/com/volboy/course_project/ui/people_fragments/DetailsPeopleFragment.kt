@@ -15,7 +15,7 @@ class DetailsPeopleFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentPeoplesDetailBinding.inflate(inflater, container, false)
         binding.profileName.text=requireArguments().getString(ARG_NAME)
-        binding.profileImage.setImageResource(requireArguments().getInt(ARG_IMAGE))
+        //binding.profileImage.setImageResource(requireArguments().getInt(ARG_IMAGE))
         val mActionBar = (requireActivity() as AppCompatActivity).supportActionBar;
         mActionBar?.hide()
         return binding.root

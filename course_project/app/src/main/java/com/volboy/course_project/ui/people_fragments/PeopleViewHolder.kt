@@ -11,7 +11,7 @@ import com.volboy.course_project.ui.channel_fragments.tab_layout_fragments.UiHol
 class PeopleUi(
     val name: String,
     val email: String?,
-    val imageId: Int,
+    val imageId: String,
     override val viewType: Int = R.layout.item_people_list,
     override val uid: String = ""
 ) : ViewTyped
@@ -28,6 +28,6 @@ class PeopleViewHolder(val view: View, private val channelsInterface: UiHolderFa
         }
         name.text = item.name
         email.text = item.email.toString()
-        image.setImageResource(item.imageId)
+        //image.setImageResource(item.imageId)
     }
 }

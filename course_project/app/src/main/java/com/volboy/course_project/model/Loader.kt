@@ -8,6 +8,7 @@ import com.volboy.course_project.message_recycler_view.ReactionsUi
 import com.volboy.course_project.message_recycler_view.TextUi
 import com.volboy.course_project.message_recycler_view.ViewTyped
 import com.volboy.course_project.ui.channel_fragments.tab_layout_fragments.TitleUi
+import com.volboy.course_project.ui.people_fragments.PeopleUi
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -38,6 +39,13 @@ class Loader() {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .map { response -> groupedMessages(response.messages) }
+    }
+
+    fun getRemoteUsers(): Single<MutableList<ViewTyped>> {
+        return App.instance.zulipApi.getUsers()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .map { response -> viewTypedUsers(response.members) }
     }
 
     private fun viewTypedStreams(streamsJSON: List<StreamJSON>): MutableList<ViewTyped> {
@@ -82,6 +90,15 @@ class Loader() {
     private fun getDateTime(seconds: Long): String {
         val formatter = SimpleDateFormat("dd/MM", Locale.getDefault())
         return formatter.format(seconds * 1000)
+    }
+
+    private fun viewTypedUsers(usersJSON: List<UserJSON>): MutableList<ViewTyped> {
+        val viewTypedList = mutableListOf<ViewTyped>()
+        usersJSON.forEach { user ->
+            val uid = user.user_id.toString()
+            viewTypedList.add(PeopleUi(user.full_name, user.email, user.avatar_url, R.layout.item_people_list, uid))
+        }
+        return viewTypedList
     }
 }
 
