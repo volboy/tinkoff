@@ -12,10 +12,3 @@ object ErrorItem : ViewTyped {
     override val uid: String = "ERROR_ITEM_ID"
     override val viewType: Int = R.layout.item_error
 }
-
-object EmojiItem : ViewTyped {
-    override val uid: String = "EMOJI_ITEM_ID"
-    override val viewType: Int = R.layout.item_emoji_dialog
-}
-
-class SimpleItem(override val viewType: Int, override val uid: String = "SIMPLE_ITEM_ID") : ViewTyped

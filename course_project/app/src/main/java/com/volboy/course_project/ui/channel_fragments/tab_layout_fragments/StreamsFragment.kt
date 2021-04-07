@@ -14,6 +14,8 @@ import com.volboy.course_project.R
 import com.volboy.course_project.databinding.FragmentStreamsBinding
 import com.volboy.course_project.message_recycler_view.CommonAdapter
 import com.volboy.course_project.message_recycler_view.ViewTyped
+import com.volboy.course_project.message_recycler_view.simple_items.ErrorItem
+import com.volboy.course_project.message_recycler_view.simple_items.ProgressItem
 import com.volboy.course_project.model.Loader
 import com.volboy.course_project.ui.channel_fragments.MessagesFragment
 import io.reactivex.Observable
@@ -35,6 +37,8 @@ class StreamsFragment : Fragment(), UiHolderFactory.ChannelsInterface {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val holderFactory = UiHolderFactory(this)
         commonAdapter = CommonAdapter(holderFactory)
+        commonAdapter.items = listOf(ProgressItem)
+        binding.rwAllStreams.adapter = commonAdapter
         val streams = loader.getRemoteStreams()
         val disposableStreams = streams.subscribe(
             { result ->
@@ -42,11 +46,11 @@ class StreamsFragment : Fragment(), UiHolderFactory.ChannelsInterface {
                 listStreams = result
             },
             { error ->
+                commonAdapter.items = listOf(ErrorItem)
                 Toast.makeText(context, "Ошибка ${error.message}", Toast.LENGTH_LONG).show()
                 Log.d("ZULIP", error.message.toString())
             }
         )
-        binding.rwAllStreams.adapter = commonAdapter
         val mActionBar = (requireActivity() as AppCompatActivity).supportActionBar;
         mActionBar?.show()
         val searchEdit = requireActivity().findViewById<EditText>(R.id.searchEditText)

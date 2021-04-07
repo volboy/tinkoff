@@ -16,6 +16,8 @@ import com.volboy.course_project.customviews.EmojiView
 
 import com.volboy.course_project.databinding.FragmentMessagesBinding
 import com.volboy.course_project.message_recycler_view.*
+import com.volboy.course_project.message_recycler_view.simple_items.ErrorItem
+import com.volboy.course_project.message_recycler_view.simple_items.ProgressItem
 import com.volboy.course_project.model.Loader
 import com.volboy.course_project.model.ReactionsJSON
 import com.volboy.course_project.ui.channel_fragments.tab_layout_fragments.SubscribedFragment
@@ -55,6 +57,8 @@ class MessagesFragment : Fragment(), MessageHolderFactory.MessageInterface {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        commonAdapter.items = listOf(ProgressItem)
+        binding.recyclerMessage.adapter = commonAdapter
         val topicName = requireArguments().getString(SubscribedFragment.ARG_TOPIC)
         val streamName = requireArguments().getString(SubscribedFragment.ARG_STREAM)
         binding.topicName.text = "Topic: #${topicName?.toLowerCase()}"
@@ -64,10 +68,10 @@ class MessagesFragment : Fragment(), MessageHolderFactory.MessageInterface {
             val disposableMessages = messages.subscribe(
                 { result ->
                     commonAdapter.items = result
-                    binding.recyclerMessage.adapter = commonAdapter
                     binding.recyclerMessage.scrollToPosition(result.size - 1)
                 },
                 { error ->
+                    commonAdapter.items = listOf(ErrorItem)
                     Toast.makeText(context, "Ошибка ${error.message}", Toast.LENGTH_LONG).show()
                     Log.d("ZULIP", error.message.toString())
                 }

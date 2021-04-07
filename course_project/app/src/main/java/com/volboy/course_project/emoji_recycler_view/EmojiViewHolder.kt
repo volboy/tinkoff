@@ -8,7 +8,7 @@ import com.volboy.course_project.message_recycler_view.ViewTyped
 
 class EmojiUi(val emoji: String, override val viewType: Int = R.layout.item_emoji_dialog) : ViewTyped
 
-class EmojiViewHolder(view: View, private val click: (View) -> Unit) : BaseViewHolder<EmojiUi>(view) {
+class EmojiViewHolder(view: View, click: (View) -> Unit) : BaseViewHolder<EmojiUi>(view) {
     private val emoji: TextView = view.findViewById(R.id.emoji)
 
     init {
