@@ -33,6 +33,7 @@ class MessagesFragment : Fragment(), EmojiBottomFragment.EmojiEventInterface {
     private lateinit var messages: MutableList<ViewTyped>
     private lateinit var itemFromMessages: View
     private lateinit var binding: FragmentMessagesBinding
+    private lateinit var commonAdapter: CommonAdapter<ViewTyped>
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentMessagesBinding.inflate(inflater, container, false)
@@ -45,22 +46,14 @@ class MessagesFragment : Fragment(), EmojiBottomFragment.EmojiEventInterface {
             true
         }
         val holderFactory = MessageHolderFactory(longClickListener)
-        val messageAdapter = CommonAdapter<ViewTyped>(holderFactory)
-        val loaderMessage = ObservableMessages() // типа загрузчик сообщений
-        binding.recyclerMessage.adapter = messageAdapter
-
-        val observableMessages = loaderMessage.getMessages().subscribe(
-            { item ->
-                messages = item as MutableList<ViewTyped>
-                messageAdapter.items = messages
-            },
-            { error -> Snackbar.make(binding.root, error.toString(), Snackbar.LENGTH_LONG).show() })
-        binding.recyclerMessage.scrollToPosition(messageAdapter.items.size - 1)
+        commonAdapter = CommonAdapter(holderFactory)
+        binding.recyclerMessage.adapter = commonAdapter
+        binding.recyclerMessage.scrollToPosition(commonAdapter.items.size - 1)
         binding.messageBtn.setOnClickListener {
             val newMessages = messages
             newMessages.add(addMessage(getNewMessage()))
-            messageAdapter.items = newMessages
-            binding.recyclerMessage.scrollToPosition(messageAdapter.items.size - 1)
+            commonAdapter.items = newMessages
+            binding.recyclerMessage.scrollToPosition(commonAdapter.items.size - 1)
         }
         binding.messageBox.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {}
@@ -134,7 +127,7 @@ class MessagesFragment : Fragment(), EmojiBottomFragment.EmojiEventInterface {
             val messages = loader.getMessages(streamName, topicName)
             val disposableMessages = messages.subscribe(
                 { result ->
-                    val result = result
+                    commonAdapter.items = result
                 },
                 { error ->
                     Toast.makeText(context, "Ошибка ${error.message}", Toast.LENGTH_LONG).show()

@@ -10,6 +10,8 @@ import com.volboy.course_project.ui.channel_fragments.tab_layout_fragments.Title
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import java.text.SimpleDateFormat
+import java.util.*
 
 class Loader() {
 
@@ -56,16 +58,16 @@ class Loader() {
     }
 
     private fun groupedMessages(messagesJSON: List<MessageJSON>): List<ViewTyped> {
-        val messageByDate: Map<Int, List<MessageJSON>> = messagesJSON.groupBy { it.timestamp }
+        val messageByDate: Map<Long, List<MessageJSON>> = messagesJSON.groupBy { it.timestamp }
         return messageByDate.flatMap { (date, msg) ->
-            listOf(DataUi(date.toString(), R.layout.item_date_divider)) + viewTypedMessages(msg)
+            listOf(DataUi(getDateTime(date), R.layout.item_date_divider)) + viewTypedMessages(msg)
         }
     }
 
     private fun viewTypedMessages(messagesJSON: List<MessageJSON>): MutableList<ViewTyped> {
         val viewTypedList = mutableListOf<ViewTyped>()
         messagesJSON.forEach { msg ->
-            if (msg.is_me_message) {
+            if (!msg.is_me_message) {
                 viewTypedList.add(TextUi(msg.sender_full_name, msg.content, null, R.layout.item_in_message, msg.id.toString()))
             } else {
                 viewTypedList.add(TextUi("You", msg.content, null, R.layout.item_out_message, msg.id.toString()))
@@ -73,7 +75,13 @@ class Loader() {
         }
         return viewTypedList
     }
+
+    private fun getDateTime(seconds: Long): String {
+        val formatter = SimpleDateFormat("dd/MM", Locale.getDefault())
+        return formatter.format(seconds*1000)
+    }
 }
+
 
 
 

@@ -28,7 +28,7 @@ class MessageJSON(
     val subject: String,
     val topic_links: Array<String>,
     val submessages: Array<String>,
-    val timestamp: Int,
+    val timestamp: Long,
     val type: String,
     val flags: Array<String>,
     val last_edit_timestamp: Int,
@@ -40,8 +40,7 @@ class ReactionsJSON(
     val emoji_code: String,
     val emoji_name: String,
     val reaction_type: String,
-    val user_id: Int,
-    val user: List<UserInReactionsJSON>
+    val user_id: Int
 )
 
 class UserInReactionsJSON(
