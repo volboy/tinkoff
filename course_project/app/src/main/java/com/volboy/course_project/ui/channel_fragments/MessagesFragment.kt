@@ -109,7 +109,7 @@ class MessagesFragment : Fragment(), MessageHolderFactory.MessageInterface {
             }
             //если не нашли такого эмоджи, сразу добавляем
             if (positionEmoji == -1) {
-                reactionsOfMessage.add(ReactionsJSON(emoji, "some_name", "some_type", 1))
+                //reactionsOfMessage.add(ReactionsJSON(emoji, "some_name", "some_type", 1))
                 //если нашли такой
             } else {
                 //проверяем ставил ли пользователь такой эмоджи

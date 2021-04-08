@@ -10,12 +10,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
-import androidx.loader.content.Loader
-import com.google.android.material.snackbar.Snackbar
 import com.volboy.course_project.R
 import com.volboy.course_project.databinding.FragmentPeopleBinding
 import com.volboy.course_project.message_recycler_view.CommonAdapter
-import com.volboy.course_project.message_recycler_view.MessageHolderFactory
 import com.volboy.course_project.message_recycler_view.ViewTyped
 import com.volboy.course_project.message_recycler_view.simple_items.ErrorItem
 import com.volboy.course_project.message_recycler_view.simple_items.ProgressItem
@@ -26,6 +23,7 @@ import io.reactivex.Observable
 class PeopleFragment : Fragment(), UiHolderFactory.ChannelsInterface {
     private lateinit var binding: FragmentPeopleBinding
     private lateinit var searchText: Observable<String>
+    private lateinit var commonAdapter: CommonAdapter<ViewTyped>
     private var listPeople = mutableListOf<ViewTyped>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -37,7 +35,7 @@ class PeopleFragment : Fragment(), UiHolderFactory.ChannelsInterface {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val holderFactory = UiHolderFactory(this)
-        val commonAdapter = CommonAdapter<ViewTyped>(holderFactory)
+        commonAdapter = CommonAdapter<ViewTyped>(holderFactory)
         commonAdapter.items = listOf(ProgressItem)
         binding.rwPeople.adapter = commonAdapter
         val loader = com.volboy.course_project.model.Loader()
@@ -87,10 +85,10 @@ class PeopleFragment : Fragment(), UiHolderFactory.ChannelsInterface {
     override fun getClickedView(view: View, position: Int, viewType: Int) {
         val detailsPeopleFragment = DetailsPeopleFragment()
         val arguments = Bundle()
-        var man = listPeople[position] as PeopleUi
-        arguments.putString(ARG_NAME, man.name)
-        arguments.putString(ARG_EMAIL, man.email)
-        arguments.putString(ARG_IMAGE, man.imageId)
+        val user = commonAdapter.items[position] as PeopleUi
+        arguments.putString(ARG_NAME, user.name)
+        arguments.putString(ARG_EMAIL, user.email)
+        arguments.putString(ARG_IMAGE, user.imageURL)
         detailsPeopleFragment.arguments = arguments
         val transaction = requireActivity().supportFragmentManager.beginTransaction()
         transaction.addToBackStack("FromPeopleFragment")
