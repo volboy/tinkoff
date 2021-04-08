@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
+import com.volboy.course_project.App
 import com.volboy.course_project.R
 import com.volboy.course_project.customviews.EmojiView
 
@@ -20,14 +21,19 @@ import com.volboy.course_project.message_recycler_view.simple_items.ErrorItem
 import com.volboy.course_project.message_recycler_view.simple_items.ProgressItem
 import com.volboy.course_project.model.Loader
 import com.volboy.course_project.model.ReactionsJSON
+import com.volboy.course_project.model.SendedMessage
 import com.volboy.course_project.ui.channel_fragments.tab_layout_fragments.SubscribedFragment
-import com.volboy.course_project.ui.channel_fragments.tab_layout_fragments.TitleUi
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class MessagesFragment : Fragment(), MessageHolderFactory.MessageInterface {
     private lateinit var reactionsOfMessage: MutableList<ReactionsJSON>
     private lateinit var binding: FragmentMessagesBinding
     private lateinit var commonAdapter: CommonAdapter<ViewTyped>
     private var positionMessage = 0
+    private var topicName = ""
+    private var streamName = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setFragmentResultListener(EmojiBottomFragment.ARG_BOTTOM_FRAGMENT) { _, bundle ->
@@ -37,11 +43,15 @@ class MessagesFragment : Fragment(), MessageHolderFactory.MessageInterface {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val holderFactory = MessageHolderFactory(this)
-        val mActionBar = (requireActivity() as AppCompatActivity).supportActionBar;
+        val mActionBar = (requireActivity() as AppCompatActivity).supportActionBar
         commonAdapter = CommonAdapter(holderFactory)
         binding = FragmentMessagesBinding.inflate(inflater, container, false)
         binding.messageBtn.setOnClickListener {
-
+            val str = binding.messageBox.text.toString()
+            if (str.isNotEmpty()) {
+                sendMessage(str)
+                binding.messageBox.text.clear()
+            }
         }
         binding.messageBox.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {}
@@ -56,14 +66,34 @@ class MessagesFragment : Fragment(), MessageHolderFactory.MessageInterface {
         return binding.root
     }
 
+    private fun sendMessage(str: String) {
+        App.instance.zulipApi.sendMessage("stream", streamName, str, topicName).enqueue(object : Callback<SendedMessage> {
+            override fun onResponse(call: Call<SendedMessage>, response: Response<SendedMessage>) {
+                if (response.isSuccessful) {
+                    downLoadMessage()
+                } else {
+                    Toast.makeText(context, " $response.code()", Toast.LENGTH_LONG).show()
+                }
+            }
+
+            override fun onFailure(call: Call<SendedMessage>, t: Throwable) {
+                Toast.makeText(context, t.message, Toast.LENGTH_LONG).show()
+            }
+        })
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         commonAdapter.items = listOf(ProgressItem)
         binding.recyclerMessage.adapter = commonAdapter
-        val topicName = requireArguments().getString(SubscribedFragment.ARG_TOPIC)
-        val streamName = requireArguments().getString(SubscribedFragment.ARG_STREAM)
+        topicName = requireArguments().getString(SubscribedFragment.ARG_TOPIC).toString()
+        streamName = requireArguments().getString(SubscribedFragment.ARG_STREAM).toString()
         binding.topicName.text = "Topic: #${topicName?.toLowerCase()}"
+        downLoadMessage()
+    }
+
+    private fun downLoadMessage() {
         val loader = Loader()
-        if (streamName != null && topicName != null) {
+        if (streamName.isNotEmpty() && topicName.isNotEmpty()) {
             val messages = loader.getMessages(streamName, topicName)
             val disposableMessages = messages.subscribe(
                 { result ->
@@ -123,10 +153,10 @@ class MessagesFragment : Fragment(), MessageHolderFactory.MessageInterface {
                   }*/
             }
         }
-        updateMessage()
+        updateMessagesReactions()
     }
 
-    private fun updateMessage() {
+    private fun updateMessagesReactions() {
         (commonAdapter.items[positionMessage] as ReactionsUi).reactions = reactionsOfMessage
         commonAdapter.notifyItemChanged(positionMessage)
     }

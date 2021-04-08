@@ -2,6 +2,7 @@ package internet
 
 import com.volboy.course_project.model.*
 import io.reactivex.Single
+import retrofit2.Call
 import retrofit2.http.*
 
 interface ZulipApi {
@@ -24,4 +25,13 @@ interface ZulipApi {
 
     @GET("users/me?json=true")
     fun getOwnUser(): Single<OwnUser>
+
+    @POST("messages")
+    @FormUrlEncoded
+    fun sendMessage(
+        @Field("type") type: String,
+        @Field("to") to: String,
+        @Field("content") content: String,
+        @Field("topic") topic: String
+    ): Call<SendedMessage>
 }
