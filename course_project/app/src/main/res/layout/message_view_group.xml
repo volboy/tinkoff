@@ -11,7 +11,7 @@
         android:layout_width="@dimen/avatar_width"
         android:layout_height="@dimen/avatar_height"
         android:scaleType="centerCrop"
-        android:src="@drawable/darell_steward"
+        android:src="@drawable/ic_profile"
         app:shapeAppearanceOverlay="@style/CircleImageView" />
 
     <TextView

@@ -16,6 +16,7 @@ import com.volboy.course_project.message_recycler_view.CommonAdapter
 import com.volboy.course_project.message_recycler_view.ViewTyped
 import com.volboy.course_project.message_recycler_view.simple_items.ErrorItem
 import com.volboy.course_project.message_recycler_view.simple_items.ProgressItem
+import com.volboy.course_project.model.Loader
 import com.volboy.course_project.ui.channel_fragments.tab_layout_fragments.TitleUi
 import com.volboy.course_project.ui.channel_fragments.tab_layout_fragments.UiHolderFactory
 import io.reactivex.Observable
@@ -38,7 +39,7 @@ class PeopleFragment : Fragment(), UiHolderFactory.ChannelsInterface {
         commonAdapter = CommonAdapter<ViewTyped>(holderFactory)
         commonAdapter.items = listOf(ProgressItem)
         binding.rwPeople.adapter = commonAdapter
-        val loader = com.volboy.course_project.model.Loader()
+        val loader = Loader()
         val users = loader.getRemoteUsers()
         val disposableMessages = users.subscribe(
             { result ->

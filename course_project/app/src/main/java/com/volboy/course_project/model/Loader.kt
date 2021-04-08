@@ -50,6 +50,12 @@ class Loader() {
             .map { response -> viewTypedUsers(response.members) }
     }
 
+    fun getOwnUser(): Single<OwnUser> {
+        return App.instance.zulipApi.getOwnUser()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+    }
+
     private fun viewTypedStreams(streamsJSON: List<StreamJSON>): MutableList<ViewTyped> {
         val viewTypedList = mutableListOf<ViewTyped>()
         streamsJSON.forEach { streams ->

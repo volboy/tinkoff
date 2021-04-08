@@ -24,3 +24,20 @@ class UserJSON(
 class IdData(val id: List<ProfileData>)
 
 class ProfileData(val value: String, val rendered_value: String)
+
+class OwnUser(
+    val avatar_url: String,
+    val avatar_version: Int,
+    val email: String,
+    val full_name: String,
+    val is_admin: Boolean,
+    val is_owner: Boolean,
+    val is_guest: Boolean,
+    val is_bot: Boolean,
+    val is_active: Boolean,
+    val timezone: String,
+    val date_joined: String,
+    val user_id: Int,
+    val delivery_email: String,
+    val id: List<IdData>
+)

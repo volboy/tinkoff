@@ -21,4 +21,7 @@ interface ZulipApi {
 
     @GET("users?json=true")
     fun getUsers(): Single<UsersResponse>
+
+    @GET("users/me?json=true")
+    fun getOwnUser(): Single<OwnUser>
 }
