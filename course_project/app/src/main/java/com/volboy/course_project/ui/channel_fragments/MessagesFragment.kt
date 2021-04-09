@@ -28,9 +28,9 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class MessagesFragment : Fragment(), MessageHolderFactory.MessageInterface {
-    private lateinit var reactionsOfMessage: MutableList<Reaction>
     private lateinit var binding: FragmentMessagesBinding
     private lateinit var commonAdapter: CommonAdapter<ViewTyped>
+    private lateinit var reactionsOfMessage: MutableList<Reaction>
     private var positionMessage = 0
     private var topicName = ""
     private var streamName = ""
@@ -39,10 +39,23 @@ class MessagesFragment : Fragment(), MessageHolderFactory.MessageInterface {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setFragmentResultListener(EmojiBottomFragment.ARG_BOTTOM_FRAGMENT) { _, bundle ->
-            val emojiList=bundle.getStringArrayList(EmojiBottomFragment.ARG_EMOJI)
+            val emojiList = bundle.getStringArrayList(EmojiBottomFragment.ARG_EMOJI)
+            reactionsOfMessage = (commonAdapter.items[positionMessage] as ReactionsUi).reactions
             if (emojiList != null) {
-                addEmoji(emojiList[1], emojiList[0])
+                val isFindEmoji = reactionsOfMessage.firstOrNull { String(Character.toChars(it.emojiCode.toInt(16))) == emojiList[1] }
+                if (isFindEmoji != null) {
+                    val isFindUser = isFindEmoji.users.firstOrNull { it == ownId }
+                    if (isFindUser != null) {
+                        removeEmojiFromMessage((commonAdapter.items[positionMessage - 1] as TextUi).uid.toInt(), emojiList[0], "unicode_emoji")
+                    } else {
+                        addEmojiToMessage((commonAdapter.items[positionMessage - 1] as TextUi).uid.toInt(), emojiList[0], "unicode_emoji")
+                    }
+                } else {
+                    addEmojiToMessage((commonAdapter.items[positionMessage - 1] as TextUi).uid.toInt(), emojiList[0], "unicode_emoji")
+                }
+
             }
+            downLoadMessage()
         }
         val loader = Loader()
         val ownUser = loader.getOwnUser()
@@ -88,7 +101,7 @@ class MessagesFragment : Fragment(), MessageHolderFactory.MessageInterface {
                 if (response.isSuccessful) {
                     downLoadMessage()
                 } else {
-                    Toast.makeText(context, " $response.code()", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, "Ошибка", Toast.LENGTH_LONG).show()
                 }
             }
 
@@ -102,17 +115,32 @@ class MessagesFragment : Fragment(), MessageHolderFactory.MessageInterface {
         App.instance.zulipApi.addReaction(messageId, emojiName, reactionType).enqueue(object : Callback<AddReactionResponse> {
             override fun onResponse(call: Call<AddReactionResponse>, response: Response<AddReactionResponse>) {
                 if (response.isSuccessful) {
-                    Toast.makeText(context, " Успех $response.code()", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, "Успех", Toast.LENGTH_SHORT).show()
                 } else {
-                    Toast.makeText(context, " Ошибка $response.code()", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, "Ошибка", Toast.LENGTH_SHORT).show()
                 }
             }
 
             override fun onFailure(call: Call<AddReactionResponse>, t: Throwable) {
-                Toast.makeText(context, t.message, Toast.LENGTH_LONG).show()
+                Toast.makeText(context, t.message, Toast.LENGTH_SHORT).show()
             }
         })
+    }
 
+    private fun removeEmojiFromMessage(messageId: Int, emojiName: String, reactionType: String) {
+        App.instance.zulipApi.removeReaction(messageId, emojiName, reactionType).enqueue(object : Callback<AddReactionResponse> {
+            override fun onResponse(call: Call<AddReactionResponse>, response: Response<AddReactionResponse>) {
+                if (response.isSuccessful) {
+                    Toast.makeText(context, "Успех", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(context, "Ошибка", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: Call<AddReactionResponse>, t: Throwable) {
+                Toast.makeText(context, t.message, Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -153,37 +181,6 @@ class MessagesFragment : Fragment(), MessageHolderFactory.MessageInterface {
     override fun getClickedView(view: View, position: Int) {
         view.isSelected = !view.isSelected
         positionMessage = position
-        addEmoji((view as EmojiView).emoji, "")
-    }
-
-    private fun addEmoji(emojiCode: String, emojiName: String) {
-        addEmojiToMessage((commonAdapter.items[positionMessage - 1] as TextUi).uid.toInt(), emojiName, "unicode_emoji")
-        var positionEmoji = -1
-        reactionsOfMessage = (commonAdapter.items[positionMessage] as ReactionsUi).reactions as MutableList<Reaction>
-        //если список реакций пуск добавляем сразу
-        if (reactionsOfMessage.isNullOrEmpty()) {
-            addEmojiToMessage((commonAdapter.items[positionMessage - 1] as TextUi).uid.toInt(), emojiName, "unicode_emoji")
-        } else {
-            //ищем эмоджи который хотим добавить в списке реакций
-            reactionsOfMessage.forEach { reaction ->
-                if (reaction.emojiCode == emojiCode) {
-                    positionEmoji = reactionsOfMessage.indexOf(reaction)
-                }
-            }
-            //если не нашли такого эмоджи, сразу добавляем
-            if (positionEmoji == -1) {
-
-                //если нашли такой
-                //проверяем ставил ли пользователь такой эмоджи
-            } else {
-
-            }
-        }
-        updateMessagesReactions()
-    }
-
-    private fun updateMessagesReactions() {
-
     }
 }
 

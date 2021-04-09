@@ -87,10 +87,10 @@ class Loader() {
         messagesJSON.forEach { msg ->
             if (!msg.is_me_message) {
                 viewTypedList.add(TextUi(msg.sender_full_name, deleteHtmlFromString(msg.content), msg.avatar_url, R.layout.item_in_message, msg.id.toString()))
-                viewTypedList.add(ReactionsUi(recountReactions(msg.reactions), R.layout.item_messages_reactions, msg.id.toString()))
+                viewTypedList.add(ReactionsUi(recountReactions(msg.reactions), R.layout.item_messages_reactions, msg.reactions.hashCode().toString()))
             } else {
                 viewTypedList.add(TextUi("You", deleteHtmlFromString(msg.content), msg.avatar_url, R.layout.item_out_message, msg.id.toString()))
-                viewTypedList.add(ReactionsUi(recountReactions(msg.reactions), R.layout.item_messages_reactions_out, msg.id.toString()))
+                viewTypedList.add(ReactionsUi(recountReactions(msg.reactions), R.layout.item_messages_reactions_out, msg.reactions.hashCode().toString()))
             }
         }
         return viewTypedList
