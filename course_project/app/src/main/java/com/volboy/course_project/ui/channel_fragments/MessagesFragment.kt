@@ -20,6 +20,7 @@ import com.volboy.course_project.message_recycler_view.*
 import com.volboy.course_project.message_recycler_view.simple_items.ErrorItem
 import com.volboy.course_project.message_recycler_view.simple_items.ProgressItem
 import com.volboy.course_project.model.Loader
+import com.volboy.course_project.model.Reaction
 import com.volboy.course_project.model.ReactionsJSON
 import com.volboy.course_project.model.SendedMessage
 import com.volboy.course_project.ui.channel_fragments.tab_layout_fragments.SubscribedFragment
@@ -28,7 +29,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class MessagesFragment : Fragment(), MessageHolderFactory.MessageInterface {
-    private lateinit var reactionsOfMessage: MutableList<ReactionsJSON>
+    private lateinit var reactionsOfMessage: MutableList<Reaction>
     private lateinit var binding: FragmentMessagesBinding
     private lateinit var commonAdapter: CommonAdapter<ViewTyped>
     private var positionMessage = 0
@@ -98,7 +99,6 @@ class MessagesFragment : Fragment(), MessageHolderFactory.MessageInterface {
             val disposableMessages = messages.subscribe(
                 { result ->
                     commonAdapter.items = result
-                    binding.recyclerMessage.scrollToPosition(result.size - 1)
                 },
                 { error ->
                     commonAdapter.items = listOf(ErrorItem)
@@ -126,14 +126,14 @@ class MessagesFragment : Fragment(), MessageHolderFactory.MessageInterface {
 
     private fun addEmoji(emoji: String) {
         var positionEmoji = -1
-        reactionsOfMessage = (commonAdapter.items[positionMessage] as ReactionsUi).reactions as MutableList<ReactionsJSON>
+        reactionsOfMessage = (commonAdapter.items[positionMessage] as ReactionsUi).reactions as MutableList<Reaction>
         //если список реакций пуск добавляем сразу
         if (reactionsOfMessage.isNullOrEmpty()) {
-            reactionsOfMessage.add(ReactionsJSON(emoji, "some_name", "some_type", 1))
+            reactionsOfMessage.add(Reaction(emoji, 1, "some_type", mutableListOf(0)))
         } else {
             //ищем эмоджи который хотим добавить в списке реакций
             reactionsOfMessage.forEach { reaction ->
-                if (reaction.emoji_code == emoji) {
+                if (reaction.emojiCode == emoji) {
                     positionEmoji = reactionsOfMessage.indexOf(reaction)
                 }
             }

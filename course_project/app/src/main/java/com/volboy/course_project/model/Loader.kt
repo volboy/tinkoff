@@ -1,5 +1,6 @@
 package com.volboy.course_project.model
 
+import android.os.Build
 import android.text.Html
 import android.text.Spanned
 import com.google.gson.Gson
@@ -86,10 +87,10 @@ class Loader() {
         messagesJSON.forEach { msg ->
             if (!msg.is_me_message) {
                 viewTypedList.add(TextUi(msg.sender_full_name, deleteHtmlFromString(msg.content), msg.avatar_url, R.layout.item_in_message, msg.id.toString()))
-                viewTypedList.add(ReactionsUi(msg.reactions, R.layout.item_messages_reactions, msg.id.toString()))
+                viewTypedList.add(ReactionsUi(recountReactions(msg.reactions), R.layout.item_messages_reactions, msg.id.toString()))
             } else {
                 viewTypedList.add(TextUi("You", deleteHtmlFromString(msg.content), msg.avatar_url, R.layout.item_out_message, msg.id.toString()))
-                viewTypedList.add(ReactionsUi(msg.reactions, R.layout.item_messages_reactions_out, msg.id.toString()))
+                viewTypedList.add(ReactionsUi(recountReactions(msg.reactions), R.layout.item_messages_reactions_out, msg.id.toString()))
             }
         }
         return viewTypedList
@@ -101,7 +102,11 @@ class Loader() {
     }
 
     private fun deleteHtmlFromString(str: String): Spanned? {
-        return Html.fromHtml(str)
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Html.fromHtml(str, Html.FROM_HTML_MODE_COMPACT)
+        } else {
+            Html.fromHtml(str)
+        }
     }
 
     private fun viewTypedUsers(usersJSON: List<UserJSON>): MutableList<ViewTyped> {
@@ -111,6 +116,19 @@ class Loader() {
             viewTypedList.add(PeopleUi(user.full_name, user.email, user.avatar_url, R.layout.item_people_list, uid))
         }
         return viewTypedList
+    }
+
+    private fun recountReactions(reactionsJSON: List<ReactionsJSON>): MutableList<Reaction> {
+        val reactions = mutableListOf<Reaction>()
+        val users = mutableListOf<Int>()
+        val reactionsByEmojiCode = reactionsJSON.groupBy { it.emoji_code }
+        reactionsByEmojiCode.forEach { (emojiCode, list) ->
+            list.forEach {
+                users.add(it.user_id)
+            }
+            reactions.add(Reaction(emojiCode, list.size, list[0].reaction_type, users))
+        }
+        return reactions
     }
 }
 

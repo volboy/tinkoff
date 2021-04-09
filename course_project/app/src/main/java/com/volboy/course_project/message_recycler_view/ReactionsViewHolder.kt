@@ -6,10 +6,10 @@ import com.volboy.course_project.R
 import com.volboy.course_project.customviews.EmojiView
 import com.volboy.course_project.customviews.FlexBoxLayout
 import com.volboy.course_project.customviews.dpToPx
-import com.volboy.course_project.model.ReactionsJSON
+import com.volboy.course_project.model.Reaction
 
 class ReactionsUi(
-    var reactions: List<ReactionsJSON>,
+    var reactions: MutableList<Reaction>,
     override val viewType: Int = R.layout.item_messages_reactions,
     override val uid: String = ""
 ) : ViewTyped
@@ -20,7 +20,7 @@ class ReactionsViewHolder(view: View, private val messageInterface: MessageHolde
     override fun bind(item: ReactionsUi) {
         flexBoxLayout.removeAllViews()
         item.reactions.forEach { reaction ->
-            addView(reaction.emoji_code, 0) //не придумал, где сделать это. Знаю, что делать здесь это жесть
+            addView(reaction.emojiCode, reaction.count) //не придумал, где сделать это. Знаю, что делать здесь это жесть
         }
     }
 
@@ -33,7 +33,7 @@ class ReactionsViewHolder(view: View, private val messageInterface: MessageHolde
         layoutParams.rightMargin = context.dpToPx(10F)
         layoutParams.bottomMargin = context.dpToPx(7F)
         emojiView.layoutParams = layoutParams
-        //emojiView.text = countReactions.toString()
+        emojiView.text = countReactions.toString()
         emojiView.emoji = emoji
         emojiView.setOnClickListener { messageInterface.getClickedView(emojiView, adapterPosition) }
         flexBoxLayout.addView(emojiView)

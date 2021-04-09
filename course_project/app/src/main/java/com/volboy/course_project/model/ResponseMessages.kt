@@ -43,6 +43,13 @@ class ReactionsJSON(
     val user_id: Int
 )
 
+class Reaction(
+    val emojiCode: String,
+    val count: Int,
+    val type: String,
+    val users: MutableList<Int>
+)
+
 class UserInReactionsJSON(
     val id: Int,
     val email: String,
