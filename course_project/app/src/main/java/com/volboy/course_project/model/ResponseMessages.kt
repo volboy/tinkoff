@@ -10,6 +10,16 @@ class MessageResponse(
     val messages: List<MessageJSON>
 )
 
+class AddReactionResponse(
+    val msg: String,
+    val result: String
+)
+
+class SendMessageResponse(
+    id: Int,
+    deliver_at: String
+)
+
 class MessageJSON(
     val avatar_url: String,
     val client: String,

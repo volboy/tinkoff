@@ -26,6 +26,14 @@ interface ZulipApi {
     @GET("users/me?json=true")
     fun getOwnUser(): Single<OwnUser>
 
+    @POST("messages/{message_id}/reactions")
+    @FormUrlEncoded
+    fun addReaction(
+        @Path("message_id") message_id: Int,
+        @Field("emoji_name") emoji_name: String,
+        @Field("reaction_type") reaction_type: String
+    ): Call<AddReactionResponse>
+
     @POST("messages")
     @FormUrlEncoded
     fun sendMessage(
@@ -33,5 +41,5 @@ interface ZulipApi {
         @Field("to") to: String,
         @Field("content") content: String,
         @Field("topic") topic: String
-    ): Call<SendedMessage>
+    ): Call<SendMessageResponse>
 }

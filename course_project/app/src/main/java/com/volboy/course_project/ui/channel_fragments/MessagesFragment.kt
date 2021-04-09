@@ -14,15 +14,14 @@ import androidx.fragment.app.setFragmentResultListener
 import com.volboy.course_project.App
 import com.volboy.course_project.R
 import com.volboy.course_project.customviews.EmojiView
-
 import com.volboy.course_project.databinding.FragmentMessagesBinding
 import com.volboy.course_project.message_recycler_view.*
 import com.volboy.course_project.message_recycler_view.simple_items.ErrorItem
 import com.volboy.course_project.message_recycler_view.simple_items.ProgressItem
+import com.volboy.course_project.model.AddReactionResponse
 import com.volboy.course_project.model.Loader
 import com.volboy.course_project.model.Reaction
-import com.volboy.course_project.model.ReactionsJSON
-import com.volboy.course_project.model.SendedMessage
+import com.volboy.course_project.model.SendMessageResponse
 import com.volboy.course_project.ui.channel_fragments.tab_layout_fragments.SubscribedFragment
 import retrofit2.Call
 import retrofit2.Callback
@@ -35,11 +34,27 @@ class MessagesFragment : Fragment(), MessageHolderFactory.MessageInterface {
     private var positionMessage = 0
     private var topicName = ""
     private var streamName = ""
+    private var ownId = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setFragmentResultListener(EmojiBottomFragment.ARG_BOTTOM_FRAGMENT) { _, bundle ->
-            bundle.getString(EmojiBottomFragment.ARG_EMOJI_CODE)?.let { addEmoji(it) }
+            val emojiList=bundle.getStringArrayList(EmojiBottomFragment.ARG_EMOJI)
+            if (emojiList != null) {
+                addEmoji(emojiList[1], emojiList[0])
+            }
         }
+        val loader = Loader()
+        val ownUser = loader.getOwnUser()
+        val disposableMessages = ownUser.subscribe(
+            { result ->
+                ownId = result.user_id
+            },
+            { error ->
+                Toast.makeText(context, "Ошибка ${error.message}", Toast.LENGTH_LONG).show()
+                Log.d("ZULIP", error.message.toString())
+            }
+        )
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -68,8 +83,8 @@ class MessagesFragment : Fragment(), MessageHolderFactory.MessageInterface {
     }
 
     private fun sendMessage(str: String) {
-        App.instance.zulipApi.sendMessage("stream", streamName, str, topicName).enqueue(object : Callback<SendedMessage> {
-            override fun onResponse(call: Call<SendedMessage>, response: Response<SendedMessage>) {
+        App.instance.zulipApi.sendMessage("stream", streamName, str, topicName).enqueue(object : Callback<SendMessageResponse> {
+            override fun onResponse(call: Call<SendMessageResponse>, response: Response<SendMessageResponse>) {
                 if (response.isSuccessful) {
                     downLoadMessage()
                 } else {
@@ -77,10 +92,27 @@ class MessagesFragment : Fragment(), MessageHolderFactory.MessageInterface {
                 }
             }
 
-            override fun onFailure(call: Call<SendedMessage>, t: Throwable) {
+            override fun onFailure(call: Call<SendMessageResponse>, t: Throwable) {
                 Toast.makeText(context, t.message, Toast.LENGTH_LONG).show()
             }
         })
+    }
+
+    private fun addEmojiToMessage(messageId: Int, emojiName: String, reactionType: String) {
+        App.instance.zulipApi.addReaction(messageId, emojiName, reactionType).enqueue(object : Callback<AddReactionResponse> {
+            override fun onResponse(call: Call<AddReactionResponse>, response: Response<AddReactionResponse>) {
+                if (response.isSuccessful) {
+                    Toast.makeText(context, " Успех $response.code()", Toast.LENGTH_LONG).show()
+                } else {
+                    Toast.makeText(context, " Ошибка $response.code()", Toast.LENGTH_LONG).show()
+                }
+            }
+
+            override fun onFailure(call: Call<AddReactionResponse>, t: Throwable) {
+                Toast.makeText(context, t.message, Toast.LENGTH_LONG).show()
+            }
+        })
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -121,44 +153,37 @@ class MessagesFragment : Fragment(), MessageHolderFactory.MessageInterface {
     override fun getClickedView(view: View, position: Int) {
         view.isSelected = !view.isSelected
         positionMessage = position
-        addEmoji((view as EmojiView).emoji)
+        addEmoji((view as EmojiView).emoji, "")
     }
 
-    private fun addEmoji(emoji: String) {
+    private fun addEmoji(emojiCode: String, emojiName: String) {
+        addEmojiToMessage((commonAdapter.items[positionMessage - 1] as TextUi).uid.toInt(), emojiName, "unicode_emoji")
         var positionEmoji = -1
         reactionsOfMessage = (commonAdapter.items[positionMessage] as ReactionsUi).reactions as MutableList<Reaction>
         //если список реакций пуск добавляем сразу
         if (reactionsOfMessage.isNullOrEmpty()) {
-            reactionsOfMessage.add(Reaction(emoji, 1, "some_type", mutableListOf(0)))
+            addEmojiToMessage((commonAdapter.items[positionMessage - 1] as TextUi).uid.toInt(), emojiName, "unicode_emoji")
         } else {
             //ищем эмоджи который хотим добавить в списке реакций
             reactionsOfMessage.forEach { reaction ->
-                if (reaction.emojiCode == emoji) {
+                if (reaction.emojiCode == emojiCode) {
                     positionEmoji = reactionsOfMessage.indexOf(reaction)
                 }
             }
             //если не нашли такого эмоджи, сразу добавляем
             if (positionEmoji == -1) {
-                //reactionsOfMessage.add(ReactionsJSON(emoji, "some_name", "some_type", 1))
+
                 //если нашли такой
-            } else {
                 //проверяем ставил ли пользователь такой эмоджи
-                /*  if ("You" in reactionsOfMessage[positionEmoji].users) {
-                      reactionsOfMessage[positionEmoji].users.remove("You")
-                      if (reactionsOfMessage[positionEmoji].users.size == 0) {
-                          reactionsOfMessage.removeAt(positionEmoji)
-                      }
-                  } else {
-                      reactionsOfMessage[positionEmoji].users.add("You")
-                  }*/
+            } else {
+
             }
         }
         updateMessagesReactions()
     }
 
     private fun updateMessagesReactions() {
-        (commonAdapter.items[positionMessage] as ReactionsUi).reactions = reactionsOfMessage
-        commonAdapter.notifyItemChanged(positionMessage)
+
     }
 }
 
