@@ -1,7 +1,11 @@
 package com.volboy.course_project.model
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
 class UsersResponse(val members: List<UserJSON>)
 
+@Entity
 class UserJSON(
     val email: String,
     val is_bot: Boolean,
@@ -11,6 +15,7 @@ class UserJSON(
     val is_admin: Boolean,
     val is_owner: Boolean,
     val bot_type: Int,
+    @PrimaryKey
     val user_id: Int,
     val bot_owner_id: Int,
     val is_active: Boolean,

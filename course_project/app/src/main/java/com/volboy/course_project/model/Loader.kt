@@ -57,7 +57,7 @@ class Loader() {
             .observeOn(AndroidSchedulers.mainThread())
     }
 
-    private fun viewTypedStreams(streamsJSON: List<StreamJSON>): MutableList<ViewTyped> {
+    fun viewTypedStreams(streamsJSON: List<StreamJSON>): MutableList<ViewTyped> {
         val viewTypedList = mutableListOf<ViewTyped>()
         streamsJSON.forEach { streams ->
             val uid = streams.stream_id.toString()
@@ -66,7 +66,7 @@ class Loader() {
         return viewTypedList
     }
 
-    private fun viewTypedTopics(topicsJSON: List<TopicJSON>): MutableList<ViewTyped> {
+    fun viewTypedTopics(topicsJSON: List<TopicJSON>): MutableList<ViewTyped> {
         val viewTypedList = mutableListOf<ViewTyped>()
         topicsJSON.forEach { topic ->
             val uid = topic.max_id.toString()
@@ -75,14 +75,14 @@ class Loader() {
         return viewTypedList
     }
 
-    private fun groupedMessages(messagesJSON: List<MessageJSON>): List<ViewTyped> {
+    fun groupedMessages(messagesJSON: List<MessageJSON>): List<ViewTyped> {
         val messageByDate: Map<Long, List<MessageJSON>> = messagesJSON.groupBy { it.timestamp }
         return messageByDate.flatMap { (date, msg) ->
             listOf(DataUi(getDateTime(date), R.layout.item_date_divider)) + viewTypedMessages(msg)
         }
     }
 
-    private fun viewTypedMessages(messagesJSON: List<MessageJSON>): MutableList<ViewTyped> {
+    fun viewTypedMessages(messagesJSON: List<MessageJSON>): MutableList<ViewTyped> {
         val viewTypedList = mutableListOf<ViewTyped>()
         messagesJSON.forEach { msg ->
             if (!msg.is_me_message) {
@@ -109,7 +109,7 @@ class Loader() {
         }
     }
 
-    private fun viewTypedUsers(usersJSON: List<UserJSON>): MutableList<ViewTyped> {
+    fun viewTypedUsers(usersJSON: List<UserJSON>): MutableList<ViewTyped> {
         val viewTypedList = mutableListOf<ViewTyped>()
         usersJSON.forEach { user ->
             val uid = user.user_id.toString()

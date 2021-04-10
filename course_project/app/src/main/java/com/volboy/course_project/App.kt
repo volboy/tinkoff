@@ -1,6 +1,8 @@
 package com.volboy.course_project
 
 import android.app.Application
+import androidx.room.Room
+import com.volboy.course_project.repository.AppDatabase
 import internet.ZulipApi
 import okhttp3.Credentials
 import okhttp3.Interceptor
@@ -16,12 +18,15 @@ class App : Application() {
 
     companion object {
         lateinit var instance: App
+        lateinit var appDatabase: AppDatabase
     }
 
     override fun onCreate() {
         super.onCreate()
         instance = this
         initRetrofit()
+        appDatabase = Room.databaseBuilder(this, AppDatabase::class.java, "zulipAppDatabase")
+            .build()
     }
 
     private fun initRetrofit() {

@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import com.volboy.course_project.App
 import com.volboy.course_project.R
 import com.volboy.course_project.databinding.FragmentStreamsBinding
 import com.volboy.course_project.message_recycler_view.CommonAdapter
@@ -19,6 +20,8 @@ import com.volboy.course_project.message_recycler_view.simple_items.ProgressItem
 import com.volboy.course_project.model.Loader
 import com.volboy.course_project.ui.channel_fragments.MessagesFragment
 import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 
 
 class StreamsFragment : Fragment(), UiHolderFactory.ChannelsInterface {
@@ -31,6 +34,16 @@ class StreamsFragment : Fragment(), UiHolderFactory.ChannelsInterface {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentStreamsBinding.inflate(inflater, container, false)
         loader = Loader()
+        val appDatabase = App.appDatabase
+        val streamsDao = appDatabase.streamsDao()
+        val disposable = streamsDao.getAllStreams()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .map { streams -> loader.viewTypedStreams(streams) }
+            .subscribe(
+                { viewTypedStreams -> commonAdapter.items = viewTypedStreams },
+                { error -> Toast.makeText(requireContext(), error.message, Toast.LENGTH_SHORT) },
+                { Toast.makeText(requireContext(), "БД пуста", Toast.LENGTH_SHORT) })
         return binding.root
     }
 

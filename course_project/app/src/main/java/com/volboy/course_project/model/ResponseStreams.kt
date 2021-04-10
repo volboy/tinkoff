@@ -1,8 +1,13 @@
 package com.volboy.course_project.model
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
 class StreamResponse(val msg: String, val result: String, val streams: List<StreamJSON>)
 
+@Entity
 class StreamJSON(
+    @PrimaryKey
     val stream_id: Int,
     val name: String,
     val description: String,

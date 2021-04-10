@@ -1,5 +1,8 @@
 package com.volboy.course_project.model
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
 class Narrow(val operator: String, val operand: String)
 
 class MessageResponse(
@@ -20,12 +23,14 @@ class SendMessageResponse(
     deliver_at: String
 )
 
+@Entity
 class MessageJSON(
     val avatar_url: String,
     val client: String,
     val content: String,
     val content_type: String,
     val display_recipient: String,
+    @PrimaryKey
     val id: Int,
     val is_me_message: Boolean,
     val reactions: List<ReactionsJSON>,
