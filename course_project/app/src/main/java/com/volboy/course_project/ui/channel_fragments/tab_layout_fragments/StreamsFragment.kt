@@ -50,7 +50,7 @@ class StreamsFragment : Fragment(), UiHolderFactory.ChannelsInterface {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val holderFactory = UiHolderFactory(this)
         commonAdapter = CommonAdapter(holderFactory)
-        commonAdapter.items = listOf(ProgressItem)
+        //commonAdapter.items = listOf(ProgressItem)
         binding.rwAllStreams.adapter = commonAdapter
         val streams = loader.getRemoteStreams()
         val disposableStreams = streams.subscribe(
