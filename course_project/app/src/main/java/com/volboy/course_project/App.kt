@@ -24,9 +24,9 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         instance = this
-        initRetrofit()
-        appDatabase = Room.databaseBuilder(this, AppDatabase::class.java, "zulipAppDatabase")
+        appDatabase = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "zulipAppDatabase")
             .build()
+        initRetrofit()
     }
 
     private fun initRetrofit() {

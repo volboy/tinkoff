@@ -7,7 +7,6 @@ import com.volboy.course_project.model.StreamJSON
 import com.volboy.course_project.model.TopicJSON
 import com.volboy.course_project.model.UserJSON
 
-
 @Database(entities = [MessageJSON::class, StreamJSON::class, TopicJSON::class, UserJSON::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun messagesDao(): MessagesDao

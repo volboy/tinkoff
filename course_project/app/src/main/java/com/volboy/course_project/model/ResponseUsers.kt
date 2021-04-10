@@ -2,10 +2,13 @@ package com.volboy.course_project.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
+import com.volboy.course_project.repository.UsersConverter
 
 class UsersResponse(val members: List<UserJSON>)
 
 @Entity
+@TypeConverters(UsersConverter::class)
 class UserJSON(
     val email: String,
     val is_bot: Boolean,

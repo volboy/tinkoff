@@ -70,7 +70,7 @@ class Loader() {
         val viewTypedList = mutableListOf<ViewTyped>()
         topicsJSON.forEach { topic ->
             val uid = topic.max_id.toString()
-            viewTypedList.add(TitleUi(topic.name, 0, false, null, 0, R.layout.item_expand, topic.name))
+            viewTypedList.add(TitleUi(topic.name, 0, false, null, 0, R.layout.item_expand, uid))
         }
         return viewTypedList
     }
