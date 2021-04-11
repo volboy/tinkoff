@@ -11,17 +11,14 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
+import com.google.gson.Gson
 import com.volboy.course_project.App
 import com.volboy.course_project.R
-import com.volboy.course_project.customviews.EmojiView
 import com.volboy.course_project.databinding.FragmentMessagesBinding
 import com.volboy.course_project.message_recycler_view.*
 import com.volboy.course_project.message_recycler_view.simple_items.ErrorItem
 import com.volboy.course_project.message_recycler_view.simple_items.ProgressItem
-import com.volboy.course_project.model.AddReactionResponse
-import com.volboy.course_project.model.Loader
-import com.volboy.course_project.model.Reaction
-import com.volboy.course_project.model.SendMessageResponse
+import com.volboy.course_project.model.*
 import com.volboy.course_project.ui.channel_fragments.tab_layout_fragments.SubscribedFragment
 import retrofit2.Call
 import retrofit2.Callback
@@ -159,6 +156,15 @@ class MessagesFragment : Fragment(), MessageHolderFactory.MessageInterface {
             val disposableMessages = messages.subscribe(
                 { result ->
                     commonAdapter.items = result
+                    val id = mutableListOf<Int>()
+                    result.forEach { item ->
+                        if (item.viewType == R.layout.item_in_message) {
+                            id.add(item.uid.toInt())
+                        }
+                    }
+                    val gson=Gson()
+                    updateMessageFlags(gson.toJson(id))
+
                 },
                 { error ->
                     commonAdapter.items = listOf(ErrorItem)
@@ -167,6 +173,19 @@ class MessagesFragment : Fragment(), MessageHolderFactory.MessageInterface {
                 }
             )
         }
+    }
+
+    private fun updateMessageFlags(messages: String) {
+        App.instance.zulipApi.updateMessageFlag(messages, "add", "read").enqueue(object : Callback<UpdateMessageFlag> {
+            override fun onResponse(call: Call<UpdateMessageFlag>, response: Response<UpdateMessageFlag>) {
+                if (response.isSuccessful) {
+                } else {
+                }
+            }
+
+            override fun onFailure(call: Call<UpdateMessageFlag>, t: Throwable) {
+            }
+        })
     }
 
     //получаем сообщение на котором был LongClick
@@ -182,6 +201,7 @@ class MessagesFragment : Fragment(), MessageHolderFactory.MessageInterface {
         view.isSelected = !view.isSelected
         positionMessage = position
     }
+
 }
 
 

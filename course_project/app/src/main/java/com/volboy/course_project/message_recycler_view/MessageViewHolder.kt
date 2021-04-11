@@ -3,9 +3,15 @@ package com.volboy.course_project.message_recycler_view
 import android.text.Spanned
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.google.android.material.imageview.ShapeableImageView
+import com.volboy.course_project.App
 import com.volboy.course_project.R
+import com.volboy.course_project.model.UpdateMessageFlag
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class TextUi(
     val title: String,
@@ -35,6 +41,5 @@ class MessageViewHolder(val view: View, private val messageInterface: MessageHol
             .error(R.drawable.ic_profile)
             .into(image)
     }
-
 }
 

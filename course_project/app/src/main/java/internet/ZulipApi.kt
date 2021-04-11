@@ -49,4 +49,13 @@ interface ZulipApi {
         @Field("content") content: String,
         @Field("topic") topic: String
     ): Call<SendMessageResponse>
+
+    @POST("messages/flags")
+    @FormUrlEncoded
+    fun updateMessageFlag(
+        @Field("messages") messages: String,
+        @Field("op") op: String,
+        @Field("flag") flag: String
+    ): Call<UpdateMessageFlag>
+
 }

@@ -34,16 +34,6 @@ class StreamsFragment : Fragment(), UiHolderFactory.ChannelsInterface {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentStreamsBinding.inflate(inflater, container, false)
         loader = Loader()
-        val appDatabase = App.appDatabase
-        val streamsDao = appDatabase.streamsDao()
-        val disposable = streamsDao.getAllStreams()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .map { streams -> loader.viewTypedStreams(streams) }
-            .subscribe(
-                { viewTypedStreams -> commonAdapter.items = viewTypedStreams },
-                { error -> Toast.makeText(requireContext(), error.message, Toast.LENGTH_SHORT) },
-                { Toast.makeText(requireContext(), "БД пуста", Toast.LENGTH_SHORT) })
         return binding.root
     }
 
@@ -52,18 +42,28 @@ class StreamsFragment : Fragment(), UiHolderFactory.ChannelsInterface {
         commonAdapter = CommonAdapter(holderFactory)
         //commonAdapter.items = listOf(ProgressItem)
         binding.rwAllStreams.adapter = commonAdapter
+        val appDatabase = App.appDatabase
+        val streamsDao = appDatabase.streamsDao()
+        val disposable = streamsDao.getAllStreams()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .map { streams -> loader.viewTypedStreams(streams) }
+            .subscribe(
+                { viewTypedStreams -> Toast.makeText(requireContext(), viewTypedStreams?.size?.toString(), Toast.LENGTH_SHORT).show() },
+                { error -> Log.i("DBZ", error.message.toString()) },
+                { Toast.makeText(requireContext(), "БД пуста", Toast.LENGTH_SHORT).show() })
         val streams = loader.getRemoteStreams()
-        val disposableStreams = streams.subscribe(
-            { result ->
-                commonAdapter.items = result
-                listStreams = result
-            },
-            { error ->
-                commonAdapter.items = listOf(ErrorItem)
-                Toast.makeText(context, "Ошибка ${error.message}", Toast.LENGTH_LONG).show()
-                Log.d("ZULIP", error.message.toString())
-            }
-        )
+         val disposableStreams = streams.subscribe(
+             { result ->
+                 commonAdapter.items = result
+                 listStreams = result
+             },
+             { error ->
+                 commonAdapter.items = listOf(ErrorItem)
+                 Toast.makeText(context, "Ошибка ${error.message}", Toast.LENGTH_LONG).show()
+                 Log.d("ZULIP", error.message.toString())
+             }
+         )
         val mActionBar = (requireActivity() as AppCompatActivity).supportActionBar;
         mActionBar?.show()
         val searchEdit = requireActivity().findViewById<EditText>(R.id.searchEditText)

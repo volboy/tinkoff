@@ -1,8 +1,6 @@
 package com.volboy.course_project.repository
 
-import androidx.room.Dao
-import androidx.room.Query
-import androidx.room.Update
+import androidx.room.*
 import com.volboy.course_project.model.MessageJSON
 import io.reactivex.Maybe
 
@@ -11,6 +9,6 @@ interface MessagesDao {
     @Query("SELECT * FROM MessageJSON")
     fun getAllMessages(): Maybe<List<MessageJSON>>
 
-    @Update
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun updateMessages(messageJSON: MessageJSON)
 }

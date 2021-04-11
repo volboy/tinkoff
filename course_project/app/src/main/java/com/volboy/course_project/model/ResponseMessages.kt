@@ -25,6 +25,13 @@ class SendMessageResponse(
     deliver_at: String
 )
 
+class UpdateMessageFlag(
+    val messages: List<Long>,
+    val msg: String,
+    val result: String
+)
+
+
 @Entity
 @TypeConverters(MessageConverter::class)
 class MessageJSON(

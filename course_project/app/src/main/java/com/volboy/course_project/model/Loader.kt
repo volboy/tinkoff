@@ -21,10 +21,15 @@ import java.util.*
 class Loader() {
 
     fun getRemoteStreams(): Single<MutableList<ViewTyped>> {
+        val appDatabase = App.appDatabase
+        val streamsDao = appDatabase.streamsDao()
         return App.instance.zulipApi.getStreams()
             .subscribeOn(Schedulers.io())
+            .map { response ->
+                streamsDao.updateStreams(response.streams)
+                viewTypedStreams(response.streams)
+            }
             .observeOn(AndroidSchedulers.mainThread())
-            .map { response -> viewTypedStreams(response.streams) }
     }
 
     fun getTopicsOfStreams(id: Int): Single<MutableList<ViewTyped>> {
@@ -35,10 +40,10 @@ class Loader() {
     }
 
     fun getMessages(streamName: String, topicName: String): Single<List<ViewTyped>> {
-        val narrows = listOf<Narrow>(Narrow("stream", streamName), Narrow("topic", topicName))
+        val narrows = listOf(Narrow("stream", streamName), Narrow("topic", topicName))
         val gson = Gson()
         val narrowsJSON = gson.toJson(narrows)
-        return App.instance.zulipApi.getMessages("newest", 100, 0, narrowsJSON)
+        return App.instance.zulipApi.getMessages("first_unread", 5, 20, narrowsJSON)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .map { response -> groupedMessages(response.messages) }
