@@ -43,7 +43,7 @@ class Loader() {
         val narrows = listOf(Narrow("stream", streamName), Narrow("topic", topicName))
         val gson = Gson()
         val narrowsJSON = gson.toJson(narrows)
-        return App.instance.zulipApi.getMessages("first_unread", 5, 20, narrowsJSON)
+        return App.instance.zulipApi.getMessages("first_unread", 10, 10, narrowsJSON)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .map { response -> groupedMessages(response.messages) }
@@ -90,7 +90,7 @@ class Loader() {
     fun viewTypedMessages(messagesJSON: List<MessageJSON>): MutableList<ViewTyped> {
         val viewTypedList = mutableListOf<ViewTyped>()
         messagesJSON.forEach { msg ->
-            if (!msg.is_me_message) {
+            if (msg.sender_id!=402377) {
                 viewTypedList.add(TextUi(msg.sender_full_name, deleteHtmlFromString(msg.content), msg.avatar_url, R.layout.item_in_message, msg.id.toString()))
                 viewTypedList.add(ReactionsUi(recountReactions(msg.reactions), R.layout.item_messages_reactions, msg.reactions.hashCode().toString()))
             } else {
