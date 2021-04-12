@@ -7,10 +7,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.volboy.course_project.App
 import com.volboy.course_project.R
@@ -72,6 +75,17 @@ class MessagesFragment : Fragment(), MessageHolderFactory.MessageInterface {
         val mActionBar = (requireActivity() as AppCompatActivity).supportActionBar
         commonAdapter = CommonAdapter(holderFactory)
         binding = FragmentMessagesBinding.inflate(inflater, container, false)
+        var relay=false
+        binding.recyclerMessage.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                val linearLayoutManager = binding.recyclerMessage.layoutManager as LinearLayoutManager
+                if (linearLayoutManager.findLastVisibleItemPosition() == commonAdapter.items.size - 5) {
+                    Log.i("PAGINATION", "Далее")
+                    relay=true
+                }
+            }
+
+        })
         binding.messageBtn.setOnClickListener {
             val str = binding.messageBox.text.toString()
             if (str.isNotEmpty()) {
@@ -162,7 +176,7 @@ class MessagesFragment : Fragment(), MessageHolderFactory.MessageInterface {
                             id.add(item.uid.toInt())
                         }
                     }
-                    val gson=Gson()
+                    val gson = Gson()
                     updateMessageFlags(gson.toJson(id))
 
                 },
