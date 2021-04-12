@@ -38,15 +38,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/topicName"
         app:layout_constraintVertical_chainStyle="packed"
-        app:stackFromEnd="true"
         tools:listitem="@layout/item_out_message" />
 
     <EditText
         android:id="@+id/messageBox"
-        android:layout_width="334dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginTop="5dp"
+        android:layout_marginEnd="10dp"
         android:layout_marginBottom="5dp"
         android:background="@drawable/message_box_drw"
         android:fadeScrollbars="true"
@@ -60,6 +60,7 @@
         android:textColorHint="@color/ev_text_color"
         android:textSize="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/messageBtn"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/recyclerMessage" />
 
@@ -67,13 +68,11 @@
         android:id="@+id/messageBtn"
         android:layout_width="39dp"
         android:layout_height="39dp"
-        android:layout_marginStart="12dp"
         android:layout_marginEnd="16dp"
         android:background="@drawable/message_button_drw"
         android:src="@drawable/ic_add_message"
         app:layout_constraintBottom_toBottomOf="@+id/messageBox"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/messageBox"
         app:layout_constraintTop_toTopOf="@+id/messageBox" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

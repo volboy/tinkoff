@@ -43,7 +43,17 @@ class Loader() {
         val narrows = listOf(Narrow("stream", streamName), Narrow("topic", topicName))
         val gson = Gson()
         val narrowsJSON = gson.toJson(narrows)
-        return App.instance.zulipApi.getMessages("first_unread", 10, 10, narrowsJSON)
+        return App.instance.zulipApi.getMessages("oldest", 10, 10, narrowsJSON)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .map { response -> groupedMessages(response.messages) }
+    }
+
+    fun getMessagesNext(startId:Int, streamName: String, topicName: String): Single<List<ViewTyped>> {
+        val narrows = listOf(Narrow("stream", streamName), Narrow("topic", topicName))
+        val gson = Gson()
+        val narrowsJSON = gson.toJson(narrows)
+        return App.instance.zulipApi.getMessagesNext(startId, 0, 5, narrowsJSON)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .map { response -> groupedMessages(response.messages) }
@@ -92,10 +102,10 @@ class Loader() {
         messagesJSON.forEach { msg ->
             if (msg.sender_id!=402377) {
                 viewTypedList.add(TextUi(msg.sender_full_name, deleteHtmlFromString(msg.content), msg.avatar_url, R.layout.item_in_message, msg.id.toString()))
-                viewTypedList.add(ReactionsUi(recountReactions(msg.reactions), R.layout.item_messages_reactions, msg.reactions.hashCode().toString()))
+                viewTypedList.add(ReactionsUi(recountReactions(msg.reactions), R.layout.item_messages_reactions, msg.reactions.toString()))
             } else {
                 viewTypedList.add(TextUi("You", deleteHtmlFromString(msg.content), msg.avatar_url, R.layout.item_out_message, msg.id.toString()))
-                viewTypedList.add(ReactionsUi(recountReactions(msg.reactions), R.layout.item_messages_reactions_out, msg.reactions.hashCode().toString()))
+                viewTypedList.add(ReactionsUi(recountReactions(msg.reactions), R.layout.item_messages_reactions_out, msg.reactions.toString()))
             }
         }
         return viewTypedList

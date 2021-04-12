@@ -75,17 +75,6 @@ class MessagesFragment : Fragment(), MessageHolderFactory.MessageInterface {
         val mActionBar = (requireActivity() as AppCompatActivity).supportActionBar
         commonAdapter = CommonAdapter(holderFactory)
         binding = FragmentMessagesBinding.inflate(inflater, container, false)
-        var relay=false
-        binding.recyclerMessage.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                val linearLayoutManager = binding.recyclerMessage.layoutManager as LinearLayoutManager
-                if (linearLayoutManager.findLastVisibleItemPosition() == commonAdapter.items.size - 5) {
-                    Log.i("PAGINATION", "Далее")
-                    relay=true
-                }
-            }
-
-        })
         binding.messageBtn.setOnClickListener {
             val str = binding.messageBox.text.toString()
             if (str.isNotEmpty()) {
@@ -161,6 +150,46 @@ class MessagesFragment : Fragment(), MessageHolderFactory.MessageInterface {
         streamName = requireArguments().getString(SubscribedFragment.ARG_STREAM).toString()
         binding.topicName.text = "Topic: #${topicName?.toLowerCase()}"
         downLoadMessage()
+        var relay = false
+        binding.recyclerMessage.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                val linearLayoutManager = binding.recyclerMessage.layoutManager as LinearLayoutManager
+                if (linearLayoutManager.findLastVisibleItemPosition() == commonAdapter.items.size - 5) {
+                    if (!relay) {
+                        relay = true
+                        var i = 0
+                        while (commonAdapter.items[linearLayoutManager.findLastVisibleItemPosition() + i] !is TextUi) {
+                            i++
+                        }
+                        val itemId = commonAdapter.items[linearLayoutManager.findLastVisibleItemPosition() + i].uid
+                        Log.i("PAGINATION", "Далее $itemId")
+                        val loader = Loader()
+                        val messages = loader.getMessagesNext(itemId.toInt(), streamName, topicName)
+                        val disposableMessages = messages.subscribe(
+                            { result ->
+                                commonAdapter.items = commonAdapter.items + result
+                                relay = false
+                                val id = mutableListOf<Int>()
+
+                                result.forEach { item ->
+                                    if (item.viewType == R.layout.item_in_message) {
+                                        id.add(item.uid.toInt())
+                                    }
+                                }
+                                val gson = Gson()
+                                updateMessageFlags(gson.toJson(id))
+
+                            },
+                            { error ->
+                                commonAdapter.items = listOf(ErrorItem)
+                                Toast.makeText(context, "Ошибка ${error.message}", Toast.LENGTH_LONG).show()
+                                Log.d("ZULIP", error.message.toString())
+                            }
+                        )
+                    }
+                }
+            }
+        })
     }
 
     private fun downLoadMessage() {

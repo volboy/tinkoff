@@ -20,6 +20,14 @@ interface ZulipApi {
         @Query("narrow") narrow: String
     ): Single<MessageResponse>
 
+    @GET("messages?json=true")
+    fun getMessagesNext(
+        @Query("anchor") anchor: Int,
+        @Query("num_before") num_before: Int,
+        @Query("num_after") num_after: Int,
+        @Query("narrow") narrow: String
+    ): Single<MessageResponse>
+
     @GET("users?json=true")
     fun getUsers(): Single<UsersResponse>
 
