@@ -17,21 +17,21 @@
     <string name="log_out_str">Log out</string>
     <string name="search_str">Search...</string>
     <string name="plus_str">+</string>
-    <string name="msg_network_error">Ошибка сети</string>
-    <string name="msg_json_error">Ошибка json</string>
-    <string name="msg_database_error">Ошибка БД</string>
-    <string name="msg_network_ok">Данные загружены из сети</string>
-    <string name="msg_network_flags">Флаг, что сообщение прочитано, обновлен</string>
-    <string name="msg_network_flags_error">Флаг, что сообщение прочитано, не обновлен</string>
-    <string name="msg_network_send_msg">Сообщение отправлено</string>
-    <string name="msg_network_send_msg_error">Сообщение не отправлено</string>
-    <string name="msg_network_send_emoji">Эмоджи отправлено</string>
-    <string name="msg_network_send_emoji_error">Эмоджи не отправлено</string>
-    <string name="msg_network_delete_emoji">Эмоджи удалено</string>
-    <string name="msg_network_delete_emoji_error">Эмоджи не удалено</string>
-    <string name="msg_database_ok">Данные загружены из БД</string>
-    v <string name="msg_database_empty">База данных пуста</string>
-    <string name="log_string">zulipapptfsspring</string>
-    <string name="pagination_str">Подгружаю новые данные</string>
+    <string name="msg_network_error">Ошибка сети </string>
+    <string name="msg_json_error">Ошибка json </string>
+    <string name="msg_database_error">Ошибка БД </string>
+    <string name="msg_network_ok">Данные загружены из сети </string>
+    <string name="msg_network_flags">Флаг, что сообщение прочитано, обновлен </string>
+    <string name="msg_network_flags_error">Флаг, что сообщение прочитано, не обновлен </string>
+    <string name="msg_network_send_msg">Сообщение отправлено </string>
+    <string name="msg_network_send_msg_error">Сообщение не отправлено </string>
+    <string name="msg_network_send_emoji">Эмоджи отправлено </string>
+    <string name="msg_network_send_emoji_error">Эмоджи не отправлено </string>
+    <string name="msg_network_delete_emoji">Эмоджи удалено </string>
+    <string name="msg_network_delete_emoji_error">Эмоджи не удалено </string>
+    <string name="msg_database_ok">Данные загружены из БД </string>
+    v <string name="msg_database_empty">База данных пуста </string>
+    <string name="log_string">zulipapptfsspring </string>
+    <string name="pagination_str">Подгружаю новые данные </string>
 
 </resources>

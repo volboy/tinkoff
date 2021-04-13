@@ -7,16 +7,16 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.SimpleItemAnimator
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.volboy.course_project.App
+import com.volboy.course_project.App.Companion.appDatabase
 import com.volboy.course_project.R
 import com.volboy.course_project.databinding.FragmentMessagesBinding
 import com.volboy.course_project.message_recycler_view.*
@@ -24,6 +24,8 @@ import com.volboy.course_project.message_recycler_view.simple_items.ErrorItem
 import com.volboy.course_project.message_recycler_view.simple_items.ProgressItem
 import com.volboy.course_project.model.*
 import com.volboy.course_project.ui.channel_fragments.tab_layout_fragments.SubscribedFragment
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -38,6 +40,7 @@ class MessagesFragment : Fragment(), MessageHolderFactory.MessageInterface {
     private var streamName = ""
     private var ownId = 0
     var loader = Loader()
+    var lastMessageIdInTopic = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,11 +78,13 @@ class MessagesFragment : Fragment(), MessageHolderFactory.MessageInterface {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         commonAdapter.items = listOf(ProgressItem)
         binding.recyclerMessage.adapter = commonAdapter
+        (binding.recyclerMessage.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         binding.topicName.text = StringBuilder(resources.getString(R.string.topic_name) + topicName.toLowerCase(Locale.ROOT))
         downLoadMessage()
         setPagination()
 
     }
+
     //TODO("Сделать это один раз при загрузке приложения и записать в БД или SharedPreference")
     private fun getOwnId() {
         val ownUser = loader.getOwnUser()
@@ -115,8 +120,6 @@ class MessagesFragment : Fragment(), MessageHolderFactory.MessageInterface {
             override fun onResponse(call: Call<SendMessageResponse>, response: Response<SendMessageResponse>) {
                 if (response.isSuccessful) {
                     showSnackbar(resources.getString(R.string.msg_network_send_msg))
-                    //TODO("Переделать на загрузку только отправленного сообщения или просто добавлять к адаптеру")
-                    downLoadMessage()
                 } else {
                     showSnackbar(resources.getString(R.string.msg_network_send_msg_error))
                 }
@@ -126,6 +129,26 @@ class MessagesFragment : Fragment(), MessageHolderFactory.MessageInterface {
                 showSnackbar(resources.getString(R.string.msg_network_send_msg_error) + t.message)
             }
         })
+        //TODO("Переделать эту копипасту")
+        val messages = loader.getMessagesNext(lastMessageIdInTopic, streamName, topicName)
+        val disposableMessages = messages.subscribe(
+            { result ->
+                commonAdapter.items = commonAdapter.items + result
+                val id = mutableListOf<Int>()
+                result.forEach { item ->
+                    if (item.viewType == R.layout.item_in_message) {
+                        id.add(item.uid.toInt())
+                    }
+                }
+                val gson = Gson()
+                //TODO ("Обновление флага что сообщения прочитаны, нужно с ним решить")
+                updateMessageFlags(gson.toJson(id))
+            },
+            { error ->
+                commonAdapter.items = listOf(ErrorItem)
+                showSnackbar(resources.getString(R.string.pagination_str) + error.message)
+            }
+        )
     }
 
     private fun addEmojiToMessage(messageId: Int, emojiName: String, reactionType: String) {
@@ -175,33 +198,48 @@ class MessagesFragment : Fragment(), MessageHolderFactory.MessageInterface {
     }
 
     private fun setPagination() {
-        var relay = false
+        val topicsDao = appDatabase.topicsDao()
+        val disposable = topicsDao.getAllTopics()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                { topics ->
+                    val thisTopic = topics.firstOrNull { topic -> topic.name == topicName }
+                    if (thisTopic != null) {
+                        lastMessageIdInTopic = thisTopic.max_id
+                    }
+
+                },
+                { error -> showSnackbar(resources.getString(R.string.msg_database_error) + error.message) },
+                {
+                    showSnackbar(resources.getString(R.string.msg_database_empty))
+                })
+        var downloadMessageFlag = false
         binding.recyclerMessage.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 val linearLayoutManager = binding.recyclerMessage.layoutManager as LinearLayoutManager
                 if (linearLayoutManager.findLastVisibleItemPosition() == commonAdapter.items.size - 5) {
-                    if (!relay) {
-                        relay = true
+                    if (!downloadMessageFlag) {
+                        downloadMessageFlag = true
                         var i = 0
                         while (commonAdapter.items[linearLayoutManager.findLastVisibleItemPosition() + i] !is TextUi) {
                             i++
                         }
                         val itemId = commonAdapter.items[linearLayoutManager.findLastVisibleItemPosition() + i].uid
                         showSnackbar(resources.getString(R.string.pagination_str))
-                        val loader = Loader()
                         val messages = loader.getMessagesNext(itemId.toInt(), streamName, topicName)
                         val disposableMessages = messages.subscribe(
                             { result ->
                                 commonAdapter.items = commonAdapter.items + result
-                                relay = false
+                                downloadMessageFlag = commonAdapter.items.firstOrNull { item -> item.uid == lastMessageIdInTopic.toString() } != null
                                 val id = mutableListOf<Int>()
-
                                 result.forEach { item ->
                                     if (item.viewType == R.layout.item_in_message) {
                                         id.add(item.uid.toInt())
                                     }
                                 }
                                 val gson = Gson()
+                                //TODO ("Обновление флага что сообщения прочитаны, нужно с ним решить")
                                 updateMessageFlags(gson.toJson(id))
                             },
                             { error ->

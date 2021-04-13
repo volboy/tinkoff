@@ -10,5 +10,5 @@ interface MessagesDao {
     fun getAllMessages(): Maybe<List<MessageJSON>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun updateMessages(messageJSON: MessageJSON)
+    fun updateMessages(messagesJSON: List<MessageJSON>)
 }

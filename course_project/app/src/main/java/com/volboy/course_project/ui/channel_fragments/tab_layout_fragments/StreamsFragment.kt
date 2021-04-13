@@ -12,6 +12,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
 import com.volboy.course_project.App
+import com.volboy.course_project.App.Companion.appDatabase
 import com.volboy.course_project.R
 import com.volboy.course_project.databinding.FragmentStreamsBinding
 import com.volboy.course_project.message_recycler_view.CommonAdapter
@@ -43,7 +44,6 @@ class StreamsFragment : Fragment(), UiHolderFactory.ChannelsInterface {
         val holderFactory = UiHolderFactory(this)
         commonAdapter = CommonAdapter(holderFactory)
         binding.rwAllStreams.adapter = commonAdapter
-        val appDatabase = App.appDatabase
         val streamsDao = appDatabase.streamsDao()
         val disposable = streamsDao.getAllStreams()
             .subscribeOn(Schedulers.io())

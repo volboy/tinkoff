@@ -5,6 +5,7 @@ import android.text.Html
 import android.text.Spanned
 import com.google.gson.Gson
 import com.volboy.course_project.App
+import com.volboy.course_project.App.Companion.appDatabase
 import com.volboy.course_project.R
 import com.volboy.course_project.message_recycler_view.DataUi
 import com.volboy.course_project.message_recycler_view.ReactionsUi
@@ -23,7 +24,6 @@ import java.util.concurrent.TimeUnit
 class Loader() {
 
     fun getRemoteStreams(): Single<MutableList<ViewTyped>> {
-        val appDatabase = App.appDatabase
         val streamsDao = appDatabase.streamsDao()
         return App.instance.zulipApi.getStreams()
             //TODO("Не забыть убрать, это для проверки загрузки данных из БД)
@@ -37,37 +37,44 @@ class Loader() {
     }
 
     fun getTopicsOfStreams(id: Int): Single<MutableList<ViewTyped>> {
+        val topicsDao = appDatabase.topicsDao()
         return App.instance.zulipApi.getStreamsTopics(id)
             .subscribeOn(Schedulers.io())
+            .map { response ->
+                topicsDao.updateTopics(response.topics)
+                viewTypedTopics(response.topics)
+            }
             .observeOn(AndroidSchedulers.mainThread())
-            .map { response -> viewTypedTopics(response.topics) }
     }
 
     fun getMessages(streamName: String, topicName: String): Single<List<ViewTyped>> {
+        val messagesDao = appDatabase.messagesDao()
         val narrows = listOf(Narrow("stream", streamName), Narrow("topic", topicName))
         val gson = Gson()
         val narrowsJSON = gson.toJson(narrows)
-        return App.instance.zulipApi.getMessages("oldest", 10, 10, narrowsJSON)
+        return App.instance.zulipApi.getMessages("oldest", 0, 20, narrowsJSON)
             .subscribeOn(Schedulers.io())
+            .map { response ->
+                messagesDao.updateMessages(response.messages)
+                groupedMessages(response.messages) }
             .observeOn(AndroidSchedulers.mainThread())
-            .map { response -> groupedMessages(response.messages) }
     }
 
     fun getMessagesNext(startId: Int, streamName: String, topicName: String): Single<List<ViewTyped>> {
         val narrows = listOf(Narrow("stream", streamName), Narrow("topic", topicName))
         val gson = Gson()
         val narrowsJSON = gson.toJson(narrows)
-        return App.instance.zulipApi.getMessagesNext(startId, 0, 5, narrowsJSON)
+        return App.instance.zulipApi.getMessagesNext(startId, 0, 20, narrowsJSON)
             .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
             .map { response -> groupedMessages(response.messages) }
+            .observeOn(AndroidSchedulers.mainThread())
     }
 
     fun getRemoteUsers(): Single<MutableList<ViewTyped>> {
         return App.instance.zulipApi.getUsers()
             .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
             .map { response -> viewTypedUsers(response.members) }
+            .observeOn(AndroidSchedulers.mainThread())
     }
 
     fun getOwnUser(): Single<OwnUser> {
@@ -85,7 +92,7 @@ class Loader() {
         return viewTypedList
     }
 
-    fun viewTypedTopics(topicsJSON: List<TopicJSON>): MutableList<ViewTyped> {
+    private fun viewTypedTopics(topicsJSON: List<TopicJSON>): MutableList<ViewTyped> {
         val viewTypedList = mutableListOf<ViewTyped>()
         topicsJSON.forEach { topic ->
             val uid = topic.max_id.toString()
@@ -94,14 +101,14 @@ class Loader() {
         return viewTypedList
     }
 
-    fun groupedMessages(messagesJSON: List<MessageJSON>): List<ViewTyped> {
+    private fun groupedMessages(messagesJSON: List<MessageJSON>): List<ViewTyped> {
         val messageByDate: Map<Long, List<MessageJSON>> = messagesJSON.groupBy { it.timestamp }
         return messageByDate.flatMap { (date, msg) ->
             listOf(DataUi(getDateTime(date), R.layout.item_date_divider)) + viewTypedMessages(msg)
         }
     }
 
-    fun viewTypedMessages(messagesJSON: List<MessageJSON>): MutableList<ViewTyped> {
+    private fun viewTypedMessages(messagesJSON: List<MessageJSON>): MutableList<ViewTyped> {
         val viewTypedList = mutableListOf<ViewTyped>()
         messagesJSON.forEach { msg ->
             if (msg.sender_id != 402377) {
@@ -128,7 +135,7 @@ class Loader() {
         }
     }
 
-    fun viewTypedUsers(usersJSON: List<UserJSON>): MutableList<ViewTyped> {
+    private fun viewTypedUsers(usersJSON: List<UserJSON>): MutableList<ViewTyped> {
         val viewTypedList = mutableListOf<ViewTyped>()
         usersJSON.forEach { user ->
             val uid = user.user_id.toString()

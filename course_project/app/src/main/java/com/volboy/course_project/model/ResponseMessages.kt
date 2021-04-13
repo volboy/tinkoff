@@ -57,8 +57,8 @@ class MessageJSON(
     val type: String,
     val flags: Array<String>,
     val last_edit_timestamp: Int,
-    val match_content: String,
-    val match_subject: String
+    val match_content: String?,
+    val match_subject: String?
 )
 
 class ReactionsJSON(
