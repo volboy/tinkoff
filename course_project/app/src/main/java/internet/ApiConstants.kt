@@ -1,0 +1,5 @@
+package internet
+
+class ApiConstants {
+
+}

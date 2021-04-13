@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import com.google.android.material.snackbar.Snackbar
 import com.volboy.course_project.App
 import com.volboy.course_project.R
 import com.volboy.course_project.databinding.FragmentStreamsBinding
@@ -30,6 +31,7 @@ class StreamsFragment : Fragment(), UiHolderFactory.ChannelsInterface {
     private var listStreams = listOf<ViewTyped>()
     private lateinit var commonAdapter: CommonAdapter<ViewTyped>
     private lateinit var searchText: Observable<String>
+    private var streamName = ""
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentStreamsBinding.inflate(inflater, container, false)
@@ -40,7 +42,6 @@ class StreamsFragment : Fragment(), UiHolderFactory.ChannelsInterface {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val holderFactory = UiHolderFactory(this)
         commonAdapter = CommonAdapter(holderFactory)
-        //commonAdapter.items = listOf(ProgressItem)
         binding.rwAllStreams.adapter = commonAdapter
         val appDatabase = App.appDatabase
         val streamsDao = appDatabase.streamsDao()
@@ -49,21 +50,32 @@ class StreamsFragment : Fragment(), UiHolderFactory.ChannelsInterface {
             .observeOn(AndroidSchedulers.mainThread())
             .map { streams -> loader.viewTypedStreams(streams) }
             .subscribe(
-                { viewTypedStreams -> Toast.makeText(requireContext(), viewTypedStreams?.size?.toString(), Toast.LENGTH_SHORT).show() },
-                { error -> Log.i("DBZ", error.message.toString()) },
-                { Toast.makeText(requireContext(), "БД пуста", Toast.LENGTH_SHORT).show() })
+                { viewTypedStreams ->
+                    showSnackbar(resources.getString(R.string.msg_database_ok) + " , размер БД " + viewTypedStreams?.size?.toString())
+                    if (viewTypedStreams.size == 0) {
+                        commonAdapter.items = listOf(ProgressItem)
+                    } else {
+                        commonAdapter.items = viewTypedStreams
+                    }
+                },
+                { error -> showSnackbar(resources.getString(R.string.msg_database_error) + error.message) },
+                {
+                    showSnackbar(resources.getString(R.string.msg_database_empty))
+                    commonAdapter.items = listOf(ProgressItem)
+                })
+
         val streams = loader.getRemoteStreams()
-         val disposableStreams = streams.subscribe(
-             { result ->
-                 commonAdapter.items = result
-                 listStreams = result
-             },
-             { error ->
-                 commonAdapter.items = listOf(ErrorItem)
-                 Toast.makeText(context, "Ошибка ${error.message}", Toast.LENGTH_LONG).show()
-                 Log.d("ZULIP", error.message.toString())
-             }
-         )
+        val disposableStreams = streams.subscribe(
+            { result ->
+                commonAdapter.items = result
+                listStreams = result
+                showSnackbar(resources.getString(R.string.msg_network_ok))
+            },
+            { error ->
+                commonAdapter.items = listOf(ErrorItem)
+                showSnackbar(resources.getString(R.string.msg_network_error) + error.message)
+            }
+        )
         val mActionBar = (requireActivity() as AppCompatActivity).supportActionBar;
         mActionBar?.show()
         val searchEdit = requireActivity().findViewById<EditText>(R.id.searchEditText)
@@ -107,6 +119,7 @@ class StreamsFragment : Fragment(), UiHolderFactory.ChannelsInterface {
         clickedStream.isSelected = !clickedStream.isSelected
         when (viewType) {
             R.layout.item_collapse -> {
+                streamName = clickedStream.title
                 if (clickedStream.isSelected) {
                     topicsOfStream.clear()
                     clickedStream.imageId = R.drawable.ic_arrow_up
@@ -140,7 +153,8 @@ class StreamsFragment : Fragment(), UiHolderFactory.ChannelsInterface {
             R.layout.item_expand -> {
                 val messagesFragment = MessagesFragment()
                 val arguments = Bundle()
-                arguments.putString(ARG_TITLE, (commonAdapter.items[position] as TitleUi).title)
+                arguments.putString(SubscribedFragment.ARG_TOPIC, (commonAdapter.items[position] as TitleUi).title)
+                arguments.putString(SubscribedFragment.ARG_STREAM, streamName)
                 messagesFragment.arguments = arguments
                 val transaction = requireActivity().supportFragmentManager.beginTransaction()
                 transaction.addToBackStack("FromSubscribedFragment")
@@ -152,5 +166,10 @@ class StreamsFragment : Fragment(), UiHolderFactory.ChannelsInterface {
 
     companion object {
         const val ARG_TITLE = "title"
+    }
+
+    private fun showSnackbar(msg: String) {
+        Snackbar.make(binding.root, msg, Snackbar.LENGTH_SHORT).show()
+        Log.i(resources.getString(R.string.log_string), msg)
     }
 }

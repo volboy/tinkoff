@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.volboy.course_project.App
 import com.volboy.course_project.R
@@ -26,6 +27,7 @@ import com.volboy.course_project.ui.channel_fragments.tab_layout_fragments.Subsc
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.*
 
 class MessagesFragment : Fragment(), MessageHolderFactory.MessageInterface {
     private lateinit var binding: FragmentMessagesBinding
@@ -35,39 +37,14 @@ class MessagesFragment : Fragment(), MessageHolderFactory.MessageInterface {
     private var topicName = ""
     private var streamName = ""
     private var ownId = 0
+    var loader = Loader()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setFragmentResultListener(EmojiBottomFragment.ARG_BOTTOM_FRAGMENT) { _, bundle ->
-            val emojiList = bundle.getStringArrayList(EmojiBottomFragment.ARG_EMOJI)
-            reactionsOfMessage = (commonAdapter.items[positionMessage] as ReactionsUi).reactions
-            if (emojiList != null) {
-                val isFindEmoji = reactionsOfMessage.firstOrNull { String(Character.toChars(it.emojiCode.toInt(16))) == emojiList[1] }
-                if (isFindEmoji != null) {
-                    val isFindUser = isFindEmoji.users.firstOrNull { it == ownId }
-                    if (isFindUser != null) {
-                        removeEmojiFromMessage((commonAdapter.items[positionMessage - 1] as TextUi).uid.toInt(), emojiList[0], "unicode_emoji")
-                    } else {
-                        addEmojiToMessage((commonAdapter.items[positionMessage - 1] as TextUi).uid.toInt(), emojiList[0], "unicode_emoji")
-                    }
-                } else {
-                    addEmojiToMessage((commonAdapter.items[positionMessage - 1] as TextUi).uid.toInt(), emojiList[0], "unicode_emoji")
-                }
-
-            }
-            downLoadMessage()
-        }
-        val loader = Loader()
-        val ownUser = loader.getOwnUser()
-        val disposableMessages = ownUser.subscribe(
-            { result ->
-                ownId = result.user_id
-            },
-            { error ->
-                Toast.makeText(context, "Ошибка ${error.message}", Toast.LENGTH_LONG).show()
-                Log.d("ZULIP", error.message.toString())
-            }
-        )
+        setFragmentResultListener()
+        getOwnId()
+        topicName = requireArguments().getString(SubscribedFragment.ARG_TOPIC).toString()
+        streamName = requireArguments().getString(SubscribedFragment.ARG_STREAM).toString()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -95,18 +72,58 @@ class MessagesFragment : Fragment(), MessageHolderFactory.MessageInterface {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        commonAdapter.items = listOf(ProgressItem)
+        binding.recyclerMessage.adapter = commonAdapter
+        binding.topicName.text = StringBuilder(resources.getString(R.string.topic_name) + topicName.toLowerCase(Locale.ROOT))
+        downLoadMessage()
+        setPagination()
+
+    }
+    //TODO("Сделать это один раз при загрузке приложения и записать в БД или SharedPreference")
+    private fun getOwnId() {
+        val ownUser = loader.getOwnUser()
+        val disposableMessages = ownUser.subscribe(
+            { result ->
+                ownId = result.user_id
+            },
+            { error ->
+                showSnackbar(resources.getString(R.string.msg_network_error) + error.message)
+            }
+        )
+    }
+
+    private fun downLoadMessage() {
+        val loader = Loader()
+        if (streamName.isNotEmpty() && topicName.isNotEmpty()) {
+            val messages = loader.getMessages(streamName, topicName)
+            val disposableMessages = messages.subscribe(
+                { result ->
+                    commonAdapter.items = result
+                    showSnackbar(resources.getString(R.string.msg_network_ok))
+                },
+                { error ->
+                    commonAdapter.items = listOf(ErrorItem)
+                    showSnackbar(resources.getString(R.string.msg_network_error) + error.message)
+                }
+            )
+        }
+    }
+
     private fun sendMessage(str: String) {
         App.instance.zulipApi.sendMessage("stream", streamName, str, topicName).enqueue(object : Callback<SendMessageResponse> {
             override fun onResponse(call: Call<SendMessageResponse>, response: Response<SendMessageResponse>) {
                 if (response.isSuccessful) {
+                    showSnackbar(resources.getString(R.string.msg_network_send_msg))
+                    //TODO("Переделать на загрузку только отправленного сообщения или просто добавлять к адаптеру")
                     downLoadMessage()
                 } else {
-                    Toast.makeText(context, "Ошибка", Toast.LENGTH_LONG).show()
+                    showSnackbar(resources.getString(R.string.msg_network_send_msg_error))
                 }
             }
 
             override fun onFailure(call: Call<SendMessageResponse>, t: Throwable) {
-                Toast.makeText(context, t.message, Toast.LENGTH_LONG).show()
+                showSnackbar(resources.getString(R.string.msg_network_send_msg_error) + t.message)
             }
         })
     }
@@ -115,14 +132,14 @@ class MessagesFragment : Fragment(), MessageHolderFactory.MessageInterface {
         App.instance.zulipApi.addReaction(messageId, emojiName, reactionType).enqueue(object : Callback<AddReactionResponse> {
             override fun onResponse(call: Call<AddReactionResponse>, response: Response<AddReactionResponse>) {
                 if (response.isSuccessful) {
-                    Toast.makeText(context, "Успех", Toast.LENGTH_SHORT).show()
+                    showSnackbar(resources.getString(R.string.msg_network_send_emoji))
                 } else {
-                    Toast.makeText(context, "Ошибка", Toast.LENGTH_SHORT).show()
+                    showSnackbar(resources.getString(R.string.msg_network_send_emoji_error))
                 }
             }
 
             override fun onFailure(call: Call<AddReactionResponse>, t: Throwable) {
-                Toast.makeText(context, t.message, Toast.LENGTH_SHORT).show()
+                showSnackbar(resources.getString(R.string.msg_network_send_emoji_error) + t.message)
             }
         })
     }
@@ -131,25 +148,33 @@ class MessagesFragment : Fragment(), MessageHolderFactory.MessageInterface {
         App.instance.zulipApi.removeReaction(messageId, emojiName, reactionType).enqueue(object : Callback<AddReactionResponse> {
             override fun onResponse(call: Call<AddReactionResponse>, response: Response<AddReactionResponse>) {
                 if (response.isSuccessful) {
-                    Toast.makeText(context, "Успех", Toast.LENGTH_SHORT).show()
+                    showSnackbar(resources.getString(R.string.msg_network_delete_emoji))
                 } else {
-                    Toast.makeText(context, "Ошибка", Toast.LENGTH_SHORT).show()
+                    showSnackbar(resources.getString(R.string.msg_network_delete_emoji_error))
                 }
             }
 
             override fun onFailure(call: Call<AddReactionResponse>, t: Throwable) {
-                Toast.makeText(context, t.message, Toast.LENGTH_SHORT).show()
+                showSnackbar(resources.getString(R.string.msg_network_delete_emoji_error) + t.message)
             }
         })
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        commonAdapter.items = listOf(ProgressItem)
-        binding.recyclerMessage.adapter = commonAdapter
-        topicName = requireArguments().getString(SubscribedFragment.ARG_TOPIC).toString()
-        streamName = requireArguments().getString(SubscribedFragment.ARG_STREAM).toString()
-        binding.topicName.text = "Topic: #${topicName?.toLowerCase()}"
-        downLoadMessage()
+    private fun updateMessageFlags(messages: String) {
+        App.instance.zulipApi.updateMessageFlag(messages, "add", "read").enqueue(object : Callback<UpdateMessageFlag> {
+            override fun onResponse(call: Call<UpdateMessageFlag>, response: Response<UpdateMessageFlag>) {
+                if (response.isSuccessful) {
+                    showSnackbar(resources.getString(R.string.msg_network_flags))
+                }
+            }
+
+            override fun onFailure(call: Call<UpdateMessageFlag>, t: Throwable) {
+                showSnackbar(resources.getString(R.string.msg_network_flags_error) + t.message)
+            }
+        })
+    }
+
+    private fun setPagination() {
         var relay = false
         binding.recyclerMessage.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -162,7 +187,7 @@ class MessagesFragment : Fragment(), MessageHolderFactory.MessageInterface {
                             i++
                         }
                         val itemId = commonAdapter.items[linearLayoutManager.findLastVisibleItemPosition() + i].uid
-                        Log.i("PAGINATION", "Далее $itemId")
+                        showSnackbar(resources.getString(R.string.pagination_str))
                         val loader = Loader()
                         val messages = loader.getMessagesNext(itemId.toInt(), streamName, topicName)
                         val disposableMessages = messages.subscribe(
@@ -178,55 +203,14 @@ class MessagesFragment : Fragment(), MessageHolderFactory.MessageInterface {
                                 }
                                 val gson = Gson()
                                 updateMessageFlags(gson.toJson(id))
-
                             },
                             { error ->
                                 commonAdapter.items = listOf(ErrorItem)
-                                Toast.makeText(context, "Ошибка ${error.message}", Toast.LENGTH_LONG).show()
-                                Log.d("ZULIP", error.message.toString())
+                                showSnackbar(resources.getString(R.string.pagination_str) + error.message)
                             }
                         )
                     }
                 }
-            }
-        })
-    }
-
-    private fun downLoadMessage() {
-        val loader = Loader()
-        if (streamName.isNotEmpty() && topicName.isNotEmpty()) {
-            val messages = loader.getMessages(streamName, topicName)
-            val disposableMessages = messages.subscribe(
-                { result ->
-                    commonAdapter.items = result
-                    val id = mutableListOf<Int>()
-                    result.forEach { item ->
-                        if (item.viewType == R.layout.item_in_message) {
-                            id.add(item.uid.toInt())
-                        }
-                    }
-                    val gson = Gson()
-                    updateMessageFlags(gson.toJson(id))
-
-                },
-                { error ->
-                    commonAdapter.items = listOf(ErrorItem)
-                    Toast.makeText(context, "Ошибка ${error.message}", Toast.LENGTH_LONG).show()
-                    Log.d("ZULIP", error.message.toString())
-                }
-            )
-        }
-    }
-
-    private fun updateMessageFlags(messages: String) {
-        App.instance.zulipApi.updateMessageFlag(messages, "add", "read").enqueue(object : Callback<UpdateMessageFlag> {
-            override fun onResponse(call: Call<UpdateMessageFlag>, response: Response<UpdateMessageFlag>) {
-                if (response.isSuccessful) {
-                } else {
-                }
-            }
-
-            override fun onFailure(call: Call<UpdateMessageFlag>, t: Throwable) {
             }
         })
     }
@@ -245,6 +229,32 @@ class MessagesFragment : Fragment(), MessageHolderFactory.MessageInterface {
         positionMessage = position
     }
 
+    private fun setFragmentResultListener() {
+        setFragmentResultListener(EmojiBottomFragment.ARG_BOTTOM_FRAGMENT) { _, bundle ->
+            val emojiList = bundle.getStringArrayList(EmojiBottomFragment.ARG_EMOJI)
+            reactionsOfMessage = (commonAdapter.items[positionMessage] as ReactionsUi).reactions
+            if (emojiList != null) {
+                val isFindEmoji = reactionsOfMessage.firstOrNull { String(Character.toChars(it.emojiCode.toInt(16))) == emojiList[1] }
+                if (isFindEmoji != null) {
+                    val isFindUser = isFindEmoji.users.firstOrNull { it == ownId }
+                    if (isFindUser != null) {
+                        removeEmojiFromMessage((commonAdapter.items[positionMessage - 1] as TextUi).uid.toInt(), emojiList[0], "unicode_emoji")
+                    } else {
+                        addEmojiToMessage((commonAdapter.items[positionMessage - 1] as TextUi).uid.toInt(), emojiList[0], "unicode_emoji")
+                    }
+                } else {
+                    addEmojiToMessage((commonAdapter.items[positionMessage - 1] as TextUi).uid.toInt(), emojiList[0], "unicode_emoji")
+                }
+            }
+            //TODO("Переделать на загрузку только измененного сообщения")
+            downLoadMessage()
+        }
+    }
+
+    private fun showSnackbar(msg: String) {
+        Snackbar.make(binding.root, msg, Snackbar.LENGTH_SHORT).show()
+        Log.i(resources.getString(R.string.log_string), msg)
+    }
 }
 
 

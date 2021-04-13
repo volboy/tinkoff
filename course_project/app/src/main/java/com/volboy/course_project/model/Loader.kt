@@ -15,8 +15,10 @@ import com.volboy.course_project.ui.people_fragments.PeopleUi
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import java.sql.Time
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 class Loader() {
 
@@ -24,7 +26,9 @@ class Loader() {
         val appDatabase = App.appDatabase
         val streamsDao = appDatabase.streamsDao()
         return App.instance.zulipApi.getStreams()
+            //TODO("Не забыть убрать, это для проверки загрузки данных из БД)
             .subscribeOn(Schedulers.io())
+            .delay(3, TimeUnit.SECONDS)
             .map { response ->
                 streamsDao.updateStreams(response.streams)
                 viewTypedStreams(response.streams)
@@ -49,7 +53,7 @@ class Loader() {
             .map { response -> groupedMessages(response.messages) }
     }
 
-    fun getMessagesNext(startId:Int, streamName: String, topicName: String): Single<List<ViewTyped>> {
+    fun getMessagesNext(startId: Int, streamName: String, topicName: String): Single<List<ViewTyped>> {
         val narrows = listOf(Narrow("stream", streamName), Narrow("topic", topicName))
         val gson = Gson()
         val narrowsJSON = gson.toJson(narrows)
@@ -100,7 +104,7 @@ class Loader() {
     fun viewTypedMessages(messagesJSON: List<MessageJSON>): MutableList<ViewTyped> {
         val viewTypedList = mutableListOf<ViewTyped>()
         messagesJSON.forEach { msg ->
-            if (msg.sender_id!=402377) {
+            if (msg.sender_id != 402377) {
                 viewTypedList.add(TextUi(msg.sender_full_name, deleteHtmlFromString(msg.content), msg.avatar_url, R.layout.item_in_message, msg.id.toString()))
                 viewTypedList.add(ReactionsUi(recountReactions(msg.reactions), R.layout.item_messages_reactions, msg.reactions.toString()))
             } else {

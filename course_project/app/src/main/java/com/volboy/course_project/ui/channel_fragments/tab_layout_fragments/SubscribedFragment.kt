@@ -10,6 +10,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import com.google.android.material.snackbar.Snackbar
+import com.volboy.course_project.App
 import com.volboy.course_project.R
 import com.volboy.course_project.databinding.FragmentSubscribedBinding
 import com.volboy.course_project.message_recycler_view.CommonAdapter
@@ -19,6 +21,8 @@ import com.volboy.course_project.message_recycler_view.simple_items.ProgressItem
 import com.volboy.course_project.model.Loader
 import com.volboy.course_project.ui.channel_fragments.MessagesFragment
 import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 
 
 class SubscribedFragment : Fragment(), UiHolderFactory.ChannelsInterface {
@@ -38,18 +42,38 @@ class SubscribedFragment : Fragment(), UiHolderFactory.ChannelsInterface {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val holderFactory = UiHolderFactory(this)
         commonAdapter = CommonAdapter(holderFactory)
-        commonAdapter.items = listOf(ProgressItem)
         binding.rwAllStreams.adapter = commonAdapter
+        val appDatabase = App.appDatabase
+        val streamsDao = appDatabase.streamsDao()
+        val disposable = streamsDao.getAllStreams()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .map { streams -> loader.viewTypedStreams(streams) }
+            .subscribe(
+                { viewTypedStreams ->
+                    showSnackbar(resources.getString(R.string.msg_database_ok) + " , размер БД " + viewTypedStreams?.size?.toString())
+                    if (viewTypedStreams.size == 0) {
+                        commonAdapter.items = listOf(ProgressItem)
+                    } else {
+                        commonAdapter.items = viewTypedStreams
+                    }
+                },
+                { error -> showSnackbar(resources.getString(R.string.msg_database_error) + error.message) },
+                {
+                    showSnackbar(resources.getString(R.string.msg_database_empty))
+                    commonAdapter.items = listOf(ProgressItem)
+                })
+
         val streams = loader.getRemoteStreams()
         val disposableStreams = streams.subscribe(
             { result ->
                 commonAdapter.items = result
                 listStreams = result
+                showSnackbar(resources.getString(R.string.msg_network_ok))
             },
             { error ->
                 commonAdapter.items = listOf(ErrorItem)
-                Toast.makeText(context, "Ошибка ${error.message}", Toast.LENGTH_LONG).show()
-                Log.d("ZULIP", error.message.toString())
+                showSnackbar(resources.getString(R.string.msg_network_error) + error.message)
             }
         )
         val mActionBar = (requireActivity() as AppCompatActivity).supportActionBar;
@@ -143,5 +167,10 @@ class SubscribedFragment : Fragment(), UiHolderFactory.ChannelsInterface {
     companion object {
         const val ARG_TOPIC = "topic"
         const val ARG_STREAM = "stream"
+    }
+
+    private fun showSnackbar(msg: String) {
+        Snackbar.make(binding.root, msg, Snackbar.LENGTH_SHORT).show()
+        Log.i(resources.getString(R.string.log_string), msg)
     }
 }
