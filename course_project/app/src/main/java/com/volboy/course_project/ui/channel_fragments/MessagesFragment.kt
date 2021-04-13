@@ -187,7 +187,7 @@ class MessagesFragment : Fragment(), MessageHolderFactory.MessageInterface {
         App.instance.zulipApi.updateMessageFlag(messages, "add", "read").enqueue(object : Callback<UpdateMessageFlag> {
             override fun onResponse(call: Call<UpdateMessageFlag>, response: Response<UpdateMessageFlag>) {
                 if (response.isSuccessful) {
-                    showSnackbar(resources.getString(R.string.msg_network_flags))
+
                 }
             }
 
@@ -240,7 +240,6 @@ class MessagesFragment : Fragment(), MessageHolderFactory.MessageInterface {
                                 updateMessageFlags(gson.toJson(id))
                             },
                             { error ->
-                                commonAdapter.items = listOf(ErrorItem)
                                 showSnackbar(resources.getString(R.string.pagination_str) + error.message)
                             }
                         )
