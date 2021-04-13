@@ -214,13 +214,11 @@ class MessagesFragment : Fragment(), MessageHolderFactory.MessageInterface {
                 {
                     showSnackbar(resources.getString(R.string.msg_database_empty))
                 })
-        var downloadMessageFlag = false
         binding.recyclerMessage.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 val linearLayoutManager = binding.recyclerMessage.layoutManager as LinearLayoutManager
                 if (linearLayoutManager.findLastVisibleItemPosition() == commonAdapter.items.size - 5) {
-                    if (!downloadMessageFlag) {
-                        downloadMessageFlag = true
+                    if (commonAdapter.items.firstOrNull { item -> item.uid == lastMessageIdInTopic.toString() } == null) {
                         var i = 0
                         while (commonAdapter.items[linearLayoutManager.findLastVisibleItemPosition() + i] !is TextUi) {
                             i++
@@ -231,7 +229,6 @@ class MessagesFragment : Fragment(), MessageHolderFactory.MessageInterface {
                         val disposableMessages = messages.subscribe(
                             { result ->
                                 commonAdapter.items = commonAdapter.items + result
-                                downloadMessageFlag = commonAdapter.items.firstOrNull { item -> item.uid == lastMessageIdInTopic.toString() } != null
                                 val id = mutableListOf<Int>()
                                 result.forEach { item ->
                                     if (item.viewType == R.layout.item_in_message) {
