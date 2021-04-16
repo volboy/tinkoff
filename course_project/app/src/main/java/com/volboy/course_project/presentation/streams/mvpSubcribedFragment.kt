@@ -1,4 +1,4 @@
-package com.volboy.course_project.mvp.ui
+package com.volboy.course_project.presentation.streams
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,9 +11,8 @@ import com.volboy.course_project.message_recycler_view.CommonAdapter
 import com.volboy.course_project.message_recycler_view.ViewTyped
 import com.volboy.course_project.message_recycler_view.simple_items.ErrorItem
 import com.volboy.course_project.message_recycler_view.simple_items.ProgressItem
-import com.volboy.course_project.mvp.presenter.StreamsView
 
-class mvpStreamsFragment : Fragment(), StreamsView {
+class mvpSubcribedFragment : Fragment(), StreamsView {
     private lateinit var binding: FragmentStreamsBinding
     private lateinit var rwStreams: RecyclerView
     private lateinit var adapter: CommonAdapter<ViewTyped>

@@ -1,6 +1,7 @@
-package com.volboy.course_project.mvp.presenter
+package com.volboy.course_project.presentation.streams
 
 import com.volboy.course_project.message_recycler_view.ViewTyped
+import com.volboy.course_project.presentation.mvp.view.LoadErrorView
 
 interface StreamsView : LoadErrorView {
     fun showStreams(data:List<ViewTyped>)

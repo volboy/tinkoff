@@ -1,4 +1,4 @@
-package com.volboy.course_project.mvp.presenter
+package com.volboy.course_project.presentation.mvp.view
 
 interface LoadErrorView {
     fun showLoading()
