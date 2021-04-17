@@ -1,22 +1,23 @@
 package com.volboy.course_project.ui.channel_fragments.tab_layout_fragments
 
 import android.view.View
-import com.volboy.course_project.R
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
+import com.volboy.course_project.R
 import com.volboy.course_project.message_recycler_view.BaseViewHolder
 import com.volboy.course_project.message_recycler_view.ViewTyped
 import com.volboy.course_project.model.TopicJSON
 
 class TitleUi(
     val title: String,
-    var count: Int=0,
+    var count: Int = 0,
     var isSelected: Boolean,
     var topics: List<TopicJSON>?,
+    var streamsId: Int?,
     var imageId: Int,
-    override val viewType: Int = R.layout.item_collapse,
+    override val viewType: Int,
     override var uid: String
 ) : ViewTyped
 

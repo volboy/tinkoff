@@ -53,7 +53,7 @@ class MessagesFragment : Fragment(), MessageHolderFactory.MessageInterface {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val holderFactory = MessageHolderFactory(this)
         val mActionBar = (requireActivity() as AppCompatActivity).supportActionBar
-        commonAdapter = CommonAdapter(holderFactory)
+        commonAdapter = CommonAdapter(holderFactory, CommonDiffUtilCallback())
         binding = FragmentMessagesBinding.inflate(inflater, container, false)
         binding.messageBtn.setOnClickListener {
             val str = binding.messageBox.text.toString()

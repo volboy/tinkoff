@@ -68,7 +68,6 @@ class App : Application() {
     inner class ResourceProvider(
         private val context: Context
     ) {
-
         fun getString(@StringRes resId: Int): String = context.getString(resId)
     }
 }

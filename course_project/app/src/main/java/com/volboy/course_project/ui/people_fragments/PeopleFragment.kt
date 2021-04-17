@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import com.volboy.course_project.R
 import com.volboy.course_project.databinding.FragmentPeopleBinding
 import com.volboy.course_project.message_recycler_view.CommonAdapter
+import com.volboy.course_project.message_recycler_view.CommonDiffUtilCallback
 import com.volboy.course_project.message_recycler_view.ViewTyped
 import com.volboy.course_project.message_recycler_view.simple_items.ErrorItem
 import com.volboy.course_project.message_recycler_view.simple_items.ProgressItem
@@ -36,7 +37,7 @@ class PeopleFragment : Fragment(), UiHolderFactory.ChannelsInterface {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val holderFactory = UiHolderFactory(this)
-        commonAdapter = CommonAdapter<ViewTyped>(holderFactory)
+        commonAdapter = CommonAdapter<ViewTyped>(holderFactory, CommonDiffUtilCallback())
         commonAdapter.items = listOf(ProgressItem)
         binding.rwPeople.adapter = commonAdapter
         val loader = Loader()
@@ -70,7 +71,7 @@ class PeopleFragment : Fragment(), UiHolderFactory.ChannelsInterface {
                             item.name.contains(inputText)
                         }
                         if (filteredStreams.isEmpty()) {
-                            commonAdapter.items = listOf(TitleUi("Ничего не найдено", 0, false, null, 0, R.layout.item_collapse, ""))
+                            commonAdapter.items = listOf(TitleUi("Ничего не найдено", 0, false, null, 0, 0, R.layout.item_collapse, ""))
                         } else {
                             commonAdapter.items = filteredStreams
                         }

@@ -16,7 +16,6 @@ import com.volboy.course_project.ui.people_fragments.PeopleUi
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import java.sql.Time
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -42,7 +41,7 @@ class Loader() {
             .subscribeOn(Schedulers.io())
             .map { response ->
                 topicsDao.updateTopics(response.topics)
-                viewTypedTopics(response.topics)
+                viewTypedTopics(response.topics, id)
             }
             .observeOn(AndroidSchedulers.mainThread())
     }
@@ -56,7 +55,8 @@ class Loader() {
             .subscribeOn(Schedulers.io())
             .map { response ->
                 messagesDao.updateMessages(response.messages)
-                groupedMessages(response.messages) }
+                groupedMessages(response.messages)
+            }
             .observeOn(AndroidSchedulers.mainThread())
     }
 
@@ -87,16 +87,16 @@ class Loader() {
         val viewTypedList = mutableListOf<ViewTyped>()
         streamsJSON.forEach { streams ->
             val uid = streams.stream_id.toString()
-            viewTypedList.add(TitleUi(streams.name, 0, false, null, R.drawable.ic_arrow_down, R.layout.item_collapse, uid))
+            viewTypedList.add(TitleUi(streams.name, 0, false, null, null, R.drawable.ic_arrow_down, R.layout.item_collapse, uid))
         }
         return viewTypedList
     }
 
-    private fun viewTypedTopics(topicsJSON: List<TopicJSON>): MutableList<ViewTyped> {
+    private fun viewTypedTopics(topicsJSON: List<TopicJSON>, streamId: Int): MutableList<ViewTyped> {
         val viewTypedList = mutableListOf<ViewTyped>()
         topicsJSON.forEach { topic ->
-            val uid = topic.max_id.toString()
-            viewTypedList.add(TitleUi(topic.name, 0, false, null, 0, R.layout.item_expand, uid))
+            val uid = topic.max_id
+            viewTypedList.add(TitleUi(topic.name, 0, false, null, streamId, 0, R.layout.item_expand, uid.toString()))
         }
         return viewTypedList
     }
@@ -111,6 +111,7 @@ class Loader() {
     private fun viewTypedMessages(messagesJSON: List<MessageJSON>): MutableList<ViewTyped> {
         val viewTypedList = mutableListOf<ViewTyped>()
         messagesJSON.forEach { msg ->
+            //TODO("Убрать этот хардкод")
             if (msg.sender_id != 402377) {
                 viewTypedList.add(TextUi(msg.sender_full_name, deleteHtmlFromString(msg.content), msg.avatar_url, R.layout.item_in_message, msg.id.toString()))
                 viewTypedList.add(ReactionsUi(recountReactions(msg.reactions), R.layout.item_messages_reactions, msg.reactions.toString()))

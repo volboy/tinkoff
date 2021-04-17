@@ -11,11 +11,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
-import com.volboy.course_project.App
 import com.volboy.course_project.App.Companion.appDatabase
 import com.volboy.course_project.R
 import com.volboy.course_project.databinding.FragmentStreamsBinding
 import com.volboy.course_project.message_recycler_view.CommonAdapter
+import com.volboy.course_project.message_recycler_view.CommonDiffUtilCallback
 import com.volboy.course_project.message_recycler_view.ViewTyped
 import com.volboy.course_project.message_recycler_view.simple_items.ErrorItem
 import com.volboy.course_project.message_recycler_view.simple_items.ProgressItem
@@ -42,7 +42,7 @@ class StreamsFragment : Fragment(), UiHolderFactory.ChannelsInterface {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val holderFactory = UiHolderFactory(this)
-        commonAdapter = CommonAdapter(holderFactory)
+        commonAdapter = CommonAdapter(holderFactory, CommonDiffUtilCallback())
         binding.rwAllStreams.adapter = commonAdapter
         val streamsDao = appDatabase.streamsDao()
         val disposable = streamsDao.getAllStreams()
@@ -96,7 +96,7 @@ class StreamsFragment : Fragment(), UiHolderFactory.ChannelsInterface {
                         if (filteredStreams.isEmpty()) {
                             commonAdapter.items = listOf(
                                 TitleUi(
-                                    "Ничего не найдено", 0, false, null, 0,
+                                    "Ничего не найдено", 0, false, null, 0, 0,
                                     R.layout.item_collapse, ""
                                 )
                             )
