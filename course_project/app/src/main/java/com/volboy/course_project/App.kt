@@ -1,7 +1,10 @@
 package com.volboy.course_project
 
 import android.app.Application
+import android.content.Context
+import androidx.annotation.StringRes
 import androidx.room.Room
+import com.volboy.course_project.presentation.streams.StreamsPresenter
 import com.volboy.course_project.repository.AppDatabase
 import internet.ZulipApi
 import okhttp3.Credentials
@@ -19,6 +22,8 @@ class App : Application() {
     companion object {
         lateinit var instance: App
         lateinit var appDatabase: AppDatabase
+        lateinit var resourceProvider: ResourceProvider
+        lateinit var streamsPresenter: StreamsPresenter
     }
 
     override fun onCreate() {
@@ -27,6 +32,8 @@ class App : Application() {
         appDatabase = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "zulipAppDatabase")
             .build()
         initRetrofit()
+        resourceProvider = ResourceProvider(applicationContext)
+        streamsPresenter = StreamsPresenter()
     }
 
     private fun initRetrofit() {
@@ -56,5 +63,12 @@ class App : Application() {
             return chain.proceed(authenticatedRequest)
         }
 
+    }
+
+    inner class ResourceProvider(
+        private val context: Context
+    ) {
+
+        fun getString(@StringRes resId: Int): String = context.getString(resId)
     }
 }

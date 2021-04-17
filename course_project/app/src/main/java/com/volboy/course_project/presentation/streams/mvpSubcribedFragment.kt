@@ -11,8 +11,10 @@ import com.volboy.course_project.message_recycler_view.CommonAdapter
 import com.volboy.course_project.message_recycler_view.ViewTyped
 import com.volboy.course_project.message_recycler_view.simple_items.ErrorItem
 import com.volboy.course_project.message_recycler_view.simple_items.ProgressItem
+import com.volboy.course_project.presentation.mvp.presenter.MvpFragment
+import com.volboy.course_project.App.Companion.streamsPresenter
 
-class mvpSubcribedFragment : Fragment(), StreamsView {
+class mvpSubcribedFragment : StreamsView, MvpFragment<StreamsView, StreamsPresenter>() {
     private lateinit var binding: FragmentStreamsBinding
     private lateinit var rwStreams: RecyclerView
     private lateinit var adapter: CommonAdapter<ViewTyped>
@@ -20,8 +22,13 @@ class mvpSubcribedFragment : Fragment(), StreamsView {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentStreamsBinding.inflate(inflater, container, false)
         initView()
+        getPresenter().getStreams()
         return binding.root
     }
+
+    override fun getPresenter(): StreamsPresenter = streamsPresenter
+
+    override fun getMvpView(): StreamsView = this
 
     override fun showStreams(streams: List<ViewTyped>) {
         adapter.items = streams
