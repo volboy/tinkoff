@@ -30,8 +30,11 @@
     <string name="msg_network_delete_emoji">Эмоджи удалено </string>
     <string name="msg_network_delete_emoji_error">Эмоджи не удалено </string>
     <string name="msg_database_ok">Данные загружены из БД </string>
-    v <string name="msg_database_empty">База данных пуста </string>
+    v
+    <string name="msg_database_empty">База данных пуста </string>
     <string name="log_string">zulipapptfsspring </string>
     <string name="pagination_str">Подгружаю новые данные </string>
+    <string name="error_str">Произошла ошибка :(</string>
+    <string name="retry_str">Повторить</string>
 
 </resources>

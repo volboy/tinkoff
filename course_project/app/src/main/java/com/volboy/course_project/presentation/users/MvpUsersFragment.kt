@@ -4,11 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.widget.AppCompatImageView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
-import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.volboy.course_project.App.Companion.usersPresenter
 import com.volboy.course_project.R
 import com.volboy.course_project.databinding.FragmentPeopleBinding
@@ -22,25 +20,17 @@ import com.volboy.course_project.ui.people_fragments.PeopleUi
 
 class MvpUsersFragment : UsersView, MvpFragment<UsersView, UsersPresenter>(), UiHolderFactory.ChannelsInterface {
     private lateinit var binding: FragmentPeopleBinding
-    private lateinit var rwUsers: RecyclerView
-    private lateinit var errorView: AppCompatImageView
-    private lateinit var loading: CircularProgressIndicator
     private lateinit var adapter: CommonAdapter<ViewTyped>
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentPeopleBinding.inflate(inflater, container, false)
         val holderFactory = UiHolderFactory(this)
         adapter = CommonAdapter(holderFactory, CommonDiffUtilCallback())
-        rwUsers = binding.rwPeople
-        rwUsers.adapter = adapter
-        errorView = binding.error
-        loading = binding.loading
+        binding.rwPeople.adapter = adapter
+        val mActionBar = (requireActivity() as AppCompatActivity).supportActionBar;
+        mActionBar?.show()
         getPresenter().getUsers()
         return binding.root
-    }
-
-    override fun onStart() {
-        super.onStart()
     }
 
     override fun getPresenter(): UsersPresenter = usersPresenter
@@ -48,22 +38,25 @@ class MvpUsersFragment : UsersView, MvpFragment<UsersView, UsersPresenter>(), Ui
     override fun getMvpView(): UsersView = this
 
     override fun showData(data: List<ViewTyped>) {
-        rwUsers.isVisible = true
-        loading.isGone = true
-        errorView.isGone = true
+        binding.rwPeople.isVisible = true
+        binding.fragmentError.root.isGone = true
+        binding.fragmentLoading.root.isGone = true
         adapter.items = data
     }
 
     override fun showError(error: String?) {
-        rwUsers.isGone = true
-        loading.isGone = true
-        errorView.isVisible = true
+        binding.rwPeople.isGone = true
+        binding.fragmentError.root.isVisible = true
+        binding.fragmentLoading.root.isGone = true
+        binding.fragmentError.errorText.text = error
+        binding.fragmentError.retryText.setOnClickListener { getPresenter().getUsers() }
+
     }
 
     override fun showLoading(msg: String) {
-        rwUsers.isGone = true
-        loading.isVisible = true
-        errorView.isGone = true
+        binding.rwPeople.isGone = true
+        binding.fragmentError.root.isGone = true
+        binding.fragmentLoading.root.isVisible = true
     }
 
     override fun getClickedView(view: View, position: Int, viewType: Int) {

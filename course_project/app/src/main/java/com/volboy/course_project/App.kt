@@ -5,6 +5,7 @@ import android.content.Context
 import androidx.annotation.StringRes
 import androidx.room.Room
 import com.volboy.course_project.model.Loader
+import com.volboy.course_project.presentation.profile.ProfilePresenter
 import com.volboy.course_project.presentation.streams.StreamsPresenter
 import com.volboy.course_project.presentation.users.UsersPresenter
 import com.volboy.course_project.repository.AppDatabase
@@ -28,6 +29,7 @@ class App : Application() {
         lateinit var resourceProvider: ResourceProvider
         lateinit var streamsPresenter: StreamsPresenter
         lateinit var usersPresenter: UsersPresenter
+        lateinit var profilePresenter: ProfilePresenter
     }
 
     override fun onCreate() {
@@ -39,6 +41,7 @@ class App : Application() {
         resourceProvider = ResourceProvider(applicationContext)
         streamsPresenter = StreamsPresenter()
         usersPresenter = UsersPresenter()
+        profilePresenter = ProfilePresenter()
         loader = Loader()
     }
 

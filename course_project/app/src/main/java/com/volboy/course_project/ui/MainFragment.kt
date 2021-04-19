@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.volboy.course_project.R
 import com.volboy.course_project.databinding.FragmentMainBinding
+import com.volboy.course_project.presentation.profile.MvpProfileFragment
 import com.volboy.course_project.presentation.users.MvpUsersFragment
 import com.volboy.course_project.ui.channel_fragments.ChannelsFragment
 
@@ -16,7 +17,7 @@ class MainFragment : Fragment() {
     private lateinit var transaction: FragmentTransaction
     private val channelsFragment = ChannelsFragment()
     private val peopleFragment = MvpUsersFragment()
-    private val profileFragment = ProfileFragment()
+    private val profileFragment = MvpProfileFragment()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentMainBinding.inflate(inflater, container, false)

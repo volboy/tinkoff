@@ -11,4 +11,14 @@
         android:layout_height="match_parent"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
+    <include
+        android:id="@+id/fragment_error"
+        layout="@layout/fragment_error"
+        android:visibility="gone" />
+
+    <include
+        android:id="@+id/fragment_loading"
+        layout="@layout/fragment_loading"
+        android:visibility="gone" />
+
 </FrameLayout>

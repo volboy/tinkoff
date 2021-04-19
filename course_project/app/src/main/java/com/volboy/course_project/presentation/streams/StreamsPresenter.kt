@@ -6,7 +6,6 @@ import com.volboy.course_project.App.Companion.loader
 import com.volboy.course_project.App.Companion.resourceProvider
 import com.volboy.course_project.R
 import com.volboy.course_project.message_recycler_view.ViewTyped
-import com.volboy.course_project.message_recycler_view.simple_items.ErrorItem
 import com.volboy.course_project.presentation.mvp.presenter.base.RxPresenter
 import com.volboy.course_project.ui.channel_fragments.tab_layout_fragments.TitleUi
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -15,6 +14,7 @@ import io.reactivex.schedulers.Schedulers
 class StreamsPresenter : RxPresenter<StreamsView>(StreamsView::class.java) {
     private val appDatabase = App.appDatabase
     private var data = mutableListOf<ViewTyped>()
+    private var dataBaseError = false
 
     fun getStreams() {
         loadStreamsFromDatabase()
@@ -59,7 +59,6 @@ class StreamsPresenter : RxPresenter<StreamsView>(StreamsView::class.java) {
                 writeLog(resourceProvider.getString(R.string.msg_network_ok))
             },
             {
-                data.addAll(position, listOf(ErrorItem))
                 writeLog(resourceProvider.getString(R.string.msg_network_error))
             }
         ).disposeOnFinish()
@@ -80,16 +79,20 @@ class StreamsPresenter : RxPresenter<StreamsView>(StreamsView::class.java) {
                     writeLog(resourceProvider.getString(R.string.msg_database_ok) + " , размер БД " + viewTypedStreams?.size?.toString())
                     if (viewTypedStreams.size == 0) {
                         view.showLoading("")
+                        dataBaseError = true
                     } else {
                         data = viewTypedStreams
                         view.showData(data)
+                        dataBaseError = false
                     }
                 },
                 { error ->
                     writeLog(resourceProvider.getString(R.string.msg_database_error) + error.message)
+                    dataBaseError = true
                 },
                 {
                     writeLog(resourceProvider.getString(R.string.msg_database_empty))
+                    dataBaseError = true
                 })
             .disposeOnFinish()
         loadRemoteStreams()
@@ -105,6 +108,11 @@ class StreamsPresenter : RxPresenter<StreamsView>(StreamsView::class.java) {
                 writeLog(resourceProvider.getString(R.string.msg_network_ok))
             },
             { error ->
+                if (dataBaseError) {
+                    view.showError(error.message)
+                } else {
+                    view.showData(data)
+                }
                 view.showError(error.message)
                 writeLog(resourceProvider.getString(R.string.msg_network_error) + error.message)
             }

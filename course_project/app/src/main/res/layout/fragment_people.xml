@@ -13,21 +13,15 @@
         android:visibility="gone"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/error"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:src="@android:drawable/ic_delete"
+    <include
+        android:id="@+id/fragment_error"
+        layout="@layout/fragment_error"
         android:visibility="gone" />
 
-    <com.google.android.material.progressindicator.CircularProgressIndicator
-        android:id="@+id/loading"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:indeterminate="true"
-        android:visibility="gone"
-        app:indicatorColor="@color/header_color" />
+    <include
+        android:id="@+id/fragment_loading"
+        layout="@layout/fragment_loading"
+        android:visibility="gone" />
+
 
 </LinearLayout>

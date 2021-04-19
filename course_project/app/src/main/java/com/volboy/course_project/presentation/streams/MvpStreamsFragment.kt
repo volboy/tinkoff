@@ -7,20 +7,18 @@ import android.view.ViewGroup
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
-import com.volboy.course_project.App.Companion.streamsPresenter
+import com.volboy.course_project.App
 import com.volboy.course_project.R
 import com.volboy.course_project.databinding.FragmentStreamsBinding
 import com.volboy.course_project.message_recycler_view.CommonAdapter
 import com.volboy.course_project.message_recycler_view.CommonDiffUtilCallback
 import com.volboy.course_project.message_recycler_view.ViewTyped
-import com.volboy.course_project.message_recycler_view.simple_items.ErrorItem
-import com.volboy.course_project.message_recycler_view.simple_items.ProgressItem
 import com.volboy.course_project.presentation.mvp.presenter.MvpFragment
 import com.volboy.course_project.ui.channel_fragments.MessagesFragment
 import com.volboy.course_project.ui.channel_fragments.tab_layout_fragments.TitleUi
 import com.volboy.course_project.ui.channel_fragments.tab_layout_fragments.UiHolderFactory
 
-class MvpSubscribedFragment : StreamsView, MvpFragment<StreamsView, StreamsPresenter>(), UiHolderFactory.ChannelsInterface {
+class MvpStreamsFragment : StreamsView, MvpFragment<StreamsView, StreamsPresenter>(), UiHolderFactory.ChannelsInterface {
     private lateinit var binding: FragmentStreamsBinding
     private lateinit var rwStreams: RecyclerView
     private lateinit var adapter: CommonAdapter<ViewTyped>
@@ -36,7 +34,7 @@ class MvpSubscribedFragment : StreamsView, MvpFragment<StreamsView, StreamsPrese
         return binding.root
     }
 
-    override fun getPresenter(): StreamsPresenter = streamsPresenter
+    override fun getPresenter(): StreamsPresenter = App.streamsPresenter
 
     override fun getMvpView(): StreamsView = this
 
@@ -64,6 +62,7 @@ class MvpSubscribedFragment : StreamsView, MvpFragment<StreamsView, StreamsPrese
         binding.fragmentError.root.isGone = true
         binding.fragmentLoading.root.isVisible = true
     }
+
     override fun getClickedView(view: View, position: Int, viewType: Int) {
         when (viewType) {
             R.layout.item_collapse -> {
