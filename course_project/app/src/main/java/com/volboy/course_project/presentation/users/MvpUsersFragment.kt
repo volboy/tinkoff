@@ -39,6 +39,10 @@ class MvpUsersFragment : UsersView, MvpFragment<UsersView, UsersPresenter>(), Ui
         return binding.root
     }
 
+    override fun onStart() {
+        super.onStart()
+    }
+
     override fun getPresenter(): UsersPresenter = usersPresenter
 
     override fun getMvpView(): UsersView = this

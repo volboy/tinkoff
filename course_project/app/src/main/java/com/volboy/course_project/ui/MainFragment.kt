@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import com.volboy.course_project.R
 import com.volboy.course_project.databinding.FragmentMainBinding
 import com.volboy.course_project.presentation.users.MvpUsersFragment
@@ -12,6 +13,7 @@ import com.volboy.course_project.ui.channel_fragments.ChannelsFragment
 
 class MainFragment : Fragment() {
     private lateinit var binding: FragmentMainBinding
+    private lateinit var transaction: FragmentTransaction
     private val channelsFragment = ChannelsFragment()
     private val peopleFragment = MvpUsersFragment()
     private val profileFragment = ProfileFragment()
@@ -34,7 +36,7 @@ class MainFragment : Fragment() {
     }
 
     private fun replaceFragment(fragment: Fragment) {
-        val transaction = requireActivity().supportFragmentManager.beginTransaction()
+        transaction = requireActivity().supportFragmentManager.beginTransaction()
         transaction.replace(R.id.fragment_container, fragment)
         transaction.commit()
     }

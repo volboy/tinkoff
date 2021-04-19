@@ -37,7 +37,7 @@ class PeopleFragment : Fragment(), UiHolderFactory.ChannelsInterface {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val holderFactory = UiHolderFactory(this)
-        commonAdapter = CommonAdapter<ViewTyped>(holderFactory, CommonDiffUtilCallback())
+        commonAdapter = CommonAdapter(holderFactory, CommonDiffUtilCallback())
         commonAdapter.items = listOf(ProgressItem)
         binding.rwPeople.adapter = commonAdapter
         val loader = Loader()

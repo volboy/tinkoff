@@ -16,7 +16,6 @@ abstract class MvpFragment<View, P : Presenter<View>> : Fragment(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mvpHelper.create()
-
     }
 
     override fun onStop() {
