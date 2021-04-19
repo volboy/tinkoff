@@ -2,18 +2,17 @@ package com.volboy.course_project.presentation.streams
 
 import android.util.Log
 import com.volboy.course_project.App
+import com.volboy.course_project.App.Companion.loader
 import com.volboy.course_project.App.Companion.resourceProvider
 import com.volboy.course_project.R
 import com.volboy.course_project.message_recycler_view.ViewTyped
 import com.volboy.course_project.message_recycler_view.simple_items.ErrorItem
-import com.volboy.course_project.model.Loader
 import com.volboy.course_project.presentation.mvp.presenter.base.RxPresenter
 import com.volboy.course_project.ui.channel_fragments.tab_layout_fragments.TitleUi
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
 class StreamsPresenter : RxPresenter<StreamsView>(StreamsView::class.java) {
-    private val loader = Loader()
     private val appDatabase = App.appDatabase
     private var data = mutableListOf<ViewTyped>()
 
@@ -33,7 +32,7 @@ class StreamsPresenter : RxPresenter<StreamsView>(StreamsView::class.java) {
         data.forEach { item ->
             if ((item as TitleUi).streamsId != data[position].uid.toInt()) {
                 if (item.uid == data[position].uid) {
-                    (item as TitleUi).imageId = R.drawable.ic_arrow_down
+                    item.imageId = R.drawable.ic_arrow_down
                 }
                 newData.add(item)
             }
@@ -80,7 +79,7 @@ class StreamsPresenter : RxPresenter<StreamsView>(StreamsView::class.java) {
                 { viewTypedStreams ->
                     writeLog(resourceProvider.getString(R.string.msg_database_ok) + " , размер БД " + viewTypedStreams?.size?.toString())
                     if (viewTypedStreams.size == 0) {
-                        view.showLoading()
+                        view.showLoading("")
                     } else {
                         data = viewTypedStreams
                         view.showData(data)
@@ -97,6 +96,7 @@ class StreamsPresenter : RxPresenter<StreamsView>(StreamsView::class.java) {
     }
 
     private fun loadRemoteStreams() {
+        view.showLoading("")
         val streams = loader.getRemoteStreams()
         streams.subscribe(
             { result ->
@@ -105,7 +105,7 @@ class StreamsPresenter : RxPresenter<StreamsView>(StreamsView::class.java) {
                 writeLog(resourceProvider.getString(R.string.msg_network_ok))
             },
             { error ->
-                view.showError()
+                view.showError(error.message)
                 writeLog(resourceProvider.getString(R.string.msg_network_error) + error.message)
             }
         )

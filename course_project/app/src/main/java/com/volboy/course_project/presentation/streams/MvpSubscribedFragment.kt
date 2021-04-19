@@ -46,11 +46,12 @@ class MvpSubscribedFragment : StreamsView, MvpFragment<StreamsView, StreamsPrese
         adapter.items = data
     }
 
-    override fun showError() {
+    override fun showError(error: String?) {
+        //TODO("Сделать обработку ошибки и отображать ее")
         adapter.items = listOf(ErrorItem)
     }
 
-    override fun showLoading() {
+    override fun showLoading(msg: String) {
         adapter.items = listOf(ProgressItem)
     }
 

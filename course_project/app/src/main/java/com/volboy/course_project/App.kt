@@ -4,7 +4,9 @@ import android.app.Application
 import android.content.Context
 import androidx.annotation.StringRes
 import androidx.room.Room
+import com.volboy.course_project.model.Loader
 import com.volboy.course_project.presentation.streams.StreamsPresenter
+import com.volboy.course_project.presentation.users.UsersPresenter
 import com.volboy.course_project.repository.AppDatabase
 import internet.ZulipApi
 import okhttp3.Credentials
@@ -22,8 +24,10 @@ class App : Application() {
     companion object {
         lateinit var instance: App
         lateinit var appDatabase: AppDatabase
+        lateinit var loader: Loader
         lateinit var resourceProvider: ResourceProvider
         lateinit var streamsPresenter: StreamsPresenter
+        lateinit var usersPresenter: UsersPresenter
     }
 
     override fun onCreate() {
@@ -34,6 +38,8 @@ class App : Application() {
         initRetrofit()
         resourceProvider = ResourceProvider(applicationContext)
         streamsPresenter = StreamsPresenter()
+        usersPresenter = UsersPresenter()
+        loader = Loader()
     }
 
     private fun initRetrofit() {
