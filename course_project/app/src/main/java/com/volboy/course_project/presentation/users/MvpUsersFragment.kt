@@ -13,10 +13,9 @@ import com.volboy.course_project.databinding.FragmentPeopleBinding
 import com.volboy.course_project.message_recycler_view.CommonAdapter
 import com.volboy.course_project.message_recycler_view.CommonDiffUtilCallback
 import com.volboy.course_project.message_recycler_view.ViewTyped
+import com.volboy.course_project.presentation.details.MvpDetailsFragment
 import com.volboy.course_project.presentation.mvp.presenter.MvpFragment
-import com.volboy.course_project.ui.channel_fragments.tab_layout_fragments.UiHolderFactory
-import com.volboy.course_project.ui.people_fragments.DetailsPeopleFragment
-import com.volboy.course_project.ui.people_fragments.PeopleUi
+import com.volboy.course_project.presentation.streams.UiHolderFactory
 
 class MvpUsersFragment : UsersView, MvpFragment<UsersView, UsersPresenter>(), UiHolderFactory.ChannelsInterface {
     private lateinit var binding: FragmentPeopleBinding
@@ -27,7 +26,7 @@ class MvpUsersFragment : UsersView, MvpFragment<UsersView, UsersPresenter>(), Ui
         val holderFactory = UiHolderFactory(this)
         adapter = CommonAdapter(holderFactory, CommonDiffUtilCallback())
         binding.rwPeople.adapter = adapter
-        val mActionBar = (requireActivity() as AppCompatActivity).supportActionBar;
+        val mActionBar = (requireActivity() as AppCompatActivity).supportActionBar
         mActionBar?.show()
         getPresenter().getUsers()
         return binding.root
@@ -60,16 +59,17 @@ class MvpUsersFragment : UsersView, MvpFragment<UsersView, UsersPresenter>(), Ui
     }
 
     override fun getClickedView(view: View, position: Int, viewType: Int) {
-        val detailsPeopleFragment = DetailsPeopleFragment()
+        val detailsPeopleFragment = MvpDetailsFragment()
         val arguments = Bundle()
         val user = adapter.items[position] as PeopleUi
         arguments.putString(ARG_NAME, user.name)
         arguments.putString(ARG_EMAIL, user.email)
         arguments.putString(ARG_IMAGE, user.imageURL)
+        arguments.putInt(ARG_USER_ID, user.uid.toInt())
         detailsPeopleFragment.arguments = arguments
         val transaction = requireActivity().supportFragmentManager.beginTransaction()
-        transaction.addToBackStack(FROM_USERS_TO_USERPROFILE)
         transaction.add(R.id.container, detailsPeopleFragment)
+        transaction.addToBackStack(FROM_USERS_TO_USERPROFILE)
         transaction.commit()
     }
 
@@ -77,6 +77,7 @@ class MvpUsersFragment : UsersView, MvpFragment<UsersView, UsersPresenter>(), Ui
         const val ARG_NAME = "name"
         const val ARG_EMAIL = "email"
         const val ARG_IMAGE = "image"
+        const val ARG_USER_ID = "id"
         const val FROM_USERS_TO_USERPROFILE = "FromUsersFragmentToDetailFragment"
     }
 }

@@ -1,4 +1,4 @@
-package com.volboy.course_project.emoji_recycler_view
+package com.volboy.course_project.presentation.bottomfragment
 
 import com.volboy.course_project.message_recycler_view.BaseAdapter
 import com.volboy.course_project.message_recycler_view.HolderFactory

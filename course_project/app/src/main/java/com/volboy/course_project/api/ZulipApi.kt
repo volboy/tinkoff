@@ -1,4 +1,4 @@
-package internet
+package com.volboy.course_project.api
 
 import com.volboy.course_project.model.*
 import io.reactivex.Single
@@ -30,6 +30,9 @@ interface ZulipApi {
 
     @GET("users?json=true")
     fun getUsers(): Single<UsersResponse>
+
+    @GET("users/{id}/presence")
+    fun getUserStatus(@Path("id") id: Int): Single<StatusUserResponse>
 
     @GET("users/me?json=true")
     fun getOwnUser(): Single<OwnUser>

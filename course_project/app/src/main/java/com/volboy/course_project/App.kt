@@ -2,14 +2,17 @@ package com.volboy.course_project
 
 import android.app.Application
 import android.content.Context
+import android.os.Build
+import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
 import androidx.room.Room
+import com.volboy.course_project.api.ZulipApi
+import com.volboy.course_project.database.AppDatabase
 import com.volboy.course_project.model.Loader
+import com.volboy.course_project.presentation.details.DetailsPresenter
 import com.volboy.course_project.presentation.profile.ProfilePresenter
 import com.volboy.course_project.presentation.streams.StreamsPresenter
 import com.volboy.course_project.presentation.users.UsersPresenter
-import com.volboy.course_project.repository.AppDatabase
-import internet.ZulipApi
 import okhttp3.Credentials
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -30,6 +33,7 @@ class App : Application() {
         lateinit var streamsPresenter: StreamsPresenter
         lateinit var usersPresenter: UsersPresenter
         lateinit var profilePresenter: ProfilePresenter
+        lateinit var detailsPresenter: DetailsPresenter
     }
 
     override fun onCreate() {
@@ -42,6 +46,7 @@ class App : Application() {
         streamsPresenter = StreamsPresenter()
         usersPresenter = UsersPresenter()
         profilePresenter = ProfilePresenter()
+        detailsPresenter = DetailsPresenter()
         loader = Loader()
     }
 
@@ -78,5 +83,10 @@ class App : Application() {
         private val context: Context
     ) {
         fun getString(@StringRes resId: Int): String = context.getString(resId)
+        fun getColor(@ColorRes resId: Int): Int = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            context.getColor(resId)
+        } else {
+            context.resources.getColor(resId)
+        }
     }
 }

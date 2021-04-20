@@ -3,7 +3,7 @@ package com.volboy.course_project.model
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
-import com.volboy.course_project.repository.MessageConverter
+import com.volboy.course_project.database.MessageConverter
 
 class Narrow(val operator: String, val operand: String)
 

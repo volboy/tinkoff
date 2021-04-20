@@ -1,8 +1,7 @@
-package com.volboy.course_project.repository
+package com.volboy.course_project.database
 
 import androidx.room.TypeConverter
 import com.volboy.course_project.model.ReactionsJSON
-import java.lang.StringBuilder
 
 class MessageConverter {
     @TypeConverter
@@ -20,7 +19,7 @@ class MessageConverter {
         val listReactions = mutableListOf<ReactionsJSON>()
         val stringList = stringReactions.split(",")
         val stringListGrouped = stringList.groupBy { "?" }
-        stringListGrouped.forEach { (key, list) ->
+        stringListGrouped.forEach { (_, list) ->
             listReactions.add(ReactionsJSON(list[0], list[1], list[2], list[3].toInt()))
         }
         return listReactions

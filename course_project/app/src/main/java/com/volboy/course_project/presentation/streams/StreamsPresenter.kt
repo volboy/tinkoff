@@ -7,7 +7,6 @@ import com.volboy.course_project.App.Companion.resourceProvider
 import com.volboy.course_project.R
 import com.volboy.course_project.message_recycler_view.ViewTyped
 import com.volboy.course_project.presentation.mvp.presenter.base.RxPresenter
-import com.volboy.course_project.ui.channel_fragments.tab_layout_fragments.TitleUi
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
@@ -24,7 +23,7 @@ class StreamsPresenter : RxPresenter<StreamsView>(StreamsView::class.java) {
         val clickedStream = data[position] as TitleUi
         clickedStream.imageId = R.drawable.ic_arrow_down
         data[position] = clickedStream
-        loadRemoteTopics(clickedStream.uid.toInt(), position)
+        loadRemoteTopics(clickedStream.uid.toInt())
     }
 
     fun removeTopics(position: Int) {
@@ -42,7 +41,7 @@ class StreamsPresenter : RxPresenter<StreamsView>(StreamsView::class.java) {
 
     }
 
-    private fun loadRemoteTopics(streamId: Int, position: Int) {
+    private fun loadRemoteTopics(streamId: Int) {
         val topic = loader.getTopicsOfStreams(streamId)
         topic.subscribe(
             { result ->

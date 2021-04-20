@@ -1,14 +1,12 @@
-package com.volboy.course_project.ui.channel_fragments
+package com.volboy.course_project.presentation.main
 
 import android.os.Bundle
-import android.view.*
-import android.widget.SearchView
-import android.widget.Toast
-import android.widget.Toolbar
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayoutMediator
-import com.volboy.course_project.MainActivity
 import com.volboy.course_project.R
 import com.volboy.course_project.databinding.FragmentChannelsBinding
 
@@ -17,7 +15,7 @@ class ChannelsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val mActionBar = (requireActivity() as AppCompatActivity).supportActionBar;
+        val mActionBar = (requireActivity() as AppCompatActivity).supportActionBar
         mActionBar?.show()
         setHasOptionsMenu(true)
     }

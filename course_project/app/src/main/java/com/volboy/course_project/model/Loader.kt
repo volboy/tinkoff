@@ -11,8 +11,8 @@ import com.volboy.course_project.message_recycler_view.DataUi
 import com.volboy.course_project.message_recycler_view.ReactionsUi
 import com.volboy.course_project.message_recycler_view.TextUi
 import com.volboy.course_project.message_recycler_view.ViewTyped
-import com.volboy.course_project.ui.channel_fragments.tab_layout_fragments.TitleUi
-import com.volboy.course_project.ui.people_fragments.PeopleUi
+import com.volboy.course_project.presentation.streams.TitleUi
+import com.volboy.course_project.presentation.users.PeopleUi
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -20,7 +20,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-class Loader() {
+class Loader {
 
     fun getRemoteStreams(): Single<MutableList<ViewTyped>> {
         val streamsDao = appDatabase.streamsDao()
@@ -83,11 +83,28 @@ class Loader() {
             .observeOn(AndroidSchedulers.mainThread())
     }
 
+    fun getUserStatus(id: Int): Single<StatusUserResponse> {
+        return App.instance.zulipApi.getUserStatus(id)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+    }
+
     fun viewTypedStreams(streamsJSON: List<StreamJSON>): MutableList<ViewTyped> {
         val viewTypedList = mutableListOf<ViewTyped>()
         streamsJSON.forEach { streams ->
             val uid = streams.stream_id.toString()
-            viewTypedList.add(TitleUi(streams.name, 0, false, null, null, R.drawable.ic_arrow_down, R.layout.item_collapse, uid))
+            viewTypedList.add(
+                TitleUi(
+                    streams.name,
+                    0,
+                    false,
+                    null,
+                    null,
+                    R.drawable.ic_arrow_down,
+                    R.layout.item_collapse,
+                    uid
+                )
+            )
         }
         return viewTypedList
     }
@@ -96,7 +113,18 @@ class Loader() {
         val viewTypedList = mutableListOf<ViewTyped>()
         topicsJSON.forEach { topic ->
             val uid = topic.max_id
-            viewTypedList.add(TitleUi(topic.name, 0, false, null, streamId, 0, R.layout.item_expand, uid.toString()))
+            viewTypedList.add(
+                TitleUi(
+                    topic.name,
+                    0,
+                    false,
+                    null,
+                    streamId,
+                    0,
+                    R.layout.item_expand,
+                    uid.toString()
+                )
+            )
         }
         return viewTypedList
     }
@@ -140,7 +168,15 @@ class Loader() {
         val viewTypedList = mutableListOf<ViewTyped>()
         usersJSON.forEach { user ->
             val uid = user.user_id.toString()
-            viewTypedList.add(PeopleUi(user.full_name, user.email, user.avatar_url, R.layout.item_people_list, uid))
+            viewTypedList.add(
+                PeopleUi(
+                    user.full_name,
+                    user.email,
+                    user.avatar_url,
+                    R.layout.item_people_list,
+                    uid
+                )
+            )
         }
         return viewTypedList
     }

@@ -1,4 +1,4 @@
-package com.volboy.course_project.ui.channel_fragments
+package com.volboy.course_project.presentation.messages
 
 import android.os.Bundle
 import android.text.Editable
@@ -23,7 +23,8 @@ import com.volboy.course_project.message_recycler_view.*
 import com.volboy.course_project.message_recycler_view.simple_items.ErrorItem
 import com.volboy.course_project.message_recycler_view.simple_items.ProgressItem
 import com.volboy.course_project.model.*
-import com.volboy.course_project.ui.channel_fragments.tab_layout_fragments.SubscribedFragment
+import com.volboy.course_project.presentation.bottomfragment.EmojiBottomFragment
+import com.volboy.course_project.presentation.streams.MvpSubscribedFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import retrofit2.Call
@@ -46,8 +47,8 @@ class MessagesFragment : Fragment(), MessageHolderFactory.MessageInterface {
         super.onCreate(savedInstanceState)
         setFragmentResultListener()
         getOwnId()
-        topicName = requireArguments().getString(SubscribedFragment.ARG_TOPIC).toString()
-        streamName = requireArguments().getString(SubscribedFragment.ARG_STREAM).toString()
+        topicName = requireArguments().getString(MvpSubscribedFragment.ARG_TOPIC).toString()
+        streamName = requireArguments().getString(MvpSubscribedFragment.ARG_STREAM).toString()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

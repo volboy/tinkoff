@@ -1,4 +1,4 @@
-package com.volboy.course_project.emoji_recycler_view
+package com.volboy.course_project.presentation.bottomfragment
 
 import android.view.View
 import com.volboy.course_project.R

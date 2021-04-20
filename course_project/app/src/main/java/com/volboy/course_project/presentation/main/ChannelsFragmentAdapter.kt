@@ -1,4 +1,4 @@
-package com.volboy.course_project.ui.channel_fragments
+package com.volboy.course_project.presentation.main
 
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter

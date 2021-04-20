@@ -1,20 +1,14 @@
-package com.volboy.course_project.ui.channel_fragments
+package com.volboy.course_project.presentation.bottomfragment
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.setFragmentResult
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.volboy.course_project.R
 import com.volboy.course_project.databinding.DialogBottomEmojiBinding
-import com.volboy.course_project.emoji_recycler_view.EmojiAdapter
-import com.volboy.course_project.emoji_recycler_view.EmojiUi
-import com.volboy.course_project.emoji_recycler_view.EmojiHolderFactory
-import com.volboy.course_project.message_recycler_view.*
+import com.volboy.course_project.message_recycler_view.ViewTyped
 import com.volboy.course_project.model.Emoji
 
 class EmojiBottomFragment : BottomSheetDialogFragment(), EmojiHolderFactory.BottomEmojiInterface {
@@ -169,7 +163,11 @@ class EmojiBottomFragment : BottomSheetDialogFragment(), EmojiHolderFactory.Bott
     override fun getClickedView(view: View, position: Int) {
         val emojiCode = String(Character.toChars(emojiCodes[position].emojiCode))
         val emojiName = emojiCodes[position].emojiName
-        setFragmentResult(ARG_BOTTOM_FRAGMENT, bundleOf(ARG_EMOJI to arrayListOf(emojiName, emojiCode)))
+        setFragmentResult(
+            ARG_BOTTOM_FRAGMENT, bundleOf(
+                ARG_EMOJI to arrayListOf(emojiName, emojiCode)
+            )
+        )
         dismiss()
     }
 

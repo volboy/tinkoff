@@ -22,7 +22,9 @@
     <color name="message_box_color">#282828</color>
     <color name="icon_bottom_menu_color">#919191</color>
     <color name="profile_text_color">#BCBCBC</color>
-    <color name="profile_status_color">#4AB54D</color>
+    <color name="profile_status_color_green">#4AB54D</color>
+    <color name="profile_status_color_orange">#FF5722</color>
+    <color name="profile_status_color_red">#D50000</color>
     <color name="email_text_color">#A1A1A1</color>
     <color name="btn_logout_color">#1B1B1B</color>
 </resources>

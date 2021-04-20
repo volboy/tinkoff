@@ -13,12 +13,8 @@ import com.volboy.course_project.databinding.FragmentStreamsBinding
 import com.volboy.course_project.message_recycler_view.CommonAdapter
 import com.volboy.course_project.message_recycler_view.CommonDiffUtilCallback
 import com.volboy.course_project.message_recycler_view.ViewTyped
-import com.volboy.course_project.message_recycler_view.simple_items.ErrorItem
-import com.volboy.course_project.message_recycler_view.simple_items.ProgressItem
+import com.volboy.course_project.presentation.messages.MessagesFragment
 import com.volboy.course_project.presentation.mvp.presenter.MvpFragment
-import com.volboy.course_project.ui.channel_fragments.MessagesFragment
-import com.volboy.course_project.ui.channel_fragments.tab_layout_fragments.TitleUi
-import com.volboy.course_project.ui.channel_fragments.tab_layout_fragments.UiHolderFactory
 
 class MvpSubscribedFragment : StreamsView, MvpFragment<StreamsView, StreamsPresenter>(), UiHolderFactory.ChannelsInterface {
     private lateinit var binding: FragmentStreamsBinding

@@ -1,4 +1,4 @@
-package com.volboy.course_project.repository
+package com.volboy.course_project.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase

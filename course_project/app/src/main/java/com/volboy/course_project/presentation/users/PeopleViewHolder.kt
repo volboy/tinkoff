@@ -1,4 +1,4 @@
-package com.volboy.course_project.ui.people_fragments
+package com.volboy.course_project.presentation.users
 
 import android.view.View
 import android.widget.ImageView
@@ -7,14 +7,14 @@ import com.bumptech.glide.Glide
 import com.volboy.course_project.R
 import com.volboy.course_project.message_recycler_view.BaseViewHolder
 import com.volboy.course_project.message_recycler_view.ViewTyped
-import com.volboy.course_project.ui.channel_fragments.tab_layout_fragments.UiHolderFactory
+import com.volboy.course_project.presentation.streams.UiHolderFactory
 
 class PeopleUi(
     val name: String,
     val email: String?,
     val imageURL: String,
     override val viewType: Int = R.layout.item_people_list,
-    override val uid: String = ""
+    override val uid: String
 ) : ViewTyped
 
 class PeopleViewHolder(val view: View, private val channelsInterface: UiHolderFactory.ChannelsInterface) :

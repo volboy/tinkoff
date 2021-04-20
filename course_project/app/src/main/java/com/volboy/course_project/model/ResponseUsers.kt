@@ -3,7 +3,7 @@ package com.volboy.course_project.model
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
-import com.volboy.course_project.repository.UsersConverter
+import com.volboy.course_project.database.UsersConverter
 
 class UsersResponse(val members: List<UserJSON>)
 
@@ -48,4 +48,15 @@ class OwnUser(
     val user_id: Int,
     val delivery_email: String,
     val id: List<IdData>
+)
+
+class StatusUserResponse(val result: String, val msg: String, val presence: Presence)
+
+class Presence(
+    val aggregated: Aggregated
+)
+
+class Aggregated(
+    val status: String,
+    val timestamp: Int
 )

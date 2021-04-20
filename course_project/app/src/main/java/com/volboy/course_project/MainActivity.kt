@@ -3,7 +3,7 @@ package com.volboy.course_project
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.volboy.course_project.databinding.ActivityMainBinding
-import com.volboy.course_project.ui.MainFragment
+import com.volboy.course_project.presentation.main.MainFragment
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding

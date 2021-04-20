@@ -1,4 +1,4 @@
-package com.volboy.course_project.ui
+package com.volboy.course_project.presentation.main
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,7 +10,6 @@ import com.volboy.course_project.R
 import com.volboy.course_project.databinding.FragmentMainBinding
 import com.volboy.course_project.presentation.profile.MvpProfileFragment
 import com.volboy.course_project.presentation.users.MvpUsersFragment
-import com.volboy.course_project.ui.channel_fragments.ChannelsFragment
 
 class MainFragment : Fragment() {
     private lateinit var binding: FragmentMainBinding
