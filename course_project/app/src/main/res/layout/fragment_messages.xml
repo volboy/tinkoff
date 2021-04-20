@@ -50,7 +50,6 @@
         android:layout_marginBottom="5dp"
         android:background="@drawable/message_box_drw"
         android:fadeScrollbars="true"
-        android:hint="@string/make_message_hint"
         android:maxHeight="102dp"
         android:minHeight="51dp"
         android:paddingLeft="21dp"
@@ -58,10 +57,12 @@
         android:singleLine="false"
         android:textColor="@color/ev_text_color"
         android:textColorHint="@color/ev_text_color"
-        android:textSize="20dp"
+        android:autofillHints="@string/make_message_hint"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/messageBtn"
         app:layout_constraintStart_toStartOf="parent"
+        android:inputType="textAutoCorrect"
+        android:textSize="20sp"
         app:layout_constraintTop_toBottomOf="@+id/recyclerMessage" />
 
     <ImageButton
@@ -73,6 +74,29 @@
         android:src="@drawable/ic_add_message"
         app:layout_constraintBottom_toBottomOf="@+id/messageBox"
         app:layout_constraintEnd_toEndOf="parent"
+        android:contentDescription="@string/error_str"
         app:layout_constraintTop_toTopOf="@+id/messageBox" />
+
+    <include
+        android:id="@+id/fragment_error"
+        layout="@layout/fragment_error"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/messageBox"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/topicName"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <include
+        android:id="@+id/fragment_loading"
+        layout="@layout/fragment_loading"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/messageBox"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/topicName"
+        app:layout_constraintVertical_chainStyle="packed" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

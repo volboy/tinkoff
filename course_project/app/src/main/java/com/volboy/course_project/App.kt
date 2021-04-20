@@ -10,6 +10,7 @@ import com.volboy.course_project.api.ZulipApi
 import com.volboy.course_project.database.AppDatabase
 import com.volboy.course_project.model.Loader
 import com.volboy.course_project.presentation.details.DetailsPresenter
+import com.volboy.course_project.presentation.messages.MessagesPresenter
 import com.volboy.course_project.presentation.profile.ProfilePresenter
 import com.volboy.course_project.presentation.streams.StreamsPresenter
 import com.volboy.course_project.presentation.users.UsersPresenter
@@ -34,6 +35,7 @@ class App : Application() {
         lateinit var usersPresenter: UsersPresenter
         lateinit var profilePresenter: ProfilePresenter
         lateinit var detailsPresenter: DetailsPresenter
+        lateinit var messagesPresenter: MessagesPresenter
     }
 
     override fun onCreate() {
@@ -47,6 +49,7 @@ class App : Application() {
         usersPresenter = UsersPresenter()
         profilePresenter = ProfilePresenter()
         detailsPresenter = DetailsPresenter()
+        messagesPresenter = MessagesPresenter()
         loader = Loader()
     }
 

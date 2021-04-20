@@ -1,4 +1,19 @@
 package com.volboy.course_project.presentation.messages
 
-interface MessagesView {
+import com.volboy.course_project.message_recycler_view.ViewTyped
+import com.volboy.course_project.presentation.mvp.view.LoadErrorView
+
+interface MessagesView : LoadErrorView {
+    fun showMessage(data: List<ViewTyped>)
+
+    fun sendMessage(message: ViewTyped)
+
+    fun addReaction()
+
+    fun deleteReactions()
+
+    fun showLocalError()
+
+    fun showLocalLoading()
+
 }
