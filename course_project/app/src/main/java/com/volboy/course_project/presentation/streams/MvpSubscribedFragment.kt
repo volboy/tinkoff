@@ -13,7 +13,7 @@ import com.volboy.course_project.databinding.FragmentStreamsBinding
 import com.volboy.course_project.message_recycler_view.CommonAdapter
 import com.volboy.course_project.message_recycler_view.CommonDiffUtilCallback
 import com.volboy.course_project.message_recycler_view.ViewTyped
-import com.volboy.course_project.presentation.messages.MessagesFragment
+import com.volboy.course_project.presentation.messages.MvpMessagesFragment
 import com.volboy.course_project.presentation.mvp.presenter.MvpFragment
 
 class MvpSubscribedFragment : StreamsView, MvpFragment<StreamsView, StreamsPresenter>(), UiHolderFactory.ChannelsInterface {
@@ -60,6 +60,7 @@ class MvpSubscribedFragment : StreamsView, MvpFragment<StreamsView, StreamsPrese
         binding.fragmentError.root.isGone = true
         binding.fragmentLoading.root.isVisible = true
     }
+
     override fun getClickedView(view: View, position: Int, viewType: Int) {
         when (viewType) {
             R.layout.item_collapse -> {
@@ -72,9 +73,10 @@ class MvpSubscribedFragment : StreamsView, MvpFragment<StreamsView, StreamsPrese
                 }
             }
             R.layout.item_expand -> {
-                val messagesFragment = MessagesFragment()
+                val messagesFragment = MvpMessagesFragment()
                 val arguments = Bundle()
                 arguments.putString(ARG_TOPIC, (adapter.items[position] as TitleUi).title)
+                arguments.putString(ARG_LAST_MSG_ID_IN_TOPIC, (adapter.items[position] as TitleUi).uid)
                 arguments.putString(ARG_STREAM, clickedStream.title)
                 messagesFragment.arguments = arguments
                 val transaction = requireActivity().supportFragmentManager.beginTransaction()
@@ -88,6 +90,7 @@ class MvpSubscribedFragment : StreamsView, MvpFragment<StreamsView, StreamsPrese
     companion object {
         const val ARG_TOPIC = "topic"
         const val ARG_STREAM = "stream"
+        const val ARG_LAST_MSG_ID_IN_TOPIC = "lastId"
         const val FROM_TOPIC_TO_MESSAGE = "FromSubscribedFragmentToMessageFragment"
     }
 }

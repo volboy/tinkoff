@@ -18,8 +18,7 @@ abstract class MvpFragment<View, P : Presenter<View>> : Fragment(),
         mvpHelper.create()
     }
 
-    override fun onStop() {
-        super.onStop()
+    override fun onDestroyView() {
         val isFinishing = isRemoving || requireActivity().isFinishing
         mvpHelper.destroy(isFinishing)
         super.onDestroyView()

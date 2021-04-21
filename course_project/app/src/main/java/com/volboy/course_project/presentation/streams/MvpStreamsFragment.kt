@@ -13,7 +13,7 @@ import com.volboy.course_project.databinding.FragmentStreamsBinding
 import com.volboy.course_project.message_recycler_view.CommonAdapter
 import com.volboy.course_project.message_recycler_view.CommonDiffUtilCallback
 import com.volboy.course_project.message_recycler_view.ViewTyped
-import com.volboy.course_project.presentation.messages.MessagesFragment
+import com.volboy.course_project.presentation.messages.MvpMessagesFragment
 import com.volboy.course_project.presentation.mvp.presenter.MvpFragment
 
 class MvpStreamsFragment : StreamsView, MvpFragment<StreamsView, StreamsPresenter>(), UiHolderFactory.ChannelsInterface {
@@ -73,7 +73,7 @@ class MvpStreamsFragment : StreamsView, MvpFragment<StreamsView, StreamsPresente
                 }
             }
             R.layout.item_expand -> {
-                val messagesFragment = MessagesFragment()
+                val messagesFragment = MvpMessagesFragment()
                 val arguments = Bundle()
                 arguments.putString(ARG_TOPIC, (adapter.items[position] as TitleUi).title)
                 arguments.putString(ARG_STREAM, clickedStream.title)

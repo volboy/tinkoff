@@ -130,9 +130,9 @@ class Loader {
     }
 
     private fun groupedMessages(messagesJSON: List<MessageJSON>): List<ViewTyped> {
-        val messageByDate: Map<Long, List<MessageJSON>> = messagesJSON.groupBy { it.timestamp }
+        val messageByDate = messagesJSON.groupBy { getDateTime(it.timestamp) }
         return messageByDate.flatMap { (date, msg) ->
-            listOf(DataUi(getDateTime(date), R.layout.item_date_divider)) + viewTypedMessages(msg)
+            listOf(DataUi(date, R.layout.item_date_divider)) + viewTypedMessages(msg)
         }
     }
 
