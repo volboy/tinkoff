@@ -6,11 +6,9 @@ import com.volboy.course_project.presentation.mvp.view.LoadErrorView
 interface MessagesView : LoadErrorView {
     fun showMessage(data: List<ViewTyped>)
 
+    fun updateMessage(data: List<ViewTyped>, msgPosition: Int)
+
     fun sendMessage(message: ViewTyped)
-
-    fun addReaction()
-
-    fun deleteReactions()
 
     fun showLocalError()
 

@@ -19,12 +19,12 @@ class EmojiBottomFragment : BottomSheetDialogFragment(), EmojiHolderFactory.Bott
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DialogBottomEmojiBinding.inflate(inflater, container, false)
         val emojiName = resources.getStringArray(R.array.emojiName)
-        val emojiCode = resources.getIntArray(R.array.emojiCode)
+        val emojiCode = resources.getStringArray(R.array.emojiCode)
         for (i in 0 until emojiCode.size.coerceAtMost(emojiName.size)) {
             emojiList.add(Emoji(emojiName[i], emojiCode[i]))
         }
         val emojiViewTyped = mutableListOf<ViewTyped>()
-        emojiList.forEach { emoji -> emojiViewTyped.add(EmojiUi(String(Character.toChars(emoji.emojiCode)))) }
+        emojiList.forEach { emoji -> emojiViewTyped.add(EmojiUi(String(Character.toChars(emoji.emojiCode.toInt(16))))) }
         val holderFactory = EmojiHolderFactory(this)
         val emojiAdapter = EmojiAdapter<ViewTyped>(holderFactory)
         emojiAdapter.items = emojiViewTyped
@@ -33,7 +33,7 @@ class EmojiBottomFragment : BottomSheetDialogFragment(), EmojiHolderFactory.Bott
     }
 
     override fun getClickedView(view: View, position: Int) {
-        val emojiCode = String(Character.toChars(emojiList[position].emojiCode))
+        val emojiCode = emojiList[position].emojiCode
         val emojiName = emojiList[position].emojiName
         setFragmentResult(ARG_BOTTOM_FRAGMENT, bundleOf(ARG_EMOJI to arrayListOf(emojiName, emojiCode)))
         dismiss()

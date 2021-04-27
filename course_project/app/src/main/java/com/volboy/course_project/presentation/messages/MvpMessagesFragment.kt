@@ -74,15 +74,17 @@ class MvpMessagesFragment : MessagesView, MvpFragment<MessagesView, MessagesPres
         adapter.items = data
     }
 
+    override fun updateMessage(data: List<ViewTyped>, msgPosition: Int) {
+        binding.recyclerMessage.isVisible = true
+        binding.messageBox.isVisible = true
+        binding.messageBtn.isVisible = true
+        binding.fragmentError.root.isGone = true
+        binding.fragmentLoading.root.isGone = true
+        adapter.items = data
+        adapter.notifyItemChanged(msgPosition)
+    }
+
     override fun sendMessage(message: ViewTyped) {
-        TODO("Not yet implemented")
-    }
-
-    override fun addReaction() {
-        TODO("Not yet implemented")
-    }
-
-    override fun deleteReactions() {
         TODO("Not yet implemented")
     }
 

@@ -57,50 +57,49 @@ class MessagesPresenter : RxPresenter<MessagesView>(MessagesView::class.java) {
         }
     }
 
-    fun addOrDeleteReaction(positionMsgOnLongClick: Int, emojiList: ArrayList<String>) {
-        var indexOfReaction = 0
-        reactionsOfMessage = (data[positionMsgOnLongClick] as ReactionsUi).reactions
-        val isFindEmoji = reactionsOfMessage.firstOrNull { String(Character.toChars(it.emojiCode.toInt(16))) == emojiList[1] }
-        if (isFindEmoji != null) {
-            val isFindUser = isFindEmoji.users.firstOrNull { it == ownId }
-            if (isFindUser != null) {
-                indexOfReaction = reactionsOfMessage.indexOf(isFindEmoji)
-                removeReaction(
-                    (data[positionMsgOnLongClick - 1] as TextUi).uid.toInt(),
-                    emojiList[0],
-                    "unicode_emoji",
-                    indexOfReaction,
-                    positionMsgOnLongClick
-                )
-            } else {
-                addReaction(
-                    (data[positionMsgOnLongClick - 1] as TextUi).uid.toInt(),
-                    emojiList[0],
-                    "unicode_emoji",
-                    indexOfReaction,
-                    null,
-                    positionMsgOnLongClick
-                )
-            }
+    fun addOrDeleteReaction(indexMsg: Int, emojiList: ArrayList<String>) {
+        var positionEmoji = -1
+        val msgID = (data[indexMsg - 1] as TextUi).uid.toInt()
+        val newReaction = Reaction(emojiList[1], 1, "unicode_emoji", mutableListOf(ownId))
+        reactionsOfMessage = (data[indexMsg] as ReactionsUi).reactions
+        //если список реакций пуск добавляем сразу
+        if (reactionsOfMessage.isNullOrEmpty()) {
+            reactionsOfMessage.add(newReaction)
+            addReaction(msgID, emojiList[0], "unicode_emoji", indexMsg)
         } else {
-            val newReaction = Reaction(emojiList[1], 1, "unicode_emoji", mutableListOf(ownId))
-            addReaction(
-                (data[positionMsgOnLongClick - 1] as TextUi).uid.toInt(),
-                emojiList[0],
-                "unicode_emoji",
-                indexOfReaction,
-                newReaction,
-                positionMsgOnLongClick
-            )
+            //ищем эмоджи который хотим добавить в списке реакций
+            reactionsOfMessage.forEach { reaction ->
+                if (reaction.emojiCode == emojiList[1]) {
+                    positionEmoji = reactionsOfMessage.indexOf(reaction)
+                }
+            }
+            //если не нашли такого эмоджи, сразу добавляем
+            if (positionEmoji == -1) {
+                reactionsOfMessage.add(newReaction)
+                addReaction(msgID, emojiList[0], "unicode_emoji", indexMsg)
+                //если нашли такой
+            } else {
+                //проверяем ставил ли пользователь такой эмоджи
+                if (ownId in reactionsOfMessage[positionEmoji].users) {
+                    reactionsOfMessage[positionEmoji].users.remove(ownId)
+                    removeReaction(msgID, emojiList[0], "unicode_emoji", indexMsg)
+                    if (reactionsOfMessage[positionEmoji].users.size == 0) {
+                        reactionsOfMessage.removeAt(positionEmoji)
+                    }
+                } else {
+                    reactionsOfMessage[positionEmoji].users.add(ownId)
+                    addReaction(msgID, emojiList[0], "unicode_emoji", indexMsg)
+                }
+            }
         }
     }
 
-    private fun removeReaction(messageId: Int, emojiName: String, reactionType: String, indexOfReaction: Int, positionMsgOnLongClick: Int) {
-        val removeEmoji = loaderMessages.removeEmojiFromMessage(messageId, emojiName, reactionType)
+    private fun removeReaction(msgId: Int, emojiName: String, reactionType: String, indexMsg: Int) {
+        val removeEmoji = loaderMessages.removeEmojiFromMessage(msgId, emojiName, reactionType)
         removeEmoji.subscribe(
             { result ->
-                (data[positionMsgOnLongClick] as ReactionsUi).reactions[indexOfReaction].users.remove(ownId)
-                view.showMessage(data)
+                (data[indexMsg] as ReactionsUi).reactions = reactionsOfMessage
+                view.updateMessage(data, indexMsg)
             },
             { error ->
                 //TODO отображаем сообщение с ошибкой
@@ -108,23 +107,12 @@ class MessagesPresenter : RxPresenter<MessagesView>(MessagesView::class.java) {
         ).disposeOnFinish()
     }
 
-    private fun addReaction(
-        messageId: Int,
-        emojiName: String,
-        reactionType: String,
-        indexOfReaction: Int,
-        newReaction: Reaction? = null,
-        positionMsgOnLongClick: Int
-    ) {
-        val addEmoji = loaderMessages.addEmojiToMessage(messageId, emojiName, reactionType)
+    private fun addReaction(msgId: Int, emojiName: String, reactionType: String, indexMsg: Int) {
+        val addEmoji = loaderMessages.addEmojiToMessage(msgId, emojiName, reactionType)
         addEmoji.subscribe(
             { result ->
-                if (newReaction != null) {
-                    (data[positionMsgOnLongClick] as ReactionsUi).reactions.add(newReaction)
-                } else {
-                    (data[positionMsgOnLongClick] as ReactionsUi).reactions[indexOfReaction].users.add(ownId)
-                }
-                view.showMessage(data)
+                (data[indexMsg] as ReactionsUi).reactions = reactionsOfMessage
+                view.updateMessage(data, indexMsg)
             },
             { error ->
                 //TODO отображаем сообщение с ошибкой
