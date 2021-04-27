@@ -7,42 +7,44 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
+import androidx.fragment.app.setFragmentResultListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.volboy.course_project.App.Companion.messagesPresenter
+import com.volboy.course_project.R
 import com.volboy.course_project.databinding.FragmentMessagesBinding
 import com.volboy.course_project.message_recycler_view.CommonAdapter
 import com.volboy.course_project.message_recycler_view.CommonDiffUtilCallback
 import com.volboy.course_project.message_recycler_view.MessageHolderFactory
 import com.volboy.course_project.message_recycler_view.ViewTyped
+import com.volboy.course_project.presentation.bottomfragment.EmojiBottomFragment
 import com.volboy.course_project.presentation.mvp.presenter.MvpFragment
 import com.volboy.course_project.presentation.streams.MvpSubscribedFragment
+import java.util.*
 
 class MvpMessagesFragment : MessagesView, MvpFragment<MessagesView, MessagesPresenter>(), MessageHolderFactory.MessageInterface {
     private lateinit var binding: FragmentMessagesBinding
     private lateinit var adapter: CommonAdapter<ViewTyped>
-    private lateinit var rwMessage: RecyclerView
     private lateinit var topicName: String
     private lateinit var streamName: String
     private lateinit var lastMsgIdInTopic: String
+    private var positionMsgOnLongClick = 0
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentMessagesBinding.inflate(inflater, container, false)
         val holderFactory = MessageHolderFactory(this)
         adapter = CommonAdapter(holderFactory, CommonDiffUtilCallback())
-        rwMessage = binding.recyclerMessage
-        rwMessage.adapter = adapter
+        binding.recyclerMessage.adapter = adapter
         topicName = requireArguments().getString(MvpSubscribedFragment.ARG_TOPIC).toString()
         streamName = requireArguments().getString(MvpSubscribedFragment.ARG_STREAM).toString()
         lastMsgIdInTopic = requireArguments().getString(MvpSubscribedFragment.ARG_LAST_MSG_ID_IN_TOPIC).toString()
-        val mActionBar = (requireActivity() as AppCompatActivity).supportActionBar
-        mActionBar?.hide()
+        (requireActivity() as AppCompatActivity).supportActionBar?.hide()
         getPresenter().loadFirstRemoteMessages(streamName, topicName)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        binding.topicName.text = topicName
+        binding.topicName.text = resources.getString(R.string.topic_name, topicName)
         binding.recyclerMessage.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 val linearLayoutManager = binding.recyclerMessage.layoutManager as LinearLayoutManager
@@ -51,6 +53,12 @@ class MvpMessagesFragment : MessagesView, MvpFragment<MessagesView, MessagesPres
                 }
             }
         })
+        setFragmentResultListener(EmojiBottomFragment.ARG_BOTTOM_FRAGMENT) { _, bundle ->
+            val emojiList: ArrayList<String>? = bundle.getStringArrayList(EmojiBottomFragment.ARG_EMOJI)
+            if (emojiList != null) {
+                getPresenter().addOrDeleteReaction(positionMsgOnLongClick, emojiList)
+            }
+        }
     }
 
     override fun getPresenter(): MessagesPresenter = messagesPresenter
@@ -99,7 +107,10 @@ class MvpMessagesFragment : MessagesView, MvpFragment<MessagesView, MessagesPres
     }
 
     override fun getLongClickedView(position: Int): Boolean {
-        TODO("Not yet implemented")
+        positionMsgOnLongClick = position + 1 //+1 потому, что реакции отдельным ViewType и находятся ниже сообщения
+        val emojiBottomFragment = EmojiBottomFragment()
+        emojiBottomFragment.show(parentFragmentManager, emojiBottomFragment.tag)
+        return true
     }
 
     override fun getClickedView(view: View, position: Int) {

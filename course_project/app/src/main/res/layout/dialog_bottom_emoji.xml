@@ -1,18 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/ev_unselected"
     android:orientation="vertical">
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="8dp"
+        android:contentDescription="@string/error_str"
+        android:src="@drawable/ic_bottom_line" />
+
     <androidx.recyclerview.widget.RecyclerView
-        android:paddingStart="8dp"
-        android:paddingEnd="8dp"
-        android:paddingTop="40dp"
-        android:background="@color/ev_unselected"
         android:id="@+id/recyclerEmoji"
         android:layout_width="match_parent"
         android:layout_height="346dp"
-        app:spanCount="7"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager" />
-</FrameLayout>
+        android:paddingStart="8dp"
+        android:paddingTop="40dp"
+        android:paddingEnd="8dp"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:spanCount="7" />
+</LinearLayout>

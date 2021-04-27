@@ -2,7 +2,7 @@ package com.volboy.course_project.presentation.profile
 
 import android.util.Log
 import com.volboy.course_project.App
-import com.volboy.course_project.App.Companion.loader
+import com.volboy.course_project.App.Companion.loaderUsers
 import com.volboy.course_project.App.Companion.resourceProvider
 import com.volboy.course_project.R
 import com.volboy.course_project.presentation.mvp.presenter.base.RxPresenter
@@ -15,7 +15,7 @@ class ProfilePresenter : RxPresenter<ProfileView>(ProfileView::class.java) {
     }
 
     private fun loadOwnUser() {
-        val ownUser = loader.getOwnUser()
+        val ownUser = loaderUsers.getOwnUser()
         val disposableMessages = ownUser.subscribe(
             { result ->
                 view.showData(result)

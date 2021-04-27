@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.setFragmentResultListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
@@ -22,7 +21,10 @@ import com.volboy.course_project.databinding.FragmentMessagesBinding
 import com.volboy.course_project.message_recycler_view.*
 import com.volboy.course_project.message_recycler_view.simple_items.ErrorItem
 import com.volboy.course_project.message_recycler_view.simple_items.ProgressItem
-import com.volboy.course_project.model.*
+import com.volboy.course_project.model.Loader
+import com.volboy.course_project.model.Reaction
+import com.volboy.course_project.model.SendMessageResponse
+import com.volboy.course_project.model.UpdateMessageFlag
 import com.volboy.course_project.presentation.bottomfragment.EmojiBottomFragment
 import com.volboy.course_project.presentation.streams.MvpSubscribedFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -40,12 +42,11 @@ class MessagesFragment : Fragment(), MessageHolderFactory.MessageInterface {
     private var topicName = ""
     private var streamName = ""
     private var ownId = 0
-    var loader = Loader()
-    var lastMessageIdInTopic = 0
+    private var loader = Loader()
+    private var lastMessageIdInTopic = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setFragmentResultListener()
         getOwnId()
         topicName = requireArguments().getString(MvpSubscribedFragment.ARG_TOPIC).toString()
         streamName = requireArguments().getString(MvpSubscribedFragment.ARG_STREAM).toString()
@@ -152,37 +153,7 @@ class MessagesFragment : Fragment(), MessageHolderFactory.MessageInterface {
         )
     }
 
-    private fun addEmojiToMessage(messageId: Int, emojiName: String, reactionType: String) {
-        App.instance.zulipApi.addReaction(messageId, emojiName, reactionType).enqueue(object : Callback<AddReactionResponse> {
-            override fun onResponse(call: Call<AddReactionResponse>, response: Response<AddReactionResponse>) {
-                if (response.isSuccessful) {
-                    showSnackbar(resources.getString(R.string.msg_network_send_emoji))
-                } else {
-                    showSnackbar(resources.getString(R.string.msg_network_send_emoji_error))
-                }
-            }
 
-            override fun onFailure(call: Call<AddReactionResponse>, t: Throwable) {
-                showSnackbar(resources.getString(R.string.msg_network_send_emoji_error) + t.message)
-            }
-        })
-    }
-
-    private fun removeEmojiFromMessage(messageId: Int, emojiName: String, reactionType: String) {
-        App.instance.zulipApi.removeReaction(messageId, emojiName, reactionType).enqueue(object : Callback<AddReactionResponse> {
-            override fun onResponse(call: Call<AddReactionResponse>, response: Response<AddReactionResponse>) {
-                if (response.isSuccessful) {
-                    showSnackbar(resources.getString(R.string.msg_network_delete_emoji))
-                } else {
-                    showSnackbar(resources.getString(R.string.msg_network_delete_emoji_error))
-                }
-            }
-
-            override fun onFailure(call: Call<AddReactionResponse>, t: Throwable) {
-                showSnackbar(resources.getString(R.string.msg_network_delete_emoji_error) + t.message)
-            }
-        })
-    }
 
     private fun updateMessageFlags(messages: String) {
         App.instance.zulipApi.updateMessageFlag(messages, "add", "read").enqueue(object : Callback<UpdateMessageFlag> {
@@ -264,27 +235,6 @@ class MessagesFragment : Fragment(), MessageHolderFactory.MessageInterface {
         positionMessage = position
     }
 
-    private fun setFragmentResultListener() {
-        setFragmentResultListener(EmojiBottomFragment.ARG_BOTTOM_FRAGMENT) { _, bundle ->
-            val emojiList = bundle.getStringArrayList(EmojiBottomFragment.ARG_EMOJI)
-            reactionsOfMessage = (commonAdapter.items[positionMessage] as ReactionsUi).reactions
-            if (emojiList != null) {
-                val isFindEmoji = reactionsOfMessage.firstOrNull { String(Character.toChars(it.emojiCode.toInt(16))) == emojiList[1] }
-                if (isFindEmoji != null) {
-                    val isFindUser = isFindEmoji.users.firstOrNull { it == ownId }
-                    if (isFindUser != null) {
-                        removeEmojiFromMessage((commonAdapter.items[positionMessage - 1] as TextUi).uid.toInt(), emojiList[0], "unicode_emoji")
-                    } else {
-                        addEmojiToMessage((commonAdapter.items[positionMessage - 1] as TextUi).uid.toInt(), emojiList[0], "unicode_emoji")
-                    }
-                } else {
-                    addEmojiToMessage((commonAdapter.items[positionMessage - 1] as TextUi).uid.toInt(), emojiList[0], "unicode_emoji")
-                }
-            }
-            //TODO("Переделать на загрузку только измененного сообщения")
-            downLoadMessage()
-        }
-    }
 
     private fun showSnackbar(msg: String) {
         Snackbar.make(binding.root, msg, Snackbar.LENGTH_SHORT).show()

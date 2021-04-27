@@ -9,7 +9,7 @@ class DetailsPresenter : RxPresenter<DetailsView>(DetailsView::class.java) {
 
     fun getUserStatus(id: Int) {
         view.showLoading("")
-        val presence = App.loader.getUserStatus(id)
+        val presence = App.loaderUsers.getUserStatus(id)
         presence.subscribe(
             { result ->
                 view.showStatus(result.presence.aggregated.status)

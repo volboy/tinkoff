@@ -43,14 +43,14 @@ interface ZulipApi {
         @Path("message_id") message_id: Int,
         @Field("emoji_name") emoji_name: String,
         @Field("reaction_type") reaction_type: String
-    ): Call<AddReactionResponse>
+    ): Single<AddReactionResponse>
 
     @DELETE("messages/{message_id}/reactions")
     fun removeReaction(
         @Path("message_id") message_id: Int,
         @Query("emoji_name") emoji_name: String,
         @Query("reaction_type") reaction_type: String
-    ): Call<AddReactionResponse>
+    ): Single<AddReactionResponse>
 
     @POST("messages")
     @FormUrlEncoded

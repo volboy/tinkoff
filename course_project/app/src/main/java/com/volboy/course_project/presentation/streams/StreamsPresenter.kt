@@ -2,7 +2,7 @@ package com.volboy.course_project.presentation.streams
 
 import android.util.Log
 import com.volboy.course_project.App
-import com.volboy.course_project.App.Companion.loader
+import com.volboy.course_project.App.Companion.loaderStreams
 import com.volboy.course_project.App.Companion.resourceProvider
 import com.volboy.course_project.R
 import com.volboy.course_project.message_recycler_view.ViewTyped
@@ -42,7 +42,7 @@ class StreamsPresenter : RxPresenter<StreamsView>(StreamsView::class.java) {
     }
 
     private fun loadRemoteTopics(streamId: Int) {
-        val topic = loader.getTopicsOfStreams(streamId)
+        val topic = loaderStreams.getTopicsOfStreams(streamId)
         topic.subscribe(
             { result ->
                 val newData = mutableListOf<ViewTyped>()
@@ -72,7 +72,7 @@ class StreamsPresenter : RxPresenter<StreamsView>(StreamsView::class.java) {
         streamsDao.getAllStreams()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .map { streams -> loader.viewTypedStreams(streams) }
+            .map { streams -> loaderStreams.viewTypedStreams(streams) }
             .subscribe(
                 { viewTypedStreams ->
                     writeLog(resourceProvider.getString(R.string.msg_database_ok) + " , размер БД " + viewTypedStreams?.size?.toString())
@@ -99,7 +99,7 @@ class StreamsPresenter : RxPresenter<StreamsView>(StreamsView::class.java) {
 
     private fun loadRemoteStreams() {
         view.showLoading("")
-        val streams = loader.getRemoteStreams()
+        val streams = loaderStreams.getRemoteStreams()
         streams.subscribe(
             { result ->
                 data = result

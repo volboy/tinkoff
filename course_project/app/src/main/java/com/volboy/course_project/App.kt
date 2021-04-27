@@ -9,6 +9,9 @@ import androidx.room.Room
 import com.volboy.course_project.api.ZulipApi
 import com.volboy.course_project.database.AppDatabase
 import com.volboy.course_project.model.Loader
+import com.volboy.course_project.model.LoaderMessage
+import com.volboy.course_project.model.LoaderStreams
+import com.volboy.course_project.model.LoaderUsers
 import com.volboy.course_project.presentation.details.DetailsPresenter
 import com.volboy.course_project.presentation.messages.MessagesPresenter
 import com.volboy.course_project.presentation.profile.ProfilePresenter
@@ -30,6 +33,9 @@ class App : Application() {
         lateinit var instance: App
         lateinit var appDatabase: AppDatabase
         lateinit var loader: Loader
+        lateinit var loaderMessages: LoaderMessage
+        lateinit var loaderStreams: LoaderStreams
+        lateinit var loaderUsers: LoaderUsers
         lateinit var resourceProvider: ResourceProvider
         lateinit var streamsPresenter: StreamsPresenter
         lateinit var usersPresenter: UsersPresenter
@@ -51,6 +57,9 @@ class App : Application() {
         detailsPresenter = DetailsPresenter()
         messagesPresenter = MessagesPresenter()
         loader = Loader()
+        loaderMessages = LoaderMessage()
+        loaderStreams = LoaderStreams()
+        loaderUsers = LoaderUsers()
     }
 
     private fun initRetrofit() {
