@@ -92,7 +92,7 @@ class Loader {
     fun viewTypedStreams(streamsJSON: List<StreamJSON>): MutableList<ViewTyped> {
         val viewTypedList = mutableListOf<ViewTyped>()
         streamsJSON.forEach { streams ->
-            val uid = streams.stream_id.toString()
+            val uid = streams.streamId.toString()
             viewTypedList.add(
                 TitleUi(
                     streams.name,
@@ -112,7 +112,7 @@ class Loader {
     private fun viewTypedTopics(topicsJSON: List<TopicJSON>, streamId: Int): MutableList<ViewTyped> {
         val viewTypedList = mutableListOf<ViewTyped>()
         topicsJSON.forEach { topic ->
-            val uid = topic.max_id
+            val uid = topic.maxId
             viewTypedList.add(
                 TitleUi(
                     topic.name,
@@ -140,11 +140,11 @@ class Loader {
         val viewTypedList = mutableListOf<ViewTyped>()
         messagesJSON.forEach { msg ->
             //TODO("Убрать этот хардкод")
-            if (msg.sender_id != 402377) {
-                viewTypedList.add(TextUi(msg.sender_full_name, deleteHtmlFromString(msg.content), msg.avatar_url, R.layout.item_in_message, msg.id.toString()))
+            if (msg.senderId != 402377) {
+                viewTypedList.add(TextUi(msg.senderFullName, deleteHtmlFromString(msg.content), msg.avatarUrl, R.layout.item_in_message, msg.id.toString()))
                 viewTypedList.add(ReactionsUi(recountReactions(msg.reactions), R.layout.item_messages_reactions, msg.reactions.toString()))
             } else {
-                viewTypedList.add(TextUi("You", deleteHtmlFromString(msg.content), msg.avatar_url, R.layout.item_out_message, msg.id.toString()))
+                viewTypedList.add(TextUi("You", deleteHtmlFromString(msg.content), msg.avatarUrl, R.layout.item_out_message, msg.id.toString()))
                 viewTypedList.add(ReactionsUi(recountReactions(msg.reactions), R.layout.item_messages_reactions_out, msg.reactions.toString()))
             }
         }
@@ -167,10 +167,10 @@ class Loader {
     private fun viewTypedUsers(usersJSON: List<UserJSON>): MutableList<ViewTyped> {
         val viewTypedList = mutableListOf<ViewTyped>()
         usersJSON.forEach { user ->
-            val uid = user.user_id.toString()
+            val uid = user.userId.toString()
             viewTypedList.add(
                 PeopleUi(
-                    user.full_name,
+                    user.fullName,
                     user.email,
                     user.avatar_url,
                     R.layout.item_people_list,
@@ -184,12 +184,12 @@ class Loader {
     private fun recountReactions(reactionsJSON: List<ReactionsJSON>): MutableList<Reaction> {
         val reactions = mutableListOf<Reaction>()
         val users = mutableListOf<Int>()
-        val reactionsByEmojiCode = reactionsJSON.groupBy { it.emoji_code }
+        val reactionsByEmojiCode = reactionsJSON.groupBy { it.emojiCode }
         reactionsByEmojiCode.forEach { (emojiCode, list) ->
             list.forEach {
-                users.add(it.user_id)
+                users.add(it.userId)
             }
-            reactions.add(Reaction(emojiCode, list.size, list[0].reaction_type, users))
+            reactions.add(Reaction(emojiCode, list.size, list[0].reactionType, users))
         }
         return reactions
     }

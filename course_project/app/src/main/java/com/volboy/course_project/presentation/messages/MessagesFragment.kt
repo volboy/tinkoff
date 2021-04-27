@@ -207,7 +207,7 @@ class MessagesFragment : Fragment(), MessageHolderFactory.MessageInterface {
                 { topics ->
                     val thisTopic = topics.firstOrNull { topic -> topic.name == topicName }
                     if (thisTopic != null) {
-                        lastMessageIdInTopic = thisTopic.max_id
+                        lastMessageIdInTopic = thisTopic.maxId
                     }
 
                 },

@@ -10,7 +10,7 @@ class UsersConverter {
         val stringBuilder: StringBuilder = StringBuilder("")
         list.forEach { idData ->
             idData.id.forEach { pD ->
-                stringBuilder.append("?${pD.value},${pD.rendered_value},")
+                stringBuilder.append("?${pD.value},${pD.renderedValue},")
             }
         }
         return stringBuilder.toString()

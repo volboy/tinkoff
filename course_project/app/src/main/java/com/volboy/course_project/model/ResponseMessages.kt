@@ -3,15 +3,19 @@ package com.volboy.course_project.model
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
+import com.google.gson.annotations.SerializedName
 import com.volboy.course_project.database.MessageConverter
 
 class Narrow(val operator: String, val operand: String)
 
 class MessageResponse(
     val anchor: Long,
-    val found_newest: Boolean,
-    val found_oldest: Boolean,
-    val history_limited: Boolean,
+    @SerializedName("found_newest")
+    val foundNewest: Boolean,
+    @SerializedName("found_oldest")
+    val foundOldest: Boolean,
+    @SerializedName("history_limited")
+    val historyLimited: Boolean,
     val messages: List<MessageJSON>
 )
 
@@ -35,37 +39,53 @@ class UpdateMessageFlag(
 @Entity
 @TypeConverters(MessageConverter::class)
 class MessageJSON(
-    val avatar_url: String,
+    @SerializedName("avatar_url")
+    val avatarUrl: String,
     val client: String,
     val content: String,
     val content_type: String,
-    val display_recipient: String,
+    @SerializedName("display_recipient")
+    val displayRecipient: String,
     @PrimaryKey
     val id: Int,
-    val is_me_message: Boolean,
+    val isMeMessage: Boolean,
     val reactions: List<ReactionsJSON>,
-    val recipient_id: Int,
-    val sender_email: String,
-    val sender_full_name: String,
-    val sender_id: Int,
-    val sender_realm_str: String,
-    val stream_id: Int,
+    @SerializedName("recipient_id")
+    val recipientId: Int,
+    @SerializedName("sender_email")
+    val senderEmail: String,
+    @SerializedName("sender_full_name")
+    val senderFullName: String,
+    @SerializedName("sender_id")
+    val senderId: Int,
+    @SerializedName("sender_realm_str")
+    val senderRealmStr: String,
+    @SerializedName("stream_id")
+    val streamId: Int,
     val subject: String,
-    val topic_links: Array<String>,
+    @SerializedName("topic_links")
+    val topicLinks: Array<String>,
     val submessages: Array<String>,
     val timestamp: Long,
     val type: String,
     val flags: Array<String>,
-    val last_edit_timestamp: Int,
-    val match_content: String?,
-    val match_subject: String?
+    @SerializedName("last_edit_timestamp")
+    val lastEditTimestamp: Int,
+    @SerializedName("match_content")
+    val matchContent: String?,
+    @SerializedName("match_subject")
+    val matchSubject: String?
 )
 
 class ReactionsJSON(
-    val emoji_code: String,
-    val emoji_name: String,
-    val reaction_type: String,
-    val user_id: Int
+    @SerializedName("emoji_code")
+    val emojiCode: String,
+    @SerializedName("emoji_name")
+    val emojiName: String,
+    @SerializedName("reaction_type")
+    val reactionType: String,
+    @SerializedName("user_id")
+    val userId: Int
 )
 
 class Reaction(
@@ -78,6 +98,8 @@ class Reaction(
 class UserInReactionsJSON(
     val id: Int,
     val email: String,
-    val full_name: String,
-    val is_mirror_dummy: Boolean
+    @SerializedName("full_name")
+    val fullName: String,
+    @SerializedName("is_mirror_dummy")
+    val isMirrorDummy: Boolean
 )

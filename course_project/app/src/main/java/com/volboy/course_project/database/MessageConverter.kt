@@ -9,7 +9,7 @@ class MessageConverter {
         val stringBuilder: StringBuilder = StringBuilder("")
         listReactions.forEach { r ->
             stringBuilder.append(
-                "?${r.emoji_code},${r.emoji_name},${r.reaction_type},${r.user_id},"
+                "?${r.emojiCode},${r.emojiName},${r.reactionType},${r.userId},"
             )
         }
         return stringBuilder.toString()
