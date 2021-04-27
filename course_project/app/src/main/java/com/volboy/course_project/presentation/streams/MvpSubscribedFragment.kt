@@ -79,10 +79,10 @@ class MvpSubscribedFragment : StreamsView, MvpFragment<StreamsView, StreamsPrese
                 arguments.putString(ARG_LAST_MSG_ID_IN_TOPIC, (adapter.items[position] as TitleUi).uid)
                 arguments.putString(ARG_STREAM, clickedStream.title)
                 messagesFragment.arguments = arguments
-                val transaction = requireActivity().supportFragmentManager.beginTransaction()
-                transaction.addToBackStack(FROM_TOPIC_TO_MESSAGE)
-                transaction.add(R.id.container, messagesFragment)
-                transaction.commit()
+                requireActivity().supportFragmentManager.beginTransaction()
+                    .addToBackStack(FROM_TOPIC_TO_MESSAGE)
+                    .add(R.id.container, messagesFragment)
+                    .commit()
             }
         }
     }

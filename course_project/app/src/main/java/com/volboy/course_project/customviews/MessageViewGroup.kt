@@ -6,15 +6,14 @@ import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.RectF
 import android.util.AttributeSet
-import android.view.LayoutInflater
 import android.view.View
-
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
 import com.volboy.course_project.R
+import com.volboy.course_project.databinding.MessageViewGroupBinding
 
 class MessageViewGroup @JvmOverloads constructor(
     context: Context,
@@ -35,10 +34,10 @@ class MessageViewGroup @JvmOverloads constructor(
     }
 
     init {
-        LayoutInflater.from(context).inflate(R.layout.message_view_group, this, true)
-        imageAvatar = findViewById(R.id.avatar)
-        header = findViewById(R.id.header)
-        message = findViewById(R.id.message)
+        val binding = MessageViewGroupBinding.bind(View.inflate(context, R.layout.message_view_group, this))
+        imageAvatar = binding.avatar
+        header = binding.header
+        message = binding.message
         setWillNotDraw(false)
     }
 
@@ -97,11 +96,7 @@ class MessageViewGroup @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
-        val canvasCount = canvas?.save()
         canvas?.drawRoundRect(mRoundRectPoint, context.dpToPx(RADIUS_RECT).toFloat(), context.dpToPx(RADIUS_RECT).toFloat(), mRoundRectPaint)
-        if (canvasCount != null) {
-            canvas.restoreToCount(canvasCount)
-        }
     }
 
     override fun generateDefaultLayoutParams(): LayoutParams = MarginLayoutParams(WRAP_CONTENT, WRAP_CONTENT)
@@ -114,9 +109,9 @@ class MessageViewGroup @JvmOverloads constructor(
         layout(rect.left, rect.top, rect.right, rect.bottom)
     }
 
-    companion object {
-        private const val RADIUS_RECT = 18.0F
-        private const val RECT_MARGIN_LEFT = 13.0F
-        private const val RECT_MARGIN_BOTTOM = 20.0F
+    private companion object {
+        const val RADIUS_RECT = 18.0F
+        const val RECT_MARGIN_LEFT = 13.0F
+        const val RECT_MARGIN_BOTTOM = 20.0F
     }
 }

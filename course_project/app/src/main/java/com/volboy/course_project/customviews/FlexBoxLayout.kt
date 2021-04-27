@@ -16,51 +16,34 @@ class FlexBoxLayout @JvmOverloads constructor(
     defStyleRes: Int = 0
 ) : ViewGroup(context, attrs, defStyleAttr, defStyleRes) {
     private val childrenRect = Rect()
-    private var lastEmojiView: EmojiView
     private var parentWidth: Int = 0
+    private lateinit var layoutParams: MarginLayoutParams
 
     init {
         setWillNotDraw(true)
         LayoutInflater.from(context).inflate(R.layout.last_emoji_view, this, true)
-        lastEmojiView = findViewById(R.id.lastEmojiView)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         var currentWidth = 0
-        var currentHeight = 0
+        var currentHeight: Int
         var resultWidth = 0
         var resultHeight = 0
         var countRows = 1
-        var countChildren = 0
-        val lastEmojiViewWidth: Int
-        val lastEmojiViewHeight: Int
         parentWidth = MeasureSpec.getSize(widthMeasureSpec)
         children.forEach { child ->
-            if (child != lastEmojiView) {
-                measureChildWithMargins(child, widthMeasureSpec, currentWidth, heightMeasureSpec, resultHeight)
-                val childrenLayoutParams = child.layoutParams as MarginLayoutParams
-                currentWidth += child.measuredWidth + childrenLayoutParams.leftMargin + childrenLayoutParams.rightMargin
-                currentHeight = child.measuredHeight + childrenLayoutParams.topMargin + childrenLayoutParams.bottomMargin
-                if (currentWidth >= parentWidth - child.measuredWidth + context.dpToPx(20F)) {
-                    resultWidth = currentWidth
-                    currentWidth = 0
-                    countRows++
-                    resultHeight = currentHeight * countRows
-                }
+            measureChildWithMargins(child, widthMeasureSpec, currentWidth, heightMeasureSpec, resultHeight)
+            val childrenLayoutParams = child.layoutParams as MarginLayoutParams
+            currentWidth += child.measuredWidth + childrenLayoutParams.marginStart + childrenLayoutParams.marginEnd
+            currentHeight = child.measuredHeight + childrenLayoutParams.topMargin + childrenLayoutParams.bottomMargin
+            if (currentWidth >= parentWidth - child.measuredWidth + context.dpToPx(20F)) {
+                resultWidth = currentWidth
+                currentWidth = 0
+                countRows++
+                resultHeight = currentHeight * countRows
             }
             if (countRows == 1) {
                 resultHeight = currentHeight
-            }
-        }
-
-        children.forEach { _ -> countChildren++ }
-        if (countChildren != 0) {
-            val lastEmojiLayoutParams = lastEmojiView.layoutParams as MarginLayoutParams
-            measureChildWithMargins(lastEmojiView, widthMeasureSpec, resultWidth, heightMeasureSpec, resultHeight)
-            lastEmojiViewWidth = lastEmojiView.measuredWidth + lastEmojiLayoutParams.leftMargin + lastEmojiLayoutParams.rightMargin
-            lastEmojiViewHeight = lastEmojiView.measuredHeight + lastEmojiLayoutParams.topMargin + lastEmojiLayoutParams.bottomMargin
-            if (resultWidth + lastEmojiViewWidth >= parentWidth) {
-                resultHeight += lastEmojiViewHeight
             }
         }
         setMeasuredDimension(resolveSize(resultWidth, widthMeasureSpec), resolveSize(resultHeight, heightMeasureSpec))
@@ -70,33 +53,26 @@ class FlexBoxLayout @JvmOverloads constructor(
         var currentWidth = 0
         var currentHeight = 0
         children.forEach { child ->
-            if (child != lastEmojiView) {
-                val childrenLayoutParams = child.layoutParams as MarginLayoutParams
-                childrenRect.left = childrenLayoutParams.leftMargin + currentWidth
-                childrenRect.top = childrenLayoutParams.topMargin + currentHeight
-                childrenRect.right = childrenRect.left + child.measuredWidth
-                childrenRect.bottom = childrenRect.top + child.measuredHeight
-                currentWidth += childrenRect.width() + childrenLayoutParams.rightMargin
-                if (currentWidth > parentWidth - childrenRect.width()) {
-                    currentWidth = 0
-                    currentHeight += childrenRect.height() + childrenLayoutParams.bottomMargin
-                }
-                child.layout(childrenRect)
-            }
-        }
-        val lastChild = children.firstOrNull { child -> child == lastEmojiView }
-        if (lastChild != null) {
-            val childrenLayoutParams = lastChild.layoutParams as MarginLayoutParams
-            childrenRect.left = childrenLayoutParams.leftMargin + currentWidth
+            val childrenLayoutParams = child.layoutParams as MarginLayoutParams
+            childrenRect.left = childrenLayoutParams.marginStart + currentWidth
             childrenRect.top = childrenLayoutParams.topMargin + currentHeight
-            childrenRect.right = childrenRect.left + lastChild.measuredWidth
-            childrenRect.bottom = childrenRect.top + lastChild.measuredHeight
-            lastChild.layout(childrenRect)
+            childrenRect.right = childrenRect.left + child.measuredWidth
+            childrenRect.bottom = childrenRect.top + child.measuredHeight
+            currentWidth += childrenRect.width() + childrenLayoutParams.marginEnd
+            if (currentWidth > parentWidth - childrenRect.width()) {
+                currentWidth = 0
+                currentHeight += childrenRect.height() + childrenLayoutParams.bottomMargin
+            }
+            child.layout(childrenRect)
         }
-
     }
 
-    override fun generateDefaultLayoutParams(): LayoutParams = MarginLayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
+    override fun generateDefaultLayoutParams(): LayoutParams {
+        layoutParams = MarginLayoutParams(LayoutParams.WRAP_CONTENT, context.dpToPx(30F))
+        layoutParams.marginStart = context.dpToPx(10F)
+        layoutParams.marginEnd = context.dpToPx(7F)
+        return layoutParams
+    }
 
     override fun generateLayoutParams(attrs: AttributeSet?): LayoutParams = MarginLayoutParams(context, attrs)
 
@@ -104,5 +80,19 @@ class FlexBoxLayout @JvmOverloads constructor(
 
     private fun View.layout(rect: Rect) {
         layout(rect.left, rect.top, rect.right, rect.bottom)
+    }
+
+    override fun addView(child: View?) {
+        super.addView(child)
+        child?.setBackgroundResource(R.drawable.emoji_view_state)
+
+    }
+
+    fun addLastView(emojiView: EmojiView) {
+        layoutParams = MarginLayoutParams(context.dpToPx(45F), context.dpToPx(30F))
+        layoutParams.marginStart = context.dpToPx(10F)
+        layoutParams.marginEnd = context.dpToPx(7F)
+        emojiView.layoutParams = layoutParams
+        this.addView(emojiView)
     }
 }

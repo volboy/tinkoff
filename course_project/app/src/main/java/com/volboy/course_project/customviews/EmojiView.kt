@@ -60,8 +60,8 @@ class EmojiView @JvmOverloads constructor(
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        resultText = if (emoji == String(Character.toChars(0))) {
-            text
+        resultText = if (text == "" || text == "0") {
+            emoji
         } else {
             "$emoji $text"
         }
