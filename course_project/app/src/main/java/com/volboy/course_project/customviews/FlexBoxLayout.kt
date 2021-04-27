@@ -71,6 +71,7 @@ class FlexBoxLayout @JvmOverloads constructor(
         layoutParams = MarginLayoutParams(LayoutParams.WRAP_CONTENT, context.dpToPx(30F))
         layoutParams.marginStart = context.dpToPx(10F)
         layoutParams.marginEnd = context.dpToPx(7F)
+        layoutParams.bottomMargin = context.dpToPx(7F)
         return layoutParams
     }
 
@@ -92,6 +93,7 @@ class FlexBoxLayout @JvmOverloads constructor(
         layoutParams = MarginLayoutParams(context.dpToPx(45F), context.dpToPx(30F))
         layoutParams.marginStart = context.dpToPx(10F)
         layoutParams.marginEnd = context.dpToPx(7F)
+        layoutParams.bottomMargin = context.dpToPx(7F)
         emojiView.layoutParams = layoutParams
         this.addView(emojiView)
     }

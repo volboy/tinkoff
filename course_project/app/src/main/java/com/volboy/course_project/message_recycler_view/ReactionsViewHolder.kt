@@ -1,6 +1,7 @@
 package com.volboy.course_project.message_recycler_view
 
 import android.view.View
+import com.volboy.course_project.MainActivity.Companion.ownId
 import com.volboy.course_project.R
 import com.volboy.course_project.customviews.EmojiView
 import com.volboy.course_project.customviews.FlexBoxLayout
@@ -19,18 +20,23 @@ class ReactionsViewHolder(view: View, private val messageInterface: MessageHolde
     override fun bind(item: ReactionsUi) {
         flexBoxLayout.removeAllViews()
         item.reactions.forEach { reaction ->
-            addView(reaction.emojiCode, reaction.users.size, false) //не придумал, где сделать это. Знаю, что делать здесь это жесть
+            if (reaction.users.contains(ownId)) {
+                addView(reaction.emojiCode, reaction.users.size, isLastView = false, ownEmoji = true)
+            } else {
+                addView(reaction.emojiCode, reaction.users.size, isLastView = false, ownEmoji = false)
+            }
         }
         if (item.reactions.size != 0) {
-            addView(context.getString(R.string.last_emoji_str), 0, true)
+            addView(context.getString(R.string.last_emoji_str), 0, true, ownEmoji = false)
         }
     }
 
-    private fun addView(emoji: String, countReactions: Int, isLastView: Boolean) {
+    private fun addView(emoji: String, countReactions: Int, isLastView: Boolean, ownEmoji: Boolean) {
         val emojiView = EmojiView(context)
         emojiView.text = countReactions.toString()
         emojiView.emoji = emoji
         emojiView.setOnClickListener { messageInterface.getClickedView(emojiView, adapterPosition) }
+        emojiView.isSelected = ownEmoji
         if (isLastView) {
             flexBoxLayout.addLastView(emojiView)
         } else {

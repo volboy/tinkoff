@@ -3,7 +3,7 @@ package com.volboy.course_project
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.volboy.course_project.App.Companion.loader
+import com.volboy.course_project.App.Companion.loaderUsers
 import com.volboy.course_project.databinding.ActivityMainBinding
 import com.volboy.course_project.presentation.main.MainFragment
 import io.reactivex.disposables.CompositeDisposable
@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getOwnId() {
-        val ownUser = loader.getOwnUser()
+        val ownUser = loaderUsers.getOwnUser()
         compositeDisposable.add(ownUser.subscribe(
             { result ->
                 ownId = result.user_id

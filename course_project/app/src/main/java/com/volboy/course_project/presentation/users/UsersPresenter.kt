@@ -1,7 +1,7 @@
 package com.volboy.course_project.presentation.users
 
 import android.util.Log
-import com.volboy.course_project.App.Companion.loader
+import com.volboy.course_project.App.Companion.loaderUsers
 import com.volboy.course_project.App.Companion.resourceProvider
 import com.volboy.course_project.R
 import com.volboy.course_project.presentation.mvp.presenter.base.RxPresenter
@@ -14,7 +14,7 @@ class UsersPresenter : RxPresenter<UsersView>(UsersView::class.java) {
     }
 
     private fun loadRemoteUsers() {
-        val users = loader.getRemoteUsers()
+        val users = loaderUsers.getRemoteUsers()
         users.subscribe(
             { result ->
                 view.showData(result)

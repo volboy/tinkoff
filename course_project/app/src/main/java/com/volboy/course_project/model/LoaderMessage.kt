@@ -5,6 +5,7 @@ import android.text.Html
 import android.text.Spanned
 import com.google.gson.Gson
 import com.volboy.course_project.App
+import com.volboy.course_project.MainActivity.Companion.ownId
 import com.volboy.course_project.R
 import com.volboy.course_project.message_recycler_view.DataUi
 import com.volboy.course_project.message_recycler_view.ReactionsUi
@@ -64,13 +65,18 @@ class LoaderMessage {
     private fun viewTypedMessages(messagesJSON: List<MessageJSON>): MutableList<ViewTyped> {
         val viewTypedList = mutableListOf<ViewTyped>()
         messagesJSON.forEach { msg ->
-            //TODO("Убрать этот хардкод")
-            if (msg.senderId != 402377) {
+            if (msg.senderId != ownId) {
                 viewTypedList.add(TextUi(msg.senderFullName, deleteHtmlFromString(msg.content), msg.avatarUrl, R.layout.item_in_message, msg.id.toString()))
-                viewTypedList.add(ReactionsUi(recountReactions(msg.reactions), R.layout.item_messages_reactions, msg.reactions.toString()))
+                viewTypedList.add(ReactionsUi(recountReactions(msg.reactions), R.layout.item_messages_reactions, msg.id.toString() + msg.reactions.toString()))
             } else {
                 viewTypedList.add(TextUi("You", deleteHtmlFromString(msg.content), msg.avatarUrl, R.layout.item_out_message, msg.id.toString()))
-                viewTypedList.add(ReactionsUi(recountReactions(msg.reactions), R.layout.item_messages_reactions_out, msg.reactions.toString()))
+                viewTypedList.add(
+                    ReactionsUi(
+                        recountReactions(msg.reactions),
+                        R.layout.item_messages_reactions_out,
+                        msg.id.toString() + msg.reactions.toString()
+                    )
+                )
             }
         }
         return viewTypedList
@@ -91,9 +97,10 @@ class LoaderMessage {
 
     private fun recountReactions(reactionsJSON: List<ReactionsJSON>): MutableList<Reaction> {
         val reactions = mutableListOf<Reaction>()
-        val users = mutableListOf<Int>()
+
         val reactionsByEmojiCode = reactionsJSON.groupBy { it.emojiCode }
         reactionsByEmojiCode.forEach { (emojiCode, list) ->
+            val users = mutableListOf<Int>()
             list.forEach {
                 users.add(it.userId)
             }

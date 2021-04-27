@@ -8,7 +8,6 @@ import androidx.annotation.StringRes
 import androidx.room.Room
 import com.volboy.course_project.api.ZulipApi
 import com.volboy.course_project.database.AppDatabase
-import com.volboy.course_project.model.Loader
 import com.volboy.course_project.model.LoaderMessage
 import com.volboy.course_project.model.LoaderStreams
 import com.volboy.course_project.model.LoaderUsers
@@ -32,7 +31,6 @@ class App : Application() {
     companion object {
         lateinit var instance: App
         lateinit var appDatabase: AppDatabase
-        lateinit var loader: Loader
         lateinit var loaderMessages: LoaderMessage
         lateinit var loaderStreams: LoaderStreams
         lateinit var loaderUsers: LoaderUsers
@@ -56,7 +54,6 @@ class App : Application() {
         profilePresenter = ProfilePresenter()
         detailsPresenter = DetailsPresenter()
         messagesPresenter = MessagesPresenter()
-        loader = Loader()
         loaderMessages = LoaderMessage()
         loaderStreams = LoaderStreams()
         loaderUsers = LoaderUsers()
