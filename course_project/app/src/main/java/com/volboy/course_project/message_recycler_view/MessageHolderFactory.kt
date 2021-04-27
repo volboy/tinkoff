@@ -17,6 +17,6 @@ class MessageHolderFactory(private val messageInterface: MessageInterface) : Hol
 
     interface MessageInterface {
         fun getLongClickedView(position: Int): Boolean
-        fun getClickedView(view: View, position: Int)
+        fun getClickedEmoji(emojiCode: String, emojiName: String, position: Int)
     }
 }

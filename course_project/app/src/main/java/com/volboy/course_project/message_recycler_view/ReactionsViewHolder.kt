@@ -21,21 +21,21 @@ class ReactionsViewHolder(view: View, private val messageInterface: MessageHolde
         flexBoxLayout.removeAllViews()
         item.reactions.forEach { reaction ->
             if (reaction.users.contains(ownId)) {
-                addView(reaction.emojiCode, reaction.users.size, isLastView = false, ownEmoji = true)
+                addView(reaction.emojiCode, reaction.emojiName, reaction.users.size, isLastView = false, ownEmoji = true)
             } else {
-                addView(reaction.emojiCode, reaction.users.size, isLastView = false, ownEmoji = false)
+                addView(reaction.emojiCode, reaction.emojiName, reaction.users.size, isLastView = false, ownEmoji = false)
             }
         }
         if (item.reactions.size != 0) {
-            addView(context.getString(R.string.last_emoji_str), 0, true, ownEmoji = false)
+            addView(context.getString(R.string.last_emoji_str), "", 0, true, ownEmoji = false)
         }
     }
 
-    private fun addView(emoji: String, countReactions: Int, isLastView: Boolean, ownEmoji: Boolean) {
+    private fun addView(emojiCode: String, emojiName: String, countReactions: Int, isLastView: Boolean, ownEmoji: Boolean) {
         val emojiView = EmojiView(context)
         emojiView.text = countReactions.toString()
-        emojiView.emoji = emoji
-        emojiView.setOnClickListener { messageInterface.getClickedView(emojiView, adapterPosition) }
+        emojiView.emoji = emojiCode
+        emojiView.setOnClickListener { messageInterface.getClickedEmoji(emojiCode, emojiName, adapterPosition) }
         emojiView.isSelected = ownEmoji
         if (isLastView) {
             flexBoxLayout.addLastView(emojiView)

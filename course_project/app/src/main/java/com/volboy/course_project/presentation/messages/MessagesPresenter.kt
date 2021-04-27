@@ -60,12 +60,12 @@ class MessagesPresenter : RxPresenter<MessagesView>(MessagesView::class.java) {
     fun addOrDeleteReaction(indexMsg: Int, emojiList: ArrayList<String>) {
         var positionEmoji = -1
         val msgID = (data[indexMsg - 1] as TextUi).uid.toInt()
-        val newReaction = Reaction(emojiList[1], 1, "unicode_emoji", mutableListOf(ownId))
+        val newReaction = Reaction(emojiList[1], emojiList[0], 1, UNICODE_EMOJI, mutableListOf(ownId))
         reactionsOfMessage = (data[indexMsg] as ReactionsUi).reactions
         //если список реакций пуск добавляем сразу
         if (reactionsOfMessage.isNullOrEmpty()) {
             reactionsOfMessage.add(newReaction)
-            addReaction(msgID, emojiList[0], "unicode_emoji", indexMsg)
+            addReaction(msgID, emojiList[0], UNICODE_EMOJI, indexMsg)
         } else {
             //ищем эмоджи который хотим добавить в списке реакций
             reactionsOfMessage.forEach { reaction ->
@@ -76,19 +76,19 @@ class MessagesPresenter : RxPresenter<MessagesView>(MessagesView::class.java) {
             //если не нашли такого эмоджи, сразу добавляем
             if (positionEmoji == -1) {
                 reactionsOfMessage.add(newReaction)
-                addReaction(msgID, emojiList[0], "unicode_emoji", indexMsg)
+                addReaction(msgID, emojiList[0], UNICODE_EMOJI, indexMsg)
                 //если нашли такой
             } else {
                 //проверяем ставил ли пользователь такой эмоджи
                 if (ownId in reactionsOfMessage[positionEmoji].users) {
                     reactionsOfMessage[positionEmoji].users.remove(ownId)
-                    removeReaction(msgID, emojiList[0], "unicode_emoji", indexMsg)
+                    removeReaction(msgID, emojiList[0], UNICODE_EMOJI, indexMsg)
                     if (reactionsOfMessage[positionEmoji].users.size == 0) {
                         reactionsOfMessage.removeAt(positionEmoji)
                     }
                 } else {
                     reactionsOfMessage[positionEmoji].users.add(ownId)
-                    addReaction(msgID, emojiList[0], "unicode_emoji", indexMsg)
+                    addReaction(msgID, emojiList[0], UNICODE_EMOJI, indexMsg)
                 }
             }
         }
@@ -120,8 +120,11 @@ class MessagesPresenter : RxPresenter<MessagesView>(MessagesView::class.java) {
         ).disposeOnFinish()
     }
 
-
     private fun writeLog(msg: String) {
         Log.i(App.resourceProvider.getString(R.string.log_string), msg)
+    }
+
+    private companion object {
+        const val UNICODE_EMOJI = "unicode_emoji"
     }
 }

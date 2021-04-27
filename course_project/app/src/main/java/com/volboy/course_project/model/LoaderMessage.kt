@@ -97,14 +97,15 @@ class LoaderMessage {
 
     private fun recountReactions(reactionsJSON: List<ReactionsJSON>): MutableList<Reaction> {
         val reactions = mutableListOf<Reaction>()
-
         val reactionsByEmojiCode = reactionsJSON.groupBy { it.emojiCode }
         reactionsByEmojiCode.forEach { (emojiCode, list) ->
             val users = mutableListOf<Int>()
+            var index = 0
             list.forEach {
                 users.add(it.userId)
             }
-            reactions.add(Reaction(emojiCode, list.size, list[0].reactionType, users))
+            reactions.add(Reaction(emojiCode, list[index].emojiName, list.size, list[index].reactionType, users))
+            index++
         }
         return reactions
     }

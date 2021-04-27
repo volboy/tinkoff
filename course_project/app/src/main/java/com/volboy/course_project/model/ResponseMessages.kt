@@ -90,6 +90,7 @@ class ReactionsJSON(
 
 class Reaction(
     val emojiCode: String,
+    val emojiName: String,
     val count: Int,
     val type: String,
     val users: MutableList<Int>

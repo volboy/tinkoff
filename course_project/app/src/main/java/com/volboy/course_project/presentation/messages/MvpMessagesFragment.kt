@@ -115,7 +115,7 @@ class MvpMessagesFragment : MessagesView, MvpFragment<MessagesView, MessagesPres
         return true
     }
 
-    override fun getClickedView(view: View, position: Int) {
-        TODO("Not yet implemented")
+    override fun getClickedEmoji(emojiCode: String, emojiName: String, position: Int) {
+        getPresenter().addOrDeleteReaction(position, arrayListOf(emojiName, emojiCode))
     }
 }

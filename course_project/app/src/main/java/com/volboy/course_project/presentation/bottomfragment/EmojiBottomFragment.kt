@@ -24,7 +24,13 @@ class EmojiBottomFragment : BottomSheetDialogFragment(), EmojiHolderFactory.Bott
             emojiList.add(Emoji(emojiName[i], emojiCode[i]))
         }
         val emojiViewTyped = mutableListOf<ViewTyped>()
-        emojiList.forEach { emoji -> emojiViewTyped.add(EmojiUi(String(Character.toChars(emoji.emojiCode.toInt(16))))) }
+        emojiList.forEach { emoji ->
+            emojiViewTyped.add(
+                EmojiUi(
+                    String(Character.toChars(emoji.emojiCode.toInt(16)))
+                )
+            )
+        }
         val holderFactory = EmojiHolderFactory(this)
         val emojiAdapter = EmojiAdapter<ViewTyped>(holderFactory)
         emojiAdapter.items = emojiViewTyped
