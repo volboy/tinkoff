@@ -38,7 +38,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/topicName"
         app:layout_constraintVertical_chainStyle="packed"
-        android:nestedScrollingEnabled="false"
         tools:listitem="@layout/item_out_message" />
 
     <EditText
@@ -49,8 +48,10 @@
         android:layout_marginTop="5dp"
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="5dp"
+        android:autofillHints="@string/make_message_hint"
         android:background="@drawable/message_box_drw"
         android:fadeScrollbars="true"
+        android:inputType="textAutoCorrect"
         android:maxHeight="102dp"
         android:minHeight="51dp"
         android:paddingLeft="21dp"
@@ -58,12 +59,10 @@
         android:singleLine="false"
         android:textColor="@color/ev_text_color"
         android:textColorHint="@color/ev_text_color"
-        android:autofillHints="@string/make_message_hint"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/messageBtn"
         app:layout_constraintStart_toStartOf="parent"
-        android:inputType="textAutoCorrect"
-        android:textSize="20sp"
         app:layout_constraintTop_toBottomOf="@+id/recyclerMessage" />
 
     <ImageButton
@@ -72,10 +71,10 @@
         android:layout_height="39dp"
         android:layout_marginEnd="16dp"
         android:background="@drawable/message_button_drw"
+        android:contentDescription="@string/error_str"
         android:src="@drawable/ic_add_message"
         app:layout_constraintBottom_toBottomOf="@+id/messageBox"
         app:layout_constraintEnd_toEndOf="parent"
-        android:contentDescription="@string/error_str"
         app:layout_constraintTop_toTopOf="@+id/messageBox" />
 
     <include

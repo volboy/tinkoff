@@ -14,8 +14,8 @@ class LoaderStreams {
     fun getRemoteStreams(): Single<MutableList<ViewTyped>> {
         val streamsDao = App.appDatabase.streamsDao()
         return App.instance.zulipApi.getStreams()
-            //TODO("Не забыть убрать, это для проверки загрузки данных из БД)
             .subscribeOn(Schedulers.io())
+            //TODO("Не забыть убрать, это для проверки загрузки данных из БД)
             .delay(3, TimeUnit.SECONDS)
             .map { response ->
                 streamsDao.updateStreams(response.streams)

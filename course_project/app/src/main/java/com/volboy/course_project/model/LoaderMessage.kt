@@ -16,6 +16,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 class LoaderMessage {
 
@@ -39,6 +40,8 @@ class LoaderMessage {
         val narrowsJSON = gson.toJson(narrows)
         return App.instance.zulipApi.getMessagesNext(startId, 0, 20, narrowsJSON)
             .subscribeOn(Schedulers.io())
+            //TODO("Не забыть убрать, это для проверки пагинации)
+            .delay(2, TimeUnit.SECONDS)
             .map { response -> groupedMessages(response.messages) }
             .observeOn(AndroidSchedulers.mainThread())
     }

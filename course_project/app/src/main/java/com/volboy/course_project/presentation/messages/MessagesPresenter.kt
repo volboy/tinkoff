@@ -13,10 +13,8 @@ import com.volboy.course_project.model.Reaction
 import com.volboy.course_project.presentation.mvp.presenter.base.RxPresenter
 
 class MessagesPresenter : RxPresenter<MessagesView>(MessagesView::class.java) {
-    private var isNextLoadingMessage = false
     private var lastMsgId = 0
     private lateinit var data: MutableList<ViewTyped>
-    private lateinit var newData: MutableList<ViewTyped>
     private lateinit var reactionsOfMessage: MutableList<Reaction>
 
     fun loadFirstRemoteMessages(streamName: String, topicName: String) {
@@ -25,8 +23,12 @@ class MessagesPresenter : RxPresenter<MessagesView>(MessagesView::class.java) {
             { result ->
                 data = result as MutableList<ViewTyped>
                 view.showMessage(data)
-                lastMsgId = result[result.lastIndex - 1].uid.toInt()
-                isNextLoadingMessage = true
+                val lastItem = data.lastOrNull { item -> item.viewType == R.layout.item_in_message || item.viewType == R.layout.item_out_message }
+                if (lastItem != null) {
+                    val lastIndex = data.indexOf(lastItem)
+                    data.addAll(lastIndex, result)
+                    lastMsgId = lastItem.uid.toInt()
+                }
                 writeLog(App.resourceProvider.getString(R.string.msg_network_ok))
             },
             { error ->
@@ -37,15 +39,19 @@ class MessagesPresenter : RxPresenter<MessagesView>(MessagesView::class.java) {
     }
 
     fun loadNextRemoteMessages(streamName: String, topicName: String, lastMsgIdInTopic: String) {
-        if ((data.firstOrNull { item -> item.uid == lastMsgIdInTopic }) == null) {
-            newData = data //нужна копия, а не ссылка
-            newData.add(ProgressItem)
+        if (data.firstOrNull { item -> item.uid == lastMsgIdInTopic } == null) {
+            val newData = ArrayList(data)
+            newData.add(newData.size, ProgressItem)
             view.showMessage(newData)
             val messages = loaderMessages.getMessagesNext(lastMsgId, streamName, topicName)
             messages.subscribe(
                 { result ->
-                    lastMsgId = result[result.lastIndex - 1].uid.toInt()
-                    data.addAll(result)
+                    val lastItem = data.lastOrNull { item -> item.viewType == R.layout.item_in_message || item.viewType == R.layout.item_out_message }
+                    if (lastItem != null) {
+                        val lastIndex = data.indexOf(lastItem)
+                        data.addAll(lastIndex, result)
+                        lastMsgId = lastItem.uid.toInt()
+                    }
                     view.showMessage(data)
                     writeLog(App.resourceProvider.getString(R.string.msg_network_ok))
                 },

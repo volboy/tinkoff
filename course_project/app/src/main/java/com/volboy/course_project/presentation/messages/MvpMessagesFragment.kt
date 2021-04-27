@@ -48,10 +48,11 @@ class MvpMessagesFragment : MessagesView, MvpFragment<MessagesView, MessagesPres
         binding.recyclerMessage.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 val linearLayoutManager = binding.recyclerMessage.layoutManager as LinearLayoutManager
-                if (linearLayoutManager.findLastVisibleItemPosition() == adapter.items.size - 5) {
+                if (linearLayoutManager.findLastCompletelyVisibleItemPosition() == adapter.items.size - 5) {
                     getPresenter().loadNextRemoteMessages(streamName, topicName, lastMsgIdInTopic)
                 }
             }
+
         })
         setFragmentResultListener(EmojiBottomFragment.ARG_BOTTOM_FRAGMENT) { _, bundle ->
             val emojiList: ArrayList<String>? = bundle.getStringArrayList(EmojiBottomFragment.ARG_EMOJI)
@@ -116,6 +117,12 @@ class MvpMessagesFragment : MessagesView, MvpFragment<MessagesView, MessagesPres
     }
 
     override fun getClickedEmoji(emojiCode: String, emojiName: String, position: Int) {
-        getPresenter().addOrDeleteReaction(position, arrayListOf(emojiName, emojiCode))
+        if (emojiName.isEmpty()) {
+            positionMsgOnLongClick = position
+            val emojiBottomFragment = EmojiBottomFragment()
+            emojiBottomFragment.show(parentFragmentManager, emojiBottomFragment.tag)
+        } else {
+            getPresenter().addOrDeleteReaction(position, arrayListOf(emojiName, emojiCode))
+        }
     }
 }
