@@ -21,7 +21,6 @@ class FlexBoxLayout @JvmOverloads constructor(
 
     init {
         setWillNotDraw(true)
-        LayoutInflater.from(context).inflate(R.layout.last_emoji_view, this, true)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {

@@ -5,9 +5,8 @@
 
     <com.volboy.course_project.customviews.FlexBoxLayout
         android:id="@+id/flex_box_layout"
-        android:layout_width="200dp"
+        android:layout_width="220dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        />
+        android:layout_gravity="end" />
 
 </FrameLayout>
