@@ -11,7 +11,7 @@ import com.volboy.course_project.recyclerview.ViewTyped
 import com.volboy.course_project.recyclerview.simple_items.ProgressItem
 
 class MessagesPresenter : RxPresenter<MessagesView>(MessagesView::class.java) {
-    private var lastMsgId = 0
+    private var lastItemId = 0
     private lateinit var data: MutableList<ViewTyped>
     private lateinit var reactionsOfMessage: MutableList<Reaction>
 
@@ -23,7 +23,7 @@ class MessagesPresenter : RxPresenter<MessagesView>(MessagesView::class.java) {
                 view.showMessage(data)
                 val lastItem = data.lastOrNull { item -> item.viewType == R.layout.item_in_message || item.viewType == R.layout.item_out_message }
                 if (lastItem != null) {
-                    lastMsgId = lastItem.uid.toInt()
+                    lastItemId = lastItem.uid.toInt()
                 }
                 writeLog(App.resourceProvider.getString(R.string.msg_network_ok))
             },
@@ -37,20 +37,21 @@ class MessagesPresenter : RxPresenter<MessagesView>(MessagesView::class.java) {
     fun loadNextRemoteMessages(streamName: String, topicName: String, lastMsgIdInTopic: String) {
         if (data.firstOrNull { item -> item.uid == lastMsgIdInTopic } == null) {
             val lastItem = data.lastOrNull { item -> item.viewType == R.layout.item_in_message || item.viewType == R.layout.item_out_message }
-            val newData = ArrayList(data)
-            newData.add(newData.size, ProgressItem)
-            view.showMessage(newData)
-            val messages = loaderMessages.getMessagesNext(lastMsgId, streamName, topicName)
+            val msgIndex = if (lastItem != null) {
+                data.indexOf(lastItem)
+            } else {
+                0
+            }
+            data.add(msgIndex + 2, ProgressItem)
+            view.updateData(data, msgIndex + 2)
+            val messages = loaderMessages.getMessagesNext(lastItemId, streamName, topicName)
             messages.subscribe(
                 { result ->
-                    if (lastItem != null) {
-                        val lastIndex = data.indexOf(lastItem)
-                        data.addAll(lastIndex, result)
-                        val newLastItem = data.lastOrNull { item -> item.viewType == R.layout.item_in_message || item.viewType == R.layout.item_out_message }
-                        if (newLastItem != null)
-                            lastMsgId = newLastItem.uid.toInt()
-                    }
-                    view.showMessage(data)
+                    val newData = ArrayList(data)
+                    newData.addAll(msgIndex + 2, result)
+                    newData.remove(ProgressItem)
+                    view.showMessage(newData)
+                    data = newData
                     writeLog(App.resourceProvider.getString(R.string.msg_network_ok))
                 },
                 { error ->

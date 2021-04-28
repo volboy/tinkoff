@@ -56,20 +56,18 @@ class MvpMessagesFragment : MessagesView, MvpFragment<MessagesView, MessagesPres
     override fun getMvpView(): MessagesView = this
 
     override fun showMessage(data: List<ViewTyped>) {
-        binding.recyclerMessage.isVisible = true
-        binding.messageBox.isVisible = true
-        binding.messageBtn.isVisible = true
-        binding.fragmentError.root.isGone = true
-        binding.fragmentLoading.root.isGone = true
+        show()
         adapter.items = data
     }
 
+    override fun updateData(data: List<ViewTyped>, position: Int) {
+        show()
+        adapter.items = data
+        adapter.notifyItemInserted(position)
+    }
+
     override fun updateMessage(data: List<ViewTyped>, msgPosition: Int) {
-        binding.recyclerMessage.isVisible = true
-        binding.messageBox.isVisible = true
-        binding.messageBtn.isVisible = true
-        binding.fragmentError.root.isGone = true
-        binding.fragmentLoading.root.isGone = true
+        show()
         adapter.items = data
         adapter.notifyItemChanged(msgPosition)
     }
@@ -113,5 +111,13 @@ class MvpMessagesFragment : MessagesView, MvpFragment<MessagesView, MessagesPres
         } else {
             getPresenter().addOrDeleteReaction(position, arrayListOf(emojiName, emojiCode))
         }
+    }
+
+    private fun show() {
+        binding.recyclerMessage.isVisible = true
+        binding.messageBox.isVisible = true
+        binding.messageBtn.isVisible = true
+        binding.fragmentError.root.isGone = true
+        binding.fragmentLoading.root.isGone = true
     }
 }

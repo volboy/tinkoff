@@ -16,7 +16,7 @@ class LoaderStreams {
         return App.instance.zulipApi.getStreams()
             .subscribeOn(Schedulers.io())
             //TODO("Не забыть убрать, это для проверки загрузки данных из БД)
-            .delay(3, TimeUnit.SECONDS)
+            .delay(2, TimeUnit.SECONDS)
             .map { response ->
                 streamsDao.updateStreams(response.streams)
                 viewTypedStreams(response.streams)
@@ -48,6 +48,8 @@ class LoaderStreams {
         val topicsDao = App.appDatabase.topicsDao()
         return App.instance.zulipApi.getStreamsTopics(id)
             .subscribeOn(Schedulers.io())
+            //TODO Не забыть убрать
+            .delay(2, TimeUnit.SECONDS)
             .map { response ->
                 topicsDao.updateTopics(response.topics)
                 viewTypedTopics(response.topics, id)
