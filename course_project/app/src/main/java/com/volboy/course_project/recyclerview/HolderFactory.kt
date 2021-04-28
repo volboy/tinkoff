@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import com.volboy.course_project.R
+import com.volboy.course_project.recyclerview.simple_items.EmptyView
 import com.volboy.course_project.recyclerview.simple_items.ErrorItem
 import com.volboy.course_project.recyclerview.simple_items.ProgressItem
 
@@ -17,6 +18,7 @@ abstract class HolderFactory : (ViewGroup, Int) -> BaseViewHolder<ViewTyped> {
         return when (viewType) {
             R.layout.item_progress -> BaseViewHolder<ProgressItem>(view)
             R.layout.item_error -> BaseViewHolder<ErrorItem>(view)
+            R.layout.empty_view -> BaseViewHolder<EmptyView>(view)
             else -> checkNotNull(createViewHolder(view, viewType)) {
                 "unknown viewType" + viewGroup.resources.getResourceName(viewType)
             }

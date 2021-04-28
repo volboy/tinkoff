@@ -1,22 +1,60 @@
 package com.volboy.course_project.presentation.streams
 
 import android.util.Log
+import android.widget.EditText
+import androidx.core.widget.addTextChangedListener
 import com.volboy.course_project.App
 import com.volboy.course_project.App.Companion.loaderStreams
 import com.volboy.course_project.App.Companion.resourceProvider
 import com.volboy.course_project.R
 import com.volboy.course_project.presentation.mvp.presenter.base.RxPresenter
 import com.volboy.course_project.recyclerview.ViewTyped
+import com.volboy.course_project.recyclerview.simple_items.EmptyView
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import java.util.concurrent.TimeUnit
 
 class StreamsPresenter : RxPresenter<StreamsView>(StreamsView::class.java) {
     private val appDatabase = App.appDatabase
     private var data = mutableListOf<ViewTyped>()
     private var dataBaseError = false
+    private lateinit var searchText: Observable<String>
 
     fun getStreams() {
         loadStreamsFromDatabase()
+    }
+
+    fun setSearchObservable(searchEdit: EditText) {
+        searchEdit.addTextChangedListener { text ->
+            searchText = Observable.create { emitter ->
+                emitter.onNext(text.toString())
+            }
+            searchText
+                .filter { inputText -> inputText.isNotEmpty() && inputText[0] != ' ' }
+                .distinctUntilChanged()
+                .debounce(TIME_SEARCH_DELAY, TimeUnit.SECONDS)
+                .subscribeOn(Schedulers.single())
+                .observeOn(AndroidSchedulers.mainThread())
+
+            searchText.subscribe(
+                { inputText ->
+                    val filteredStreams = data.filter { stream ->
+                        val item = stream as TitleUi
+                        item.title.contains(inputText, ignoreCase = true)
+                    }
+                    if (filteredStreams.isEmpty()) {
+                        view.showData(listOf(EmptyView))
+                    } else {
+                        view.showData(filteredStreams)
+                    }
+                },
+                { error -> view.showData(data) }
+            )
+            if (text.isNullOrEmpty()) {
+                view.showData(data)
+            }
+        }
     }
 
     fun getTopics(position: Int) {
@@ -119,11 +157,11 @@ class StreamsPresenter : RxPresenter<StreamsView>(StreamsView::class.java) {
             .disposeOnFinish()
     }
 
-    fun search() {
-
-    }
-
     private fun writeLog(msg: String) {
         Log.i(resourceProvider.getString(R.string.log_string), msg)
+    }
+
+    companion object {
+        private const val TIME_SEARCH_DELAY = 500L
     }
 }
