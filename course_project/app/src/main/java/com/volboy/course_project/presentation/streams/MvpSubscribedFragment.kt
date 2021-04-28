@@ -4,8 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.Toast
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
+import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.RecyclerView
 import com.volboy.course_project.App.Companion.streamsPresenter
 import com.volboy.course_project.R
@@ -15,12 +18,20 @@ import com.volboy.course_project.presentation.mvp.presenter.MvpFragment
 import com.volboy.course_project.recyclerview.CommonAdapter
 import com.volboy.course_project.recyclerview.CommonDiffUtilCallback
 import com.volboy.course_project.recyclerview.ViewTyped
+import com.volboy.course_project.recyclerview.simple_items.EmptyView
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
+import java.util.concurrent.TimeUnit
 
 class MvpSubscribedFragment : StreamsView, MvpFragment<StreamsView, StreamsPresenter>(), UiHolderFactory.ChannelsInterface {
     private lateinit var binding: FragmentStreamsBinding
     private lateinit var rwStreams: RecyclerView
     private lateinit var adapter: CommonAdapter<ViewTyped>
     private lateinit var clickedStream: TitleUi
+    private lateinit var searchText: Observable<String>
+    private var compositeDisposable = CompositeDisposable()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentStreamsBinding.inflate(inflater, container, false)
@@ -30,6 +41,46 @@ class MvpSubscribedFragment : StreamsView, MvpFragment<StreamsView, StreamsPrese
         rwStreams.adapter = adapter
         getPresenter().getStreams()
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val listStreams = adapter.items
+        val searchEdit = requireActivity().findViewById<EditText>(R.id.searchEditText)
+        searchEdit.addTextChangedListener { text ->
+            searchText = Observable.create { emitter ->
+                emitter.onNext(text.toString())
+            }
+            searchText
+                .filter { inputText -> inputText.isNotEmpty() && inputText[0] != ' ' }
+                .distinctUntilChanged()
+                .debounce(TIME_SEARCH_DELAY, TimeUnit.SECONDS)
+                .subscribeOn(Schedulers.single())
+                .observeOn(AndroidSchedulers.mainThread())
+
+            compositeDisposable.add(searchText.subscribe(
+                { inputText ->
+                    val filteredStreams = listStreams.filter { stream ->
+                        val item = stream as TitleUi
+                        item.title.contains(inputText, ignoreCase = true)
+                    }
+                    if (filteredStreams.isEmpty()) {
+                        adapter.items = listOf(EmptyView)
+                    } else {
+                        adapter.items = filteredStreams
+                    }
+                },
+                { error -> Toast.makeText(requireContext(), error.message, Toast.LENGTH_SHORT).show() }
+            ))
+            if (text.isNullOrEmpty()) {
+                adapter.items = listStreams
+            }
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        compositeDisposable.clear()
     }
 
     override fun getPresenter(): StreamsPresenter = streamsPresenter
@@ -92,5 +143,6 @@ class MvpSubscribedFragment : StreamsView, MvpFragment<StreamsView, StreamsPrese
         const val ARG_STREAM = "stream"
         const val ARG_LAST_MSG_ID_IN_TOPIC = "lastId"
         const val FROM_TOPIC_TO_MESSAGE = "FromSubscribedFragmentToMessageFragment"
+        const val TIME_SEARCH_DELAY = 1L
     }
 }

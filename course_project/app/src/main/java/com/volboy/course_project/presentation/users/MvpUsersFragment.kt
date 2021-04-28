@@ -26,8 +26,7 @@ class MvpUsersFragment : UsersView, MvpFragment<UsersView, UsersPresenter>(), Ui
         val holderFactory = UiHolderFactory(this)
         adapter = CommonAdapter(holderFactory, CommonDiffUtilCallback(), null)
         binding.rwPeople.adapter = adapter
-        val mActionBar = (requireActivity() as AppCompatActivity).supportActionBar
-        mActionBar?.show()
+        (requireActivity() as AppCompatActivity).supportActionBar?.show()
         getPresenter().getUsers()
         return binding.root
     }

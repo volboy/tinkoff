@@ -119,6 +119,10 @@ class StreamsPresenter : RxPresenter<StreamsView>(StreamsView::class.java) {
             .disposeOnFinish()
     }
 
+    fun search() {
+
+    }
+
     private fun writeLog(msg: String) {
         Log.i(resourceProvider.getString(R.string.log_string), msg)
     }

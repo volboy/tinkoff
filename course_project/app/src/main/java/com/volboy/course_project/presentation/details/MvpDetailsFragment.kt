@@ -21,11 +21,15 @@ class MvpDetailsFragment : DetailsView, MvpFragment<DetailsView, DetailsPresente
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentPeoplesDetailBinding.inflate(inflater, container, false)
-        val mActionBar = (requireActivity() as AppCompatActivity).supportActionBar
-        mActionBar?.hide()
+        (requireActivity() as AppCompatActivity).supportActionBar?.hide()
         userId = requireArguments().getInt(MvpUsersFragment.ARG_USER_ID)
         getPresenter().getUserStatus(userId)
         return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        (requireActivity() as AppCompatActivity).supportActionBar?.show()
     }
 
     override fun getPresenter(): DetailsPresenter = detailsPresenter

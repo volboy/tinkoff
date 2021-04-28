@@ -23,8 +23,6 @@ class MessagesPresenter : RxPresenter<MessagesView>(MessagesView::class.java) {
                 view.showMessage(data)
                 val lastItem = data.lastOrNull { item -> item.viewType == R.layout.item_in_message || item.viewType == R.layout.item_out_message }
                 if (lastItem != null) {
-                    val lastIndex = data.indexOf(lastItem)
-                    data.addAll(lastIndex, result)
                     lastMsgId = lastItem.uid.toInt()
                 }
                 writeLog(App.resourceProvider.getString(R.string.msg_network_ok))
@@ -38,17 +36,19 @@ class MessagesPresenter : RxPresenter<MessagesView>(MessagesView::class.java) {
 
     fun loadNextRemoteMessages(streamName: String, topicName: String, lastMsgIdInTopic: String) {
         if (data.firstOrNull { item -> item.uid == lastMsgIdInTopic } == null) {
+            val lastItem = data.lastOrNull { item -> item.viewType == R.layout.item_in_message || item.viewType == R.layout.item_out_message }
             val newData = ArrayList(data)
             newData.add(newData.size, ProgressItem)
             view.showMessage(newData)
             val messages = loaderMessages.getMessagesNext(lastMsgId, streamName, topicName)
             messages.subscribe(
                 { result ->
-                    val lastItem = data.lastOrNull { item -> item.viewType == R.layout.item_in_message || item.viewType == R.layout.item_out_message }
                     if (lastItem != null) {
                         val lastIndex = data.indexOf(lastItem)
                         data.addAll(lastIndex, result)
-                        lastMsgId = lastItem.uid.toInt()
+                        val newLastItem = data.lastOrNull { item -> item.viewType == R.layout.item_in_message || item.viewType == R.layout.item_out_message }
+                        if (newLastItem != null)
+                            lastMsgId = newLastItem.uid.toInt()
                     }
                     view.showMessage(data)
                     writeLog(App.resourceProvider.getString(R.string.msg_network_ok))
