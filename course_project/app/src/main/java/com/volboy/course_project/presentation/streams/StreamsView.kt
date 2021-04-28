@@ -6,6 +6,8 @@ import com.volboy.course_project.recyclerview.ViewTyped
 interface StreamsView : LoadErrorView {
     fun showData(data: List<ViewTyped>)
 
+    fun updateData(data: List<ViewTyped>, position: Int)
+
     fun hideData(data: List<ViewTyped>)
 
 }

@@ -10,6 +10,7 @@ import com.volboy.course_project.R
 import com.volboy.course_project.presentation.mvp.presenter.base.RxPresenter
 import com.volboy.course_project.recyclerview.ViewTyped
 import com.volboy.course_project.recyclerview.simple_items.EmptyView
+import com.volboy.course_project.recyclerview.simple_items.ProgressItem
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -81,16 +82,25 @@ class StreamsPresenter : RxPresenter<StreamsView>(StreamsView::class.java) {
 
     private fun loadRemoteTopics(streamId: Int) {
         val topic = loaderStreams.getTopicsOfStreams(streamId)
+        val stream = data.firstOrNull { item -> item.uid == streamId.toString() }
+        val streamIndex = if (stream != null) {
+            data.indexOf(stream)
+        } else {
+            0
+        }
+        data.add(streamIndex + 1, ProgressItem)
+        view.updateData(data, streamIndex + 1)
         topic.subscribe(
             { result ->
                 val newData = mutableListOf<ViewTyped>()
                 data.forEach { item ->
                     newData.add(item)
-                    if (item.uid.toInt() == streamId) {
+                    if (item.uid == streamId.toString()) {
                         (item as TitleUi).imageId = R.drawable.ic_arrow_up
                         newData.addAll(result)
                     }
                 }
+                newData.remove(ProgressItem)
                 view.showData(newData)
                 data = newData
                 writeLog(resourceProvider.getString(R.string.msg_network_ok))

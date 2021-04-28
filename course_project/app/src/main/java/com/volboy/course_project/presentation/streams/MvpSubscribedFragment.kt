@@ -46,7 +46,14 @@ class MvpSubscribedFragment : StreamsView, MvpFragment<StreamsView, StreamsPrese
         binding.fragmentError.root.isGone = true
         binding.fragmentLoading.root.isGone = true
         adapter.items = data
-        adapter.notifyDataSetChanged()
+    }
+
+    override fun updateData(data: List<ViewTyped>, position: Int) {
+        binding.rwAllStreams.isVisible = true
+        binding.fragmentError.root.isGone = true
+        binding.fragmentLoading.root.isGone = true
+        adapter.items = data
+        adapter.notifyItemInserted(position)
     }
 
     override fun hideData(data: List<ViewTyped>) {
