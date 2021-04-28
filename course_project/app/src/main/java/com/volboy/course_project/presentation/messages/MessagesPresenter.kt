@@ -20,7 +20,7 @@ class MessagesPresenter : RxPresenter<MessagesView>(MessagesView::class.java) {
         messages.subscribe(
             { result ->
                 data = result as MutableList<ViewTyped>
-                view.showMessage(data)
+                view.showMessage(data, 0)
                 writeLog(App.resourceProvider.getString(R.string.msg_network_ok))
             },
             { error ->
@@ -40,14 +40,18 @@ class MessagesPresenter : RxPresenter<MessagesView>(MessagesView::class.java) {
             }
             val buffer = ArrayList(data)
             buffer.add(msgIndex + 2, ProgressItem)
-            view.showMessage(buffer)
+            view.showMessage(buffer, buffer.size-1)
             val messages = loaderMessages.getMessagesNext(lastItemId, streamName, topicName)
             messages.subscribe(
                 { result ->
                     val resultData = ArrayList(buffer)
-                    resultData.addAll(msgIndex + 2, result)
-                    resultData.remove(ProgressItem)
-                    view.showMessage(resultData)
+                    with(resultData) {
+                        addAll(msgIndex + 2, result)
+                        removeAt(msgIndex+1)
+                        removeAt(msgIndex)
+                        remove(ProgressItem)
+                    }
+                    view.showMessage(resultData, msgIndex)
                     data = resultData
                     writeLog(App.resourceProvider.getString(R.string.msg_network_ok))
                 },
