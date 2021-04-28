@@ -92,14 +92,9 @@ class StreamsPresenter : RxPresenter<StreamsView>(StreamsView::class.java) {
         view.updateData(data, streamIndex + 1)
         topic.subscribe(
             { result ->
-                val newData = mutableListOf<ViewTyped>()
-                data.forEach { item ->
-                    newData.add(item)
-                    if (item.uid == streamId.toString()) {
-                        (item as TitleUi).imageId = R.drawable.ic_arrow_up
-                        newData.addAll(result)
-                    }
-                }
+                (stream as TitleUi).imageId = R.drawable.ic_arrow_up
+                val newData = ArrayList(data)
+                newData.addAll(streamIndex + 1, result)
                 newData.remove(ProgressItem)
                 view.showData(newData)
                 data = newData
