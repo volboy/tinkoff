@@ -1,7 +1,10 @@
-package com.volboy.course_project.message_recycler_view
+package com.volboy.course_project.recyclerview
 
 import android.view.View
 import com.volboy.course_project.R
+import com.volboy.course_project.presentation.messages.DataViewHolder
+import com.volboy.course_project.presentation.messages.MessageViewHolder
+import com.volboy.course_project.presentation.messages.ReactionsViewHolder
 
 class MessageHolderFactory(private val messageInterface: MessageInterface) : HolderFactory() {
     override fun createViewHolder(view: View, viewType: Int): BaseViewHolder<*>? {
@@ -10,7 +13,10 @@ class MessageHolderFactory(private val messageInterface: MessageInterface) : Hol
             R.layout.item_out_message -> MessageViewHolder(view, messageInterface)
             R.layout.item_date_divider -> DataViewHolder(view)
             R.layout.item_messages_reactions -> ReactionsViewHolder(view, messageInterface)
-            R.layout.item_messages_reactions_out -> ReactionsViewHolder(view, messageInterface)
+            R.layout.item_messages_reactions_out -> ReactionsViewHolder(
+                view,
+                messageInterface
+            )
             else -> null
         }
     }

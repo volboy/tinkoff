@@ -8,18 +8,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.setFragmentResultListener
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.volboy.course_project.App.Companion.messagesPresenter
 import com.volboy.course_project.R
 import com.volboy.course_project.databinding.FragmentMessagesBinding
-import com.volboy.course_project.message_recycler_view.CommonAdapter
-import com.volboy.course_project.message_recycler_view.CommonDiffUtilCallback
-import com.volboy.course_project.message_recycler_view.MessageHolderFactory
-import com.volboy.course_project.message_recycler_view.ViewTyped
 import com.volboy.course_project.presentation.bottomfragment.EmojiBottomFragment
 import com.volboy.course_project.presentation.mvp.presenter.MvpFragment
 import com.volboy.course_project.presentation.streams.MvpSubscribedFragment
+import com.volboy.course_project.recyclerview.*
 import java.util.*
 
 class MvpMessagesFragment : MessagesView, MvpFragment<MessagesView, MessagesPresenter>(), MessageHolderFactory.MessageInterface {
@@ -33,7 +28,10 @@ class MvpMessagesFragment : MessagesView, MvpFragment<MessagesView, MessagesPres
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentMessagesBinding.inflate(inflater, container, false)
         val holderFactory = MessageHolderFactory(this)
-        adapter = CommonAdapter(holderFactory, CommonDiffUtilCallback())
+        adapter = CommonAdapter(
+            holderFactory,
+            CommonDiffUtilCallback(),
+            PaginationAdapterHelper { _ -> getPresenter().loadNextRemoteMessages(streamName, topicName, lastMsgIdInTopic) })
         binding.recyclerMessage.adapter = adapter
         topicName = requireArguments().getString(MvpSubscribedFragment.ARG_TOPIC).toString()
         streamName = requireArguments().getString(MvpSubscribedFragment.ARG_STREAM).toString()
@@ -45,15 +43,6 @@ class MvpMessagesFragment : MessagesView, MvpFragment<MessagesView, MessagesPres
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.topicName.text = resources.getString(R.string.topic_name, topicName)
-        binding.recyclerMessage.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                val linearLayoutManager = binding.recyclerMessage.layoutManager as LinearLayoutManager
-                if (linearLayoutManager.findLastCompletelyVisibleItemPosition() == adapter.items.size - 5) {
-                    getPresenter().loadNextRemoteMessages(streamName, topicName, lastMsgIdInTopic)
-                }
-            }
-
-        })
         setFragmentResultListener(EmojiBottomFragment.ARG_BOTTOM_FRAGMENT) { _, bundle ->
             val emojiList: ArrayList<String>? = bundle.getStringArrayList(EmojiBottomFragment.ARG_EMOJI)
             if (emojiList != null) {

@@ -10,11 +10,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.volboy.course_project.App.Companion.streamsPresenter
 import com.volboy.course_project.R
 import com.volboy.course_project.databinding.FragmentStreamsBinding
-import com.volboy.course_project.message_recycler_view.CommonAdapter
-import com.volboy.course_project.message_recycler_view.CommonDiffUtilCallback
-import com.volboy.course_project.message_recycler_view.ViewTyped
 import com.volboy.course_project.presentation.messages.MvpMessagesFragment
 import com.volboy.course_project.presentation.mvp.presenter.MvpFragment
+import com.volboy.course_project.recyclerview.CommonAdapter
+import com.volboy.course_project.recyclerview.CommonDiffUtilCallback
+import com.volboy.course_project.recyclerview.ViewTyped
 
 class MvpSubscribedFragment : StreamsView, MvpFragment<StreamsView, StreamsPresenter>(), UiHolderFactory.ChannelsInterface {
     private lateinit var binding: FragmentStreamsBinding
@@ -25,7 +25,7 @@ class MvpSubscribedFragment : StreamsView, MvpFragment<StreamsView, StreamsPrese
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentStreamsBinding.inflate(inflater, container, false)
         val holderFactory = UiHolderFactory(this)
-        adapter = CommonAdapter(holderFactory, CommonDiffUtilCallback())
+        adapter = CommonAdapter(holderFactory, CommonDiffUtilCallback(), null)
         rwStreams = binding.rwAllStreams
         rwStreams.adapter = adapter
         getPresenter().getStreams()

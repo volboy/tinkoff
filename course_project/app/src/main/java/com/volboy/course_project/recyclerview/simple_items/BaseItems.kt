@@ -1,7 +1,7 @@
-package com.volboy.course_project.message_recycler_view.simple_items
+package com.volboy.course_project.recyclerview.simple_items
 
 import com.volboy.course_project.R
-import com.volboy.course_project.message_recycler_view.ViewTyped
+import com.volboy.course_project.recyclerview.ViewTyped
 
 object ProgressItem : ViewTyped {
     override val uid: String = "PROGRESS_ITEM_ID"

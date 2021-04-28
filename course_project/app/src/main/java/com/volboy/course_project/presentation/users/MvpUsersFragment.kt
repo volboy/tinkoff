@@ -10,12 +10,12 @@ import androidx.core.view.isVisible
 import com.volboy.course_project.App.Companion.usersPresenter
 import com.volboy.course_project.R
 import com.volboy.course_project.databinding.FragmentPeopleBinding
-import com.volboy.course_project.message_recycler_view.CommonAdapter
-import com.volboy.course_project.message_recycler_view.CommonDiffUtilCallback
-import com.volboy.course_project.message_recycler_view.ViewTyped
 import com.volboy.course_project.presentation.details.MvpDetailsFragment
 import com.volboy.course_project.presentation.mvp.presenter.MvpFragment
 import com.volboy.course_project.presentation.streams.UiHolderFactory
+import com.volboy.course_project.recyclerview.CommonAdapter
+import com.volboy.course_project.recyclerview.CommonDiffUtilCallback
+import com.volboy.course_project.recyclerview.ViewTyped
 
 class MvpUsersFragment : UsersView, MvpFragment<UsersView, UsersPresenter>(), UiHolderFactory.ChannelsInterface {
     private lateinit var binding: FragmentPeopleBinding
@@ -24,7 +24,7 @@ class MvpUsersFragment : UsersView, MvpFragment<UsersView, UsersPresenter>(), Ui
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentPeopleBinding.inflate(inflater, container, false)
         val holderFactory = UiHolderFactory(this)
-        adapter = CommonAdapter(holderFactory, CommonDiffUtilCallback())
+        adapter = CommonAdapter(holderFactory, CommonDiffUtilCallback(), null)
         binding.rwPeople.adapter = adapter
         val mActionBar = (requireActivity() as AppCompatActivity).supportActionBar
         mActionBar?.show()

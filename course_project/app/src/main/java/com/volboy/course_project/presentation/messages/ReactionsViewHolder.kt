@@ -1,4 +1,4 @@
-package com.volboy.course_project.message_recycler_view
+package com.volboy.course_project.presentation.messages
 
 import android.view.View
 import com.volboy.course_project.MainActivity.Companion.ownId
@@ -6,6 +6,9 @@ import com.volboy.course_project.R
 import com.volboy.course_project.customviews.EmojiView
 import com.volboy.course_project.customviews.FlexBoxLayout
 import com.volboy.course_project.model.Reaction
+import com.volboy.course_project.recyclerview.BaseViewHolder
+import com.volboy.course_project.recyclerview.MessageHolderFactory
+import com.volboy.course_project.recyclerview.ViewTyped
 
 class ReactionsUi(
     var reactions: MutableList<Reaction>,

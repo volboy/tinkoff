@@ -7,10 +7,10 @@ import com.google.gson.Gson
 import com.volboy.course_project.App
 import com.volboy.course_project.MainActivity.Companion.ownId
 import com.volboy.course_project.R
-import com.volboy.course_project.message_recycler_view.DataUi
-import com.volboy.course_project.message_recycler_view.ReactionsUi
-import com.volboy.course_project.message_recycler_view.TextUi
-import com.volboy.course_project.message_recycler_view.ViewTyped
+import com.volboy.course_project.presentation.messages.DataUi
+import com.volboy.course_project.presentation.messages.ReactionsUi
+import com.volboy.course_project.presentation.messages.TextUi
+import com.volboy.course_project.recyclerview.ViewTyped
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -69,10 +69,32 @@ class LoaderMessage {
         val viewTypedList = mutableListOf<ViewTyped>()
         messagesJSON.forEach { msg ->
             if (msg.senderId != ownId) {
-                viewTypedList.add(TextUi(msg.senderFullName, deleteHtmlFromString(msg.content), msg.avatarUrl, R.layout.item_in_message, msg.id.toString()))
-                viewTypedList.add(ReactionsUi(recountReactions(msg.reactions), R.layout.item_messages_reactions, msg.id.toString() + msg.reactions.toString()))
+                viewTypedList.add(
+                    TextUi(
+                        msg.senderFullName,
+                        deleteHtmlFromString(msg.content),
+                        msg.avatarUrl,
+                        R.layout.item_in_message,
+                        msg.id.toString()
+                    )
+                )
+                viewTypedList.add(
+                    ReactionsUi(
+                        recountReactions(msg.reactions),
+                        R.layout.item_messages_reactions,
+                        msg.id.toString() + msg.reactions.toString()
+                    )
+                )
             } else {
-                viewTypedList.add(TextUi("You", deleteHtmlFromString(msg.content), msg.avatarUrl, R.layout.item_out_message, msg.id.toString()))
+                viewTypedList.add(
+                    TextUi(
+                        "You",
+                        deleteHtmlFromString(msg.content),
+                        msg.avatarUrl,
+                        R.layout.item_out_message,
+                        msg.id.toString()
+                    )
+                )
                 viewTypedList.add(
                     ReactionsUi(
                         recountReactions(msg.reactions),

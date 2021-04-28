@@ -9,8 +9,8 @@ import androidx.fragment.app.setFragmentResult
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.volboy.course_project.R
 import com.volboy.course_project.databinding.DialogBottomEmojiBinding
-import com.volboy.course_project.message_recycler_view.ViewTyped
 import com.volboy.course_project.model.Emoji
+import com.volboy.course_project.recyclerview.ViewTyped
 
 class EmojiBottomFragment : BottomSheetDialogFragment(), EmojiHolderFactory.BottomEmojiInterface {
     private lateinit var binding: DialogBottomEmojiBinding

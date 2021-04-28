@@ -2,8 +2,8 @@ package com.volboy.course_project.presentation.bottomfragment
 
 import android.view.View
 import com.volboy.course_project.R
-import com.volboy.course_project.message_recycler_view.BaseViewHolder
-import com.volboy.course_project.message_recycler_view.HolderFactory
+import com.volboy.course_project.recyclerview.BaseViewHolder
+import com.volboy.course_project.recyclerview.HolderFactory
 
 class EmojiHolderFactory(private val bottomEmojiInterface: BottomEmojiInterface) : HolderFactory() {
     override fun createViewHolder(view: View, viewType: Int): BaseViewHolder<*>? {

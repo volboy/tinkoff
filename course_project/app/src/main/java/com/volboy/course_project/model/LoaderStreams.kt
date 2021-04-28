@@ -2,8 +2,8 @@ package com.volboy.course_project.model
 
 import com.volboy.course_project.App
 import com.volboy.course_project.R
-import com.volboy.course_project.message_recycler_view.ViewTyped
 import com.volboy.course_project.presentation.streams.TitleUi
+import com.volboy.course_project.recyclerview.ViewTyped
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers

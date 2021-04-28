@@ -1,12 +1,12 @@
-package com.volboy.course_project.message_recycler_view
+package com.volboy.course_project.recyclerview
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import com.volboy.course_project.R
-import com.volboy.course_project.message_recycler_view.simple_items.ErrorItem
-import com.volboy.course_project.message_recycler_view.simple_items.ProgressItem
+import com.volboy.course_project.recyclerview.simple_items.ErrorItem
+import com.volboy.course_project.recyclerview.simple_items.ProgressItem
 
 abstract class HolderFactory : (ViewGroup, Int) -> BaseViewHolder<ViewTyped> {
 

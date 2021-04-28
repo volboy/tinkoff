@@ -1,4 +1,4 @@
-package com.volboy.course_project.message_recycler_view
+package com.volboy.course_project.recyclerview
 
 import androidx.recyclerview.widget.DiffUtil
 

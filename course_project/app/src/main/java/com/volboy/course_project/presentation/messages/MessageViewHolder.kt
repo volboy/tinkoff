@@ -1,17 +1,14 @@
-package com.volboy.course_project.message_recycler_view
+package com.volboy.course_project.presentation.messages
 
 import android.text.Spanned
 import android.view.View
 import android.widget.TextView
-import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.google.android.material.imageview.ShapeableImageView
-import com.volboy.course_project.App
 import com.volboy.course_project.R
-import com.volboy.course_project.model.UpdateMessageFlag
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.volboy.course_project.recyclerview.BaseViewHolder
+import com.volboy.course_project.recyclerview.MessageHolderFactory
+import com.volboy.course_project.recyclerview.ViewTyped
 
 class TextUi(
     val title: String,

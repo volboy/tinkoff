@@ -5,8 +5,8 @@ import com.volboy.course_project.App
 import com.volboy.course_project.App.Companion.loaderStreams
 import com.volboy.course_project.App.Companion.resourceProvider
 import com.volboy.course_project.R
-import com.volboy.course_project.message_recycler_view.ViewTyped
 import com.volboy.course_project.presentation.mvp.presenter.base.RxPresenter
+import com.volboy.course_project.recyclerview.ViewTyped
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 

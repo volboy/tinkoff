@@ -1,8 +1,8 @@
 package com.volboy.course_project.presentation.bottomfragment
 
-import com.volboy.course_project.message_recycler_view.BaseAdapter
-import com.volboy.course_project.message_recycler_view.HolderFactory
-import com.volboy.course_project.message_recycler_view.ViewTyped
+import com.volboy.course_project.recyclerview.BaseAdapter
+import com.volboy.course_project.recyclerview.HolderFactory
+import com.volboy.course_project.recyclerview.ViewTyped
 
 class EmojiAdapter<T : ViewTyped>(holderFactory: HolderFactory) : BaseAdapter<T>(holderFactory) {
     private val localItems: MutableList<T> = mutableListOf()

@@ -1,8 +1,10 @@
-package com.volboy.course_project.message_recycler_view
+package com.volboy.course_project.presentation.messages
 
 import android.view.View
 import android.widget.TextView
 import com.volboy.course_project.R
+import com.volboy.course_project.recyclerview.BaseViewHolder
+import com.volboy.course_project.recyclerview.ViewTyped
 
 class DataUi(
     val data: String,

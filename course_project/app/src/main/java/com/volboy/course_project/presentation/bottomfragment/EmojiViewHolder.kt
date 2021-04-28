@@ -4,8 +4,8 @@ import android.view.View
 import android.widget.TextView
 import com.volboy.course_project.R
 import com.volboy.course_project.databinding.ItemEmojiDialogBinding
-import com.volboy.course_project.message_recycler_view.BaseViewHolder
-import com.volboy.course_project.message_recycler_view.ViewTyped
+import com.volboy.course_project.recyclerview.BaseViewHolder
+import com.volboy.course_project.recyclerview.ViewTyped
 
 class EmojiUi(
     val emoji: String,

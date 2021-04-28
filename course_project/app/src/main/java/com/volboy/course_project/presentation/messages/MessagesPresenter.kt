@@ -5,12 +5,10 @@ import com.volboy.course_project.App
 import com.volboy.course_project.App.Companion.loaderMessages
 import com.volboy.course_project.MainActivity.Companion.ownId
 import com.volboy.course_project.R
-import com.volboy.course_project.message_recycler_view.ReactionsUi
-import com.volboy.course_project.message_recycler_view.TextUi
-import com.volboy.course_project.message_recycler_view.ViewTyped
-import com.volboy.course_project.message_recycler_view.simple_items.ProgressItem
 import com.volboy.course_project.model.Reaction
 import com.volboy.course_project.presentation.mvp.presenter.base.RxPresenter
+import com.volboy.course_project.recyclerview.ViewTyped
+import com.volboy.course_project.recyclerview.simple_items.ProgressItem
 
 class MessagesPresenter : RxPresenter<MessagesView>(MessagesView::class.java) {
     private var lastMsgId = 0

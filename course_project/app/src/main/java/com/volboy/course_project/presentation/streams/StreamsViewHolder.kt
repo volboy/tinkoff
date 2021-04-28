@@ -6,9 +6,9 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
 import com.volboy.course_project.R
-import com.volboy.course_project.message_recycler_view.BaseViewHolder
-import com.volboy.course_project.message_recycler_view.ViewTyped
 import com.volboy.course_project.model.TopicJSON
+import com.volboy.course_project.recyclerview.BaseViewHolder
+import com.volboy.course_project.recyclerview.ViewTyped
 
 class TitleUi(
     val title: String,

@@ -1,4 +1,4 @@
-package com.volboy.course_project.message_recycler_view
+package com.volboy.course_project.recyclerview
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
