@@ -21,10 +21,6 @@ class MessagesPresenter : RxPresenter<MessagesView>(MessagesView::class.java) {
             { result ->
                 data = result as MutableList<ViewTyped>
                 view.showMessage(data)
-                val lastItem = data.lastOrNull { item -> item.viewType == R.layout.item_in_message || item.viewType == R.layout.item_out_message }
-                if (lastItem != null) {
-                    lastItemId = lastItem.uid.toInt()
-                }
                 writeLog(App.resourceProvider.getString(R.string.msg_network_ok))
             },
             { error ->
@@ -37,21 +33,22 @@ class MessagesPresenter : RxPresenter<MessagesView>(MessagesView::class.java) {
     fun loadNextRemoteMessages(streamName: String, topicName: String, lastMsgIdInTopic: String) {
         if (data.firstOrNull { item -> item.uid == lastMsgIdInTopic } == null) {
             val lastItem = data.lastOrNull { item -> item.viewType == R.layout.item_in_message || item.viewType == R.layout.item_out_message }
-            val msgIndex = if (lastItem != null) {
-                data.indexOf(lastItem)
-            } else {
-                0
+            var msgIndex = 0
+            if (lastItem != null) {
+                msgIndex = data.indexOf(lastItem)
+                lastItemId = lastItem.uid.toInt()
             }
-            data.add(msgIndex + 2, ProgressItem)
-            view.updateData(data, msgIndex + 2)
+            val buffer = ArrayList(data)
+            buffer.add(msgIndex + 2, ProgressItem)
+            view.showMessage(buffer)
             val messages = loaderMessages.getMessagesNext(lastItemId, streamName, topicName)
             messages.subscribe(
                 { result ->
-                    val newData = ArrayList(data)
-                    newData.addAll(msgIndex + 2, result)
-                    newData.remove(ProgressItem)
-                    view.showMessage(newData)
-                    data = newData
+                    val resultData = ArrayList(buffer)
+                    resultData.addAll(msgIndex + 2, result)
+                    resultData.remove(ProgressItem)
+                    view.showMessage(resultData)
+                    data = resultData
                     writeLog(App.resourceProvider.getString(R.string.msg_network_ok))
                 },
                 { error ->

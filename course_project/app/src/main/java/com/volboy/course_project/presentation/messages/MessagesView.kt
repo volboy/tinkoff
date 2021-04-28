@@ -6,14 +6,7 @@ import com.volboy.course_project.recyclerview.ViewTyped
 interface MessagesView : LoadErrorView {
     fun showMessage(data: List<ViewTyped>)
 
-    fun updateData(data: List<ViewTyped>, position: Int)
-
     fun updateMessage(data: List<ViewTyped>, msgPosition: Int)
 
     fun sendMessage(message: ViewTyped)
-
-    fun showLocalError()
-
-    fun showLocalLoading()
-
 }

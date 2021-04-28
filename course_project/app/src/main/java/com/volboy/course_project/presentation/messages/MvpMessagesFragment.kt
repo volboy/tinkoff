@@ -28,14 +28,14 @@ class MvpMessagesFragment : MessagesView, MvpFragment<MessagesView, MessagesPres
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentMessagesBinding.inflate(inflater, container, false)
         val holderFactory = MessageHolderFactory(this)
+        topicName = requireArguments().getString(MvpSubscribedFragment.ARG_TOPIC).toString()
+        streamName = requireArguments().getString(MvpSubscribedFragment.ARG_STREAM).toString()
+        lastMsgIdInTopic = requireArguments().getString(MvpSubscribedFragment.ARG_LAST_MSG_ID_IN_TOPIC).toString()
         adapter = CommonAdapter(
             holderFactory,
             CommonDiffUtilCallback(),
             PaginationAdapterHelper { _ -> getPresenter().loadNextRemoteMessages(streamName, topicName, lastMsgIdInTopic) })
         binding.recyclerMessage.adapter = adapter
-        topicName = requireArguments().getString(MvpSubscribedFragment.ARG_TOPIC).toString()
-        streamName = requireArguments().getString(MvpSubscribedFragment.ARG_STREAM).toString()
-        lastMsgIdInTopic = requireArguments().getString(MvpSubscribedFragment.ARG_LAST_MSG_ID_IN_TOPIC).toString()
         (requireActivity() as AppCompatActivity).supportActionBar?.hide()
         getPresenter().loadFirstRemoteMessages(streamName, topicName)
         return binding.root
@@ -60,12 +60,6 @@ class MvpMessagesFragment : MessagesView, MvpFragment<MessagesView, MessagesPres
         adapter.items = data
     }
 
-    override fun updateData(data: List<ViewTyped>, position: Int) {
-        show()
-        adapter.items = data
-        adapter.notifyItemInserted(position)
-    }
-
     override fun updateMessage(data: List<ViewTyped>, msgPosition: Int) {
         show()
         adapter.items = data
@@ -73,14 +67,6 @@ class MvpMessagesFragment : MessagesView, MvpFragment<MessagesView, MessagesPres
     }
 
     override fun sendMessage(message: ViewTyped) {
-        TODO("Not yet implemented")
-    }
-
-    override fun showLocalError() {
-        TODO("Not yet implemented")
-    }
-
-    override fun showLocalLoading() {
         TODO("Not yet implemented")
     }
 
@@ -93,7 +79,11 @@ class MvpMessagesFragment : MessagesView, MvpFragment<MessagesView, MessagesPres
     }
 
     override fun showError(error: String?) {
-        TODO("Not yet implemented")
+        binding.fragmentError.root.isVisible = true
+        binding.fragmentLoading.root.isGone = true
+        binding.recyclerMessage.isGone = true
+        binding.messageBox.isGone = true
+        binding.messageBtn.isGone = true
     }
 
     override fun getLongClickedView(position: Int): Boolean {
