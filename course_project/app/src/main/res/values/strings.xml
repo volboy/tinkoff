@@ -40,5 +40,6 @@
     <string name="idle">idle</string>
     <string name="offline">offline</string>
     <string name="empty_str">К сожалению ничего \n не найдено :(</string>
+    <string name="you_str">You</string>
 
 </resources>

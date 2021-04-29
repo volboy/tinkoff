@@ -1,6 +1,8 @@
 package com.volboy.course_project.presentation.messages
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,7 +24,6 @@ class MvpMessagesFragment : MessagesView, MvpFragment<MessagesView, MessagesPres
     private lateinit var adapter: CommonAdapter<ViewTyped>
     private lateinit var topicName: String
     private lateinit var streamName: String
-    private lateinit var lastMsgIdInTopic: String
     private var positionMsgOnLongClick = 0
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -30,11 +31,10 @@ class MvpMessagesFragment : MessagesView, MvpFragment<MessagesView, MessagesPres
         val holderFactory = MessageHolderFactory(this)
         topicName = requireArguments().getString(MvpSubscribedFragment.ARG_TOPIC).toString()
         streamName = requireArguments().getString(MvpSubscribedFragment.ARG_STREAM).toString()
-        lastMsgIdInTopic = requireArguments().getString(MvpSubscribedFragment.ARG_LAST_MSG_ID_IN_TOPIC).toString()
         adapter = CommonAdapter(
             holderFactory,
             CommonDiffUtilCallback(),
-            PaginationAdapterHelper { _ -> getPresenter().loadNextRemoteMessages(streamName, topicName, lastMsgIdInTopic) })
+            PaginationAdapterHelper { _ -> getPresenter().loadNextRemoteMessages(streamName, topicName) })
         binding.recyclerMessage.adapter = adapter
         (requireActivity() as AppCompatActivity).supportActionBar?.hide()
         getPresenter().loadFirstRemoteMessages(streamName, topicName)
@@ -49,6 +49,22 @@ class MvpMessagesFragment : MessagesView, MvpFragment<MessagesView, MessagesPres
                 getPresenter().addOrDeleteReaction(positionMsgOnLongClick, emojiList)
             }
         }
+        binding.messageBtn.setOnClickListener {
+            val str = binding.messageBox.text.toString()
+            if (str.isNotEmpty()) {
+                getPresenter().sendMessage(str, streamName, topicName)
+                binding.messageBox.text.clear()
+            }
+        }
+        binding.messageBox.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {}
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if (binding.messageBox.text.isNotEmpty()) {
+                    binding.messageBtn.setImageResource(R.drawable.ic_send_message)
+                }
+            }
+        })
     }
 
     override fun getPresenter(): MessagesPresenter = messagesPresenter

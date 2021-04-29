@@ -59,7 +59,7 @@ interface ZulipApi {
         @Field("to") to: String,
         @Field("content") content: String,
         @Field("topic") topic: String
-    ): Call<SendMessageResponse>
+    ): Single<SendMessageResponse>
 
     @POST("messages/flags")
     @FormUrlEncoded

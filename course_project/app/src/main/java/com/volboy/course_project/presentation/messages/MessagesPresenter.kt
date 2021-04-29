@@ -30,37 +30,36 @@ class MessagesPresenter : RxPresenter<MessagesView>(MessagesView::class.java) {
         ).disposeOnFinish()
     }
 
-    fun loadNextRemoteMessages(streamName: String, topicName: String, lastMsgIdInTopic: String) {
-        if (data.firstOrNull { item -> item.uid == lastMsgIdInTopic } == null) {
-            val lastItem = data.lastOrNull { item -> item.viewType == R.layout.item_in_message || item.viewType == R.layout.item_out_message }
-            var msgIndex = 0
-            if (lastItem != null) {
-                msgIndex = data.indexOf(lastItem)
-                lastItemId = lastItem.uid.toInt()
-            }
-            val buffer = ArrayList(data)
-            buffer.add(msgIndex + 2, ProgressItem)
-            view.showMessage(buffer, buffer.size-1)
-            val messages = loaderMessages.getMessagesNext(lastItemId, streamName, topicName)
-            messages.subscribe(
-                { result ->
-                    val resultData = ArrayList(buffer)
-                    with(resultData) {
-                        addAll(msgIndex + 2, result)
-                        removeAt(msgIndex+1)
-                        removeAt(msgIndex)
-                        remove(ProgressItem)
-                    }
-                    view.showMessage(resultData, msgIndex)
-                    data = resultData
-                    writeLog(App.resourceProvider.getString(R.string.msg_network_ok))
-                },
-                { error ->
-                    view.showError(error.message)
-                    writeLog(App.resourceProvider.getString(R.string.msg_network_error))
-                }
-            ).disposeOnFinish()
+    fun loadNextRemoteMessages(streamName: String, topicName: String) {
+        val lastItem = data.lastOrNull { item -> item.viewType == R.layout.item_in_message || item.viewType == R.layout.item_out_message }
+        var msgIndex = 0
+        if (lastItem != null) {
+            msgIndex = data.indexOf(lastItem)
+            lastItemId = lastItem.uid.toInt()
         }
+        val buffer = ArrayList(data)
+        buffer.add(msgIndex + 2, ProgressItem)
+        view.showMessage(buffer, buffer.size - 1)
+        val messages = loaderMessages.getMessagesNext(lastItemId, streamName, topicName)
+        messages.subscribe(
+            { result ->
+                val resultData = ArrayList(buffer)
+                with(resultData) {
+                    addAll(msgIndex + 2, result)
+                    removeAt(msgIndex + 1)
+                    removeAt(msgIndex)
+                    remove(ProgressItem)
+                }
+                view.showMessage(resultData, msgIndex)
+                data = resultData
+                writeLog(App.resourceProvider.getString(R.string.msg_network_ok))
+            },
+            { error ->
+                view.showError(error.message)
+                writeLog(App.resourceProvider.getString(R.string.msg_network_error))
+            }
+        ).disposeOnFinish()
+
     }
 
     fun addOrDeleteReaction(indexMsg: Int, emojiList: ArrayList<String>) {
@@ -119,6 +118,19 @@ class MessagesPresenter : RxPresenter<MessagesView>(MessagesView::class.java) {
             { result ->
                 (data[indexMsg] as ReactionsUi).reactions = reactionsOfMessage
                 view.updateMessage(data, indexMsg)
+            },
+            { error ->
+                //TODO отображаем сообщение с ошибкой
+            }
+        ).disposeOnFinish()
+    }
+
+    fun sendMessage(str: String, streamName: String, topicName: String) {
+        val sendMessage = loaderMessages.sendMessage(str, streamName, topicName)
+        sendMessage.subscribe(
+            { result ->
+                lastItemId = result.id
+                loadNextRemoteMessages(streamName, topicName)
             },
             { error ->
                 //TODO отображаем сообщение с ошибкой

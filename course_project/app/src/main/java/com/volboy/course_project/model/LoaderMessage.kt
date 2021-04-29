@@ -58,6 +58,12 @@ class LoaderMessage {
             .observeOn(AndroidSchedulers.mainThread())
     }
 
+    fun sendMessage(str: String, streamName: String, topicName: String): Single<SendMessageResponse> {
+        return App.instance.zulipApi.sendMessage("stream", streamName, str, topicName)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+    }
+
     private fun groupedMessages(messagesJSON: List<MessageJSON>): List<ViewTyped> {
         val messageByDate = messagesJSON.groupBy { getDateTime(it.timestamp) }
         return messageByDate.flatMap { (date, msg) ->
@@ -88,7 +94,7 @@ class LoaderMessage {
             } else {
                 viewTypedList.add(
                     TextUi(
-                        "You",
+                        App.resourceProvider.getString(R.string.you_str),
                         deleteHtmlFromString(msg.content),
                         msg.avatarUrl,
                         R.layout.item_out_message,

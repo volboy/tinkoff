@@ -25,8 +25,8 @@ class AddReactionResponse(
 )
 
 class SendMessageResponse(
-    id: Int,
-    deliver_at: String
+    val id: Int,
+    val deliver_at: String
 )
 
 class UpdateMessageFlag(
