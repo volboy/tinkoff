@@ -129,8 +129,17 @@ class MessagesPresenter : RxPresenter<MessagesView>(MessagesView::class.java) {
         val sendMessage = loaderMessages.sendMessage(str, streamName, topicName)
         sendMessage.subscribe(
             { result ->
-                lastItemId = result.id
-                loadNextRemoteMessages(streamName, topicName)
+                val getLastMessage = loaderMessages.getLastMessage(result.id, streamName, topicName)
+                getLastMessage.subscribe(
+                    { lastMsg ->
+                        data.addAll(0, lastMsg)
+                        val newData = ArrayList(data)
+                        view.showMessage(newData, 0)
+                    },
+                    { error ->
+                        //TODO отображаем сообщение с ошибкой
+                    }
+                ).disposeOnFinish()
             },
             { error ->
                 //TODO отображаем сообщение с ошибкой

@@ -49,6 +49,11 @@ class MvpMessagesFragment : MessagesView, MvpFragment<MessagesView, MessagesPres
                 getPresenter().addOrDeleteReaction(positionMsgOnLongClick, emojiList)
             }
         }
+        binding.recyclerMessage.addOnLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
+            if (bottom < oldBottom) {
+                binding.recyclerMessage.smoothScrollToPosition(0)
+            }
+        }
         binding.messageBtn.setOnClickListener {
             val str = binding.messageBox.text.toString()
             if (str.isNotEmpty()) {
@@ -77,6 +82,7 @@ class MvpMessagesFragment : MessagesView, MvpFragment<MessagesView, MessagesPres
     override fun showMessage(data: List<ViewTyped>, position: Int) {
         show()
         adapter.items = data
+        binding.recyclerMessage.smoothScrollToPosition(position)
     }
 
     override fun updateMessage(data: List<ViewTyped>, msgPosition: Int) {

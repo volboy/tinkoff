@@ -48,6 +48,17 @@ class LoaderMessage {
             .observeOn(AndroidSchedulers.mainThread())
     }
 
+    fun getLastMessage(startId: Int, streamName: String, topicName: String): Single<List<ViewTyped>> {
+        val narrows = listOf(Narrow("stream", streamName), Narrow("topic", topicName))
+        val gson = Gson()
+        val narrowsJSON = gson.toJson(narrows)
+        return App.instance.zulipApi.getMessagesNext(startId, 0, 0, narrowsJSON)
+            .subscribeOn(Schedulers.io())
+            .map { response -> groupedMessages(response.messages) }
+            .map { list -> list.reversed() }
+            .observeOn(AndroidSchedulers.mainThread())
+    }
+
     fun addEmojiToMessage(messageId: Int, emojiName: String, reactionType: String): Single<AddReactionResponse> {
         return App.instance.zulipApi.addReaction(messageId, emojiName, reactionType)
             .subscribeOn(Schedulers.io())
