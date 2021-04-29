@@ -25,12 +25,13 @@ class LoaderMessage {
         val narrows = listOf(Narrow("stream", streamName), Narrow("topic", topicName))
         val gson = Gson()
         val narrowsJSON = gson.toJson(narrows)
-        return App.instance.zulipApi.getMessages("oldest", 0, 20, narrowsJSON)
+        return App.instance.zulipApi.getMessages("newest", 20, 0, narrowsJSON)
             .subscribeOn(Schedulers.io())
             .map { response ->
                 messagesDao.updateMessages(response.messages)
                 groupedMessages(response.messages)
             }
+            .map { list -> list.reversed() }
             .observeOn(AndroidSchedulers.mainThread())
     }
 
@@ -38,11 +39,12 @@ class LoaderMessage {
         val narrows = listOf(Narrow("stream", streamName), Narrow("topic", topicName))
         val gson = Gson()
         val narrowsJSON = gson.toJson(narrows)
-        return App.instance.zulipApi.getMessagesNext(startId, 0, 20, narrowsJSON)
+        return App.instance.zulipApi.getMessagesNext(startId, 20, 0, narrowsJSON)
             .subscribeOn(Schedulers.io())
             //TODO("Не забыть убрать, это для проверки пагинации)
             .delay(2, TimeUnit.SECONDS)
             .map { response -> groupedMessages(response.messages) }
+            .map { list -> list.reversed() }
             .observeOn(AndroidSchedulers.mainThread())
     }
 

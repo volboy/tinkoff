@@ -55,6 +55,7 @@ class MvpMessagesFragment : MessagesView, MvpFragment<MessagesView, MessagesPres
                 getPresenter().sendMessage(str, streamName, topicName)
                 binding.messageBox.text.clear()
             }
+            binding.messageBtn.setImageResource(R.drawable.ic_add_message)
         }
         binding.messageBox.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {}
@@ -62,6 +63,8 @@ class MvpMessagesFragment : MessagesView, MvpFragment<MessagesView, MessagesPres
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (binding.messageBox.text.isNotEmpty()) {
                     binding.messageBtn.setImageResource(R.drawable.ic_send_message)
+                } else {
+                    binding.messageBtn.setImageResource(R.drawable.ic_add_message)
                 }
             }
         })
@@ -74,7 +77,6 @@ class MvpMessagesFragment : MessagesView, MvpFragment<MessagesView, MessagesPres
     override fun showMessage(data: List<ViewTyped>, position: Int) {
         show()
         adapter.items = data
-        binding.recyclerMessage.smoothScrollToPosition(position)
     }
 
     override fun updateMessage(data: List<ViewTyped>, msgPosition: Int) {
