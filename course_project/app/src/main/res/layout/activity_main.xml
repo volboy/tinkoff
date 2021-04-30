@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -13,11 +14,12 @@
         android:background="@color/app_background"
         android:gravity="center"
         android:paddingStart="20dp"
-        android:paddingEnd="20dp">
+        android:paddingEnd="20dp"
+        app:contentInsetEnd="50dp">
 
         <EditText
             android:id="@+id/searchEditText"
-            android:layout_width="300dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:autofillHints="@string/search_str"
             android:hint="@string/search_str"
@@ -35,7 +37,6 @@
             android:contentDescription="@string/error_str"
             android:src="@drawable/ic_search" />
     </androidx.appcompat.widget.Toolbar>
-
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/container"

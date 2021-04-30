@@ -46,8 +46,11 @@ class MessagesPresenter : RxPresenter<MessagesView>(MessagesView::class.java) {
                 val resultData = ArrayList(buffer)
                 with(resultData) {
                     addAll(msgIndex + 2, result)
-                    removeAt(msgIndex + 1)
-                    removeAt(msgIndex)
+                    removeAt(msgIndex + 1) //удаляем реакции под старым сообщением
+                    if (resultData[msgIndex - 1].uid == "date") {
+                        removeAt(msgIndex - 1)
+                    }
+                    removeAt(msgIndex) //удаляем старое сообщение
                     remove(ProgressItem)
                 }
                 view.showMessage(resultData, msgIndex)

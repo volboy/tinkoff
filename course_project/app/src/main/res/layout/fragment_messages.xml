@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/ev_unselected">
 
     <TextView
         android:id="@+id/topicName"
@@ -14,7 +15,7 @@
         android:text="@string/topic_name"
         android:textColor="@color/ev_text_color"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/recyclerMessage"
+        app:layout_constraintBottom_toTopOf="@id/recyclerMessage"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -31,11 +32,11 @@
         android:paddingEnd="10dp"
         android:paddingBottom="10dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toTopOf="@+id/messageBox"
+        app:layout_constraintBottom_toTopOf="@id/messageBox"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/topicName"
+        app:layout_constraintTop_toBottomOf="@id/topicName"
         app:layout_constraintVertical_chainStyle="packed"
         app:reverseLayout="true"
         tools:listitem="@layout/item_out_message" />
@@ -62,9 +63,9 @@
         android:textColorHint="@color/ev_text_color"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/messageBtn"
+        app:layout_constraintEnd_toStartOf="@id/messageBtn"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recyclerMessage" />
+        app:layout_constraintTop_toBottomOf="@id/recyclerMessage" />
 
     <ImageButton
         android:id="@+id/messageBtn"
@@ -74,30 +75,30 @@
         android:background="@drawable/message_button_drw"
         android:contentDescription="@string/error_str"
         android:src="@drawable/ic_add_message"
-        app:layout_constraintBottom_toBottomOf="@+id/messageBox"
+        app:layout_constraintBottom_toBottomOf="@id/messageBox"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/messageBox" />
+        app:layout_constraintTop_toTopOf="@id/messageBox" />
 
     <include
         android:id="@+id/fragment_error"
         layout="@layout/fragment_error"
         android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/messageBox"
+        app:layout_constraintBottom_toTopOf="@id/messageBox"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/topicName"
+        app:layout_constraintTop_toBottomOf="@id/topicName"
         app:layout_constraintVertical_chainStyle="packed" />
 
     <include
         android:id="@+id/fragment_loading"
         layout="@layout/fragment_loading"
         android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/messageBox"
+        app:layout_constraintBottom_toTopOf="@id/messageBox"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/topicName"
+        app:layout_constraintTop_toBottomOf="@id/topicName"
         app:layout_constraintVertical_chainStyle="packed" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

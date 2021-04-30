@@ -10,7 +10,7 @@ import com.volboy.courseproject.recyclerview.ViewTyped
 class DataUi(
     val data: String,
     override val viewType: Int = R.layout.item_date_divider,
-    override val uid: String = ""
+    override val uid: String = "date"
 ) : ViewTyped
 
 class DataViewHolder(view: View) : BaseViewHolder<DataUi>(view) {

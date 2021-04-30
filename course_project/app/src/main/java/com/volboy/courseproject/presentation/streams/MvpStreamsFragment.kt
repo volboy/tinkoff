@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
-import com.volboy.courseproject.App
+import com.volboy.courseproject.App.Companion.streamsPresenter
 import com.volboy.courseproject.R
 import com.volboy.courseproject.databinding.FragmentStreamsBinding
 import com.volboy.courseproject.presentation.messages.MvpMessagesFragment
@@ -36,7 +36,7 @@ class MvpStreamsFragment : StreamsView, MvpFragment<StreamsView, StreamsPresente
         return binding.root
     }
 
-    override fun getPresenter(): StreamsPresenter = App.streamsPresenter
+    override fun getPresenter(): StreamsPresenter = streamsPresenter
 
     override fun getMvpView(): StreamsView = this
 
