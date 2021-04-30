@@ -32,10 +32,10 @@ class MvpSubscribedFragment : StreamsView, MvpFragment<StreamsView, StreamsPrese
         val holderFactory = UiHolderFactory(this)
         adapter = CommonAdapter(holderFactory, CommonDiffUtilCallback(), null)
         (requireActivity() as AppCompatActivity).supportActionBar?.show()
-        val searchEdit = requireActivity().findViewById<EditText>(R.id.searchEditText)
         binding.rwAllStreams.adapter = adapter
         binding.rwAllStreams.addItemDecoration(StreamsItemDecoration(requireContext()))
         getPresenter().getStreams()
+        val searchEdit = requireActivity().findViewById<EditText>(R.id.searchEditText)
         getPresenter().setSearchObservable(searchEdit)
         return binding.root
     }

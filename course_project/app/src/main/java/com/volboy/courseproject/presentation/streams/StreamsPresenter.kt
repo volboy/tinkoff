@@ -51,7 +51,7 @@ class StreamsPresenter : RxPresenter<StreamsView>(StreamsView::class.java) {
                     }
                 },
                 { error -> view.showData(data) }
-            )
+            ).disposeOnFinish()
             if (text.isNullOrEmpty()) {
                 view.showData(data)
             }
