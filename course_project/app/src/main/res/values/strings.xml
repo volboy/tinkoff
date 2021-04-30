@@ -2,7 +2,6 @@
     <string name="app_name">hw_2</string>
     <string name="header_str">"User's name"</string>
     <string name="message_str">Darrell Stewart is a 6–0, 170-pound Athlete from Houston, TX.</string>
-    <string name="simple_header_str">Имя Фамилия</string>
     <string name="date_divider_str">1 Фев</string>
     <string name="make_message_hint">Написать</string>
     <string name="tab_channels_1">Subscribed</string>
@@ -11,29 +10,16 @@
     <string name="messageCount">" mes"</string>
     <string name="stream_name">Testing</string>
     <string name="topic_name">Topic: #%1$s</string>
-    <string name="status_str">In a meeting</string>
     <string name="status_mode">online</string>
     <string name="email_str">darell@company.com</string>
-    <string name="log_out_str">Log out</string>
     <string name="search_str">Search…</string>
-    <string name="plus_str">+</string>
     <string name="msg_network_error">Ошибка сети </string>
-    <string name="msg_json_error">Ошибка json </string>
     <string name="msg_database_error">Ошибка БД </string>
     <string name="msg_network_ok">Данные загружены из сети </string>
-    <string name="msg_network_flags">Флаг, что сообщение прочитано, обновлен </string>
-    <string name="msg_network_flags_error">Флаг, что сообщение прочитано, не обновлен </string>
-    <string name="msg_network_send_msg">Сообщение отправлено </string>
-    <string name="msg_network_send_msg_error">Сообщение не отправлено </string>
-    <string name="msg_network_send_emoji">Эмоджи отправлено </string>
-    <string name="msg_network_send_emoji_error">Эмоджи не отправлено </string>
-    <string name="msg_network_delete_emoji">Эмоджи удалено </string>
-    <string name="msg_network_delete_emoji_error">Эмоджи не удалено </string>
     <string name="msg_database_ok">Данные загружены из БД </string>
     <string name="last_emoji_str">002B</string>
     <string name="msg_database_empty">База данных пуста </string>
     <string name="log_string">zulipapptfsspring </string>
-    <string name="pagination_str">Подгружаю новые данные </string>
     <string name="error_str">Произошла ошибка :(</string>
     <string name="retry_str">Повторить</string>
     <string name="active">active</string>
@@ -41,5 +27,8 @@
     <string name="offline">offline</string>
     <string name="empty_str">К сожалению ничего \n не найдено :(</string>
     <string name="you_str">You</string>
+    <string name="channels_str">Channels</string>
+    <string name="people_str">People</string>
+    <string name="profile_str">Profile</string>
 
 </resources>

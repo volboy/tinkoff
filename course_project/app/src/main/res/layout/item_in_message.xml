@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.volboy.course_project.customviews.MessageViewGroup xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<com.volboy.courseproject.customviews.MessageViewGroup xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/inMessageItem"
-    android:layout_width="@dimen/message_view_width"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginTop="10dp"
-    android:layout_marginBottom="10dp">
-
-</com.volboy.course_project.customviews.MessageViewGroup>
+    android:layout_marginBottom="10dp" />

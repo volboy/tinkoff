@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/app_background">
+    android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/topicName"
@@ -52,6 +51,7 @@
         android:autofillHints="@string/make_message_hint"
         android:background="@drawable/message_box_drw"
         android:fadeScrollbars="true"
+        android:hint="@string/make_message_hint"
         android:inputType="textAutoCorrect"
         android:maxHeight="102dp"
         android:minHeight="51dp"

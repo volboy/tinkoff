@@ -7,12 +7,12 @@
         </shape>
     </item>
     <item>
-    <selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <selector>
         <item
             android:drawable="@drawable/emoji_view_selected"
             android:state_selected="true" />
         <item
-            android:drawable="@drawable/emoji_view_notselected"
+            android:drawable="@drawable/emoji_view_not_selected"
             android:state_selected="false" />
     </selector>
     </item>

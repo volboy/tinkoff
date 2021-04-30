@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="321dp"
     android:layout_height="wrap_content"
-    tools:parentTag="com.volboy.course_project.customviews.MessageViewGroup">
+    tools:parentTag="com.volboy.courseproject.customviews.MessageViewGroup">
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/avatar"
@@ -18,7 +18,7 @@
         android:id="@+id/header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/headerMarginLeft"
+        android:layout_marginStart="@dimen/headerMarginLeft"
         android:layout_marginTop="@dimen/headerMarginTop"
         android:layout_marginBottom="@dimen/headerMarginBottom"
         android:text="@string/header_str"
@@ -29,7 +29,7 @@
         android:id="@+id/message"
         android:layout_width="@dimen/message_width"
         android:layout_height="wrap_content"
-        android:layout_marginRight="@dimen/messageMarginRight"
+        android:layout_marginEnd="@dimen/messageMarginRight"
         android:layout_marginBottom="@dimen/messageMarginBottom"
         android:text="@string/message_str"
         android:textColor="@color/message_color"

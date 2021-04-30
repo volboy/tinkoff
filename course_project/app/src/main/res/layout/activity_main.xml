@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -20,10 +19,12 @@
             android:id="@+id/searchEditText"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
+            android:autofillHints="@string/search_str"
             android:hint="@string/search_str"
+            android:inputType="text"
+            android:textColor="@color/white"
             android:textColorHint="@color/white"
-            android:textSize="22sp"
-            android:textColor="@color/white"/>
+            android:textSize="22sp" />
 
         <ImageButton
             android:id="@+id/searchButton"
@@ -31,6 +32,7 @@
             android:layout_height="27dp"
             android:layout_marginStart="20dp"
             android:background="@drawable/search_button_drw"
+            android:contentDescription="@string/error_str"
             android:src="@drawable/ic_search" />
     </androidx.appcompat.widget.Toolbar>
 

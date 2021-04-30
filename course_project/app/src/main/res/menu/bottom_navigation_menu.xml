@@ -3,13 +3,13 @@
     <item
         android:id="@+id/channels"
         android:icon="@drawable/ic_channels"
-        android:title="Channels" />
+        android:title="@string/channels_str" />
     <item
         android:id="@+id/people"
         android:icon="@drawable/ic_people"
-        android:title="People" />
+        android:title="@string/people_str" />
     <item
         android:id="@+id/profile"
         android:icon="@drawable/ic_profile"
-        android:title="Profile" />
+        android:title="@string/profile_str" />
 </menu>

@@ -8,6 +8,7 @@ buildscript {
         constraint_version = '2.0.4'
         livedata_version = '2.2.0'
         viewmodel_version = '2.2.0'
+
     }
     repositories {
         google()
