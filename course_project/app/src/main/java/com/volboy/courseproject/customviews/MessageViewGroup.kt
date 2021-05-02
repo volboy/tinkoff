@@ -47,7 +47,8 @@ class MessageViewGroup @JvmOverloads constructor(
         val headerHeight: Int
         val messageHeight: Int
         val imageAvatarWidth: Int
-        val messageWidth: Int
+        val messageWidthMessage: Int
+        val messageWidthHeader: Int
         val imageAvatarLayoutParams = imageAvatar.layoutParams as MarginLayoutParams
         val headerLayoutParams = header.layoutParams as MarginLayoutParams
         val messageLayoutParams = message.layoutParams as MarginLayoutParams
@@ -57,12 +58,13 @@ class MessageViewGroup @JvmOverloads constructor(
         //обмеряем заголовок
         measureChildWithMargins(header, widthMeasureSpec, imageAvatarWidth, heightMeasureSpec, 0)
         headerHeight = header.measuredHeight + headerLayoutParams.topMargin + headerLayoutParams.bottomMargin
+        messageWidthHeader = header.measuredWidth + headerLayoutParams.leftMargin + headerLayoutParams.rightMargin
         //обмеряем сообщение
         measureChildWithMargins(message, widthMeasureSpec, imageAvatarWidth, heightMeasureSpec, headerHeight)
-        messageWidth = message.measuredWidth + messageLayoutParams.leftMargin + messageLayoutParams.rightMargin
+        messageWidthMessage = message.measuredWidth + messageLayoutParams.leftMargin + messageLayoutParams.rightMargin
         messageHeight = message.measuredHeight + messageLayoutParams.topMargin + messageLayoutParams.bottomMargin
         //итого ширина и высота
-        widthResult = imageAvatarWidth + messageWidth
+        widthResult = imageAvatarWidth + maxOf(messageWidthMessage, messageWidthHeader) + context.dpToPx(50.0F)
         heightResult = headerHeight + messageHeight
         setMeasuredDimension(resolveSize(widthResult, widthMeasureSpec), resolveSize(heightResult, heightMeasureSpec))
     }
@@ -89,7 +91,7 @@ class MessageViewGroup @JvmOverloads constructor(
         mRoundRectPoint.set(
             headerRect.left.toFloat() - context.dpToPx(RECT_MARGIN_LEFT),
             imageAvatar.top.toFloat(),
-            messageRect.right.toFloat() + messageLayoutParams.rightMargin,
+            maxOf(messageRect.right, headerRect.right).toFloat() + context.dpToPx(RECT_MARGIN_RIGHT),
             messageRect.bottom.toFloat() + context.dpToPx(RECT_MARGIN_BOTTOM)
         )
     }
@@ -112,6 +114,7 @@ class MessageViewGroup @JvmOverloads constructor(
     private companion object {
         const val RADIUS_RECT = 18.0F
         const val RECT_MARGIN_LEFT = 13.0F
+        const val RECT_MARGIN_RIGHT = 13.0F
         const val RECT_MARGIN_BOTTOM = 20.0F
     }
 }
