@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
-import com.volboy.courseproject.App.Companion.streamsPresenter
+import com.volboy.courseproject.App.Companion.component
 import com.volboy.courseproject.R
 import com.volboy.courseproject.databinding.FragmentStreamsBinding
 import com.volboy.courseproject.presentation.messages.MvpMessagesFragment
@@ -21,11 +21,19 @@ import com.volboy.courseproject.presentation.mvp.presenter.MvpFragment
 import com.volboy.courseproject.recyclerview.CommonAdapter
 import com.volboy.courseproject.recyclerview.CommonDiffUtilCallback
 import com.volboy.courseproject.recyclerview.ViewTyped
+import javax.inject.Inject
 
 class MvpSubscribedFragment : StreamsView, MvpFragment<StreamsView, StreamsPresenter>(), UiHolderFactory.ChannelsInterface {
     private lateinit var binding: FragmentStreamsBinding
     private lateinit var adapter: CommonAdapter<ViewTyped>
     private lateinit var clickedStream: TitleUi
+
+    @Inject
+    lateinit var streamsPresenter: StreamsPresenter
+
+    init {
+        component.injectStreamsPresenter(this)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentStreamsBinding.inflate(inflater, container, false)

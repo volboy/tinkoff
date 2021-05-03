@@ -8,14 +8,23 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
-import com.volboy.courseproject.App.Companion.profilePresenter
+import com.volboy.courseproject.App.Companion.component
 import com.volboy.courseproject.R
 import com.volboy.courseproject.databinding.FragmentProfileBinding
 import com.volboy.courseproject.model.OwnUser
 import com.volboy.courseproject.presentation.mvp.presenter.MvpFragment
+import javax.inject.Inject
 
 class MvpProfileFragment : ProfileView, MvpFragment<ProfileView, ProfilePresenter>() {
     private lateinit var binding: FragmentProfileBinding
+
+    @Inject
+    lateinit var profilePresenter: ProfilePresenter
+
+    init {
+        component.injectProfilePresenter(this)
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentProfileBinding.inflate(inflater, container, false)
         (requireActivity() as AppCompatActivity).supportActionBar?.hide()

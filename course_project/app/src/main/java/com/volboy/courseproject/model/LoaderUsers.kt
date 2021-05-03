@@ -1,29 +1,38 @@
 package com.volboy.courseproject.model
 
-import com.volboy.courseproject.App
+import com.volboy.courseproject.App.Companion.component
 import com.volboy.courseproject.R
+import com.volboy.courseproject.api.ZulipApi
 import com.volboy.courseproject.presentation.users.PeopleUi
 import com.volboy.courseproject.recyclerview.ViewTyped
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
 
 class LoaderUsers {
 
+    @Inject
+    lateinit var zulipApi: ZulipApi
+
+    init {
+        component.injectRetrofit(this)
+    }
+
     fun getRemoteUsers(): Single<MutableList<ViewTyped>> =
-        App.instance.zulipApi.getUsers()
+        zulipApi.getUsers()
             .subscribeOn(Schedulers.io())
             .map { response -> viewTypedUsers(response.members) }
             .observeOn(AndroidSchedulers.mainThread())
 
 
     fun getOwnUser(): Single<OwnUser> =
-        App.instance.zulipApi.getOwnUser()
+        zulipApi.getOwnUser()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
 
     fun getUserStatus(id: Int): Single<StatusUserResponse> =
-        App.instance.zulipApi.getUserStatus(id)
+        zulipApi.getUserStatus(id)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
 

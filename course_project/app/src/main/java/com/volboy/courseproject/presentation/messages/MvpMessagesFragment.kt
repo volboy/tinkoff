@@ -10,13 +10,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.setFragmentResultListener
-import com.volboy.courseproject.App.Companion.messagesPresenter
+import com.volboy.courseproject.App.Companion.component
 import com.volboy.courseproject.R
 import com.volboy.courseproject.databinding.FragmentMessagesBinding
 import com.volboy.courseproject.presentation.bottomfragment.EmojiBottomFragment
 import com.volboy.courseproject.presentation.mvp.presenter.MvpFragment
 import com.volboy.courseproject.recyclerview.*
 import java.util.*
+import javax.inject.Inject
 
 class MvpMessagesFragment : MessagesView, MvpFragment<MessagesView, MessagesPresenter>(), MessageHolderFactory.MessageInterface {
     private lateinit var binding: FragmentMessagesBinding
@@ -24,6 +25,13 @@ class MvpMessagesFragment : MessagesView, MvpFragment<MessagesView, MessagesPres
     private lateinit var topicName: String
     private lateinit var streamName: String
     private var positionMsgOnLongClick = 0
+
+    @Inject
+    lateinit var messagePresenter: MessagesPresenter
+
+    init {
+        component.injectMessagePresenter(this)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentMessagesBinding.inflate(inflater, container, false)
@@ -74,7 +82,7 @@ class MvpMessagesFragment : MessagesView, MvpFragment<MessagesView, MessagesPres
         })
     }
 
-    override fun getPresenter(): MessagesPresenter = messagesPresenter
+    override fun getPresenter(): MessagesPresenter = messagePresenter
 
     override fun getMvpView(): MessagesView = this
 

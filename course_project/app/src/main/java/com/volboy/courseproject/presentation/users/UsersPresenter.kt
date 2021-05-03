@@ -4,8 +4,8 @@ import android.util.Log
 import android.widget.EditText
 import androidx.core.widget.addTextChangedListener
 import com.volboy.courseproject.App.Companion.component
-import com.volboy.courseproject.App.Companion.resourceProvider
 import com.volboy.courseproject.R
+import com.volboy.courseproject.common.ResourceProvider
 import com.volboy.courseproject.model.LoaderUsers
 import com.volboy.courseproject.presentation.mvp.presenter.base.RxPresenter
 import com.volboy.courseproject.recyclerview.ViewTyped
@@ -23,8 +23,12 @@ class UsersPresenter : RxPresenter<UsersView>(UsersView::class.java) {
     @Inject
     lateinit var loaderUsers: LoaderUsers
 
+    @Inject
+    lateinit var res: ResourceProvider
+
     init {
         component.injectLoaderUsers(this)
+        component.injectResourceProvider(this)
     }
 
     fun getUsers() {
@@ -70,17 +74,17 @@ class UsersPresenter : RxPresenter<UsersView>(UsersView::class.java) {
             { result ->
                 data = result
                 view.showData(data)
-                writeLog(resourceProvider.getString(R.string.msg_network_ok))
+                writeLog(res.getString(R.string.msg_network_ok))
             },
             { error ->
                 view.showError(error.message)
-                writeLog(resourceProvider.getString(R.string.msg_network_error))
+                writeLog(res.getString(R.string.msg_network_error))
             }
         ).disposeOnFinish()
     }
 
     private fun writeLog(msg: String) {
-        Log.i(resourceProvider.getString(R.string.log_string), msg)
+        Log.i(res.getString(R.string.log_string), msg)
     }
 
     companion object {

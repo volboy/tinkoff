@@ -4,8 +4,8 @@ import android.util.Log
 import android.widget.EditText
 import androidx.core.widget.addTextChangedListener
 import com.volboy.courseproject.App.Companion.component
-import com.volboy.courseproject.App.Companion.resourceProvider
 import com.volboy.courseproject.R
+import com.volboy.courseproject.common.ResourceProvider
 import com.volboy.courseproject.database.AppDatabase
 import com.volboy.courseproject.model.LoaderStreams
 import com.volboy.courseproject.presentation.mvp.presenter.base.RxPresenter
@@ -29,9 +29,13 @@ class StreamsPresenter : RxPresenter<StreamsView>(StreamsView::class.java) {
     @Inject
     lateinit var appDatabase: AppDatabase
 
+    @Inject
+    lateinit var res: ResourceProvider
+
     init {
         component.injectLoaderStreams(this)
         component.injectDatabase(this)
+        component.injectResourceProvider(this)
     }
 
     fun getStreams() {
@@ -110,10 +114,10 @@ class StreamsPresenter : RxPresenter<StreamsView>(StreamsView::class.java) {
                 newData.remove(ProgressItem)
                 view.showData(newData)
                 data = newData
-                writeLog(resourceProvider.getString(R.string.msg_network_ok))
+                writeLog(res.getString(R.string.msg_network_ok))
             },
             {
-                writeLog(resourceProvider.getString(R.string.msg_network_error))
+                writeLog(res.getString(R.string.msg_network_error))
             }
         ).disposeOnFinish()
     }
@@ -130,7 +134,7 @@ class StreamsPresenter : RxPresenter<StreamsView>(StreamsView::class.java) {
             .map { streams -> loaderStreams.viewTypedStreams(streams) }
             .subscribe(
                 { viewTypedStreams ->
-                    writeLog(resourceProvider.getString(R.string.msg_database_ok) + " , размер БД " + viewTypedStreams?.size?.toString())
+                    writeLog(res.getString(R.string.msg_database_ok) + " , размер БД " + viewTypedStreams?.size?.toString())
                     if (viewTypedStreams.isEmpty()) {
                         view.showLoading("")
                         dataBaseError = true
@@ -141,11 +145,11 @@ class StreamsPresenter : RxPresenter<StreamsView>(StreamsView::class.java) {
                     }
                 },
                 { error ->
-                    writeLog(resourceProvider.getString(R.string.msg_database_error) + error.message)
+                    writeLog(res.getString(R.string.msg_database_error) + error.message)
                     dataBaseError = true
                 },
                 {
-                    writeLog(resourceProvider.getString(R.string.msg_database_empty))
+                    writeLog(res.getString(R.string.msg_database_empty))
                     dataBaseError = true
                 })
             .disposeOnFinish()
@@ -159,7 +163,7 @@ class StreamsPresenter : RxPresenter<StreamsView>(StreamsView::class.java) {
             { result ->
                 data = result as MutableList<ViewTyped>
                 view.showData(data)
-                writeLog(resourceProvider.getString(R.string.msg_network_ok))
+                writeLog(res.getString(R.string.msg_network_ok))
             },
             { error ->
                 if (dataBaseError) {
@@ -168,14 +172,14 @@ class StreamsPresenter : RxPresenter<StreamsView>(StreamsView::class.java) {
                     view.showData(data)
                 }
                 view.showError(error.message)
-                writeLog(resourceProvider.getString(R.string.msg_network_error) + error.message)
+                writeLog(res.getString(R.string.msg_network_error) + error.message)
             }
         )
             .disposeOnFinish()
     }
 
     private fun writeLog(msg: String) {
-        Log.i(resourceProvider.getString(R.string.log_string), msg)
+        Log.i(res.getString(R.string.log_string), msg)
     }
 
     companion object {

@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
-import com.volboy.courseproject.App.Companion.usersPresenter
+import com.volboy.courseproject.App.Companion.component
 import com.volboy.courseproject.R
 import com.volboy.courseproject.databinding.FragmentPeopleBinding
 import com.volboy.courseproject.presentation.details.MvpDetailsFragment
@@ -18,10 +18,18 @@ import com.volboy.courseproject.presentation.streams.UiHolderFactory
 import com.volboy.courseproject.recyclerview.CommonAdapter
 import com.volboy.courseproject.recyclerview.CommonDiffUtilCallback
 import com.volboy.courseproject.recyclerview.ViewTyped
+import javax.inject.Inject
 
 class MvpUsersFragment : UsersView, MvpFragment<UsersView, UsersPresenter>(), UiHolderFactory.ChannelsInterface {
     private lateinit var binding: FragmentPeopleBinding
     private lateinit var adapter: CommonAdapter<ViewTyped>
+
+    @Inject
+    lateinit var usersPresenter: UsersPresenter
+
+    init {
+        component.injectUsersPresenter(this)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentPeopleBinding.inflate(inflater, container, false)

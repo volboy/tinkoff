@@ -1,8 +1,8 @@
 package com.volboy.courseproject.model
 
-import com.volboy.courseproject.App
 import com.volboy.courseproject.App.Companion.component
 import com.volboy.courseproject.R
+import com.volboy.courseproject.api.ZulipApi
 import com.volboy.courseproject.database.AppDatabase
 import com.volboy.courseproject.presentation.streams.TitleUi
 import com.volboy.courseproject.recyclerview.ViewTyped
@@ -17,13 +17,17 @@ class LoaderStreams {
     @Inject
     lateinit var appDatabase: AppDatabase
 
+    @Inject
+    lateinit var zulipApi: ZulipApi
+
     init {
         component.injectDatabase(this)
+        component.injectRetrofit(this)
     }
 
     fun getRemoteStreams(): Single<List<ViewTyped>> {
         val streamsDao = appDatabase.streamsDao()
-        return App.instance.zulipApi.getStreams()
+        return zulipApi.getStreams()
             .subscribeOn(Schedulers.io())
             //TODO("Не забыть убрать, это для проверки загрузки данных из БД)
             .delay(2, TimeUnit.SECONDS)
@@ -50,7 +54,7 @@ class LoaderStreams {
 
     fun getTopicsOfStreams(id: Int): Single<MutableList<ViewTyped>> {
         val topicsDao = appDatabase.topicsDao()
-        return App.instance.zulipApi.getStreamsTopics(id)
+        return zulipApi.getStreamsTopics(id)
             .subscribeOn(Schedulers.io())
             //TODO Не забыть убрать
             .delay(2, TimeUnit.SECONDS)

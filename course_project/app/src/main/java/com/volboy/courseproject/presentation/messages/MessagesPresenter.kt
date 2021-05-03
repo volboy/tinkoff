@@ -1,10 +1,10 @@
 package com.volboy.courseproject.presentation.messages
 
 import android.util.Log
-import com.volboy.courseproject.App
 import com.volboy.courseproject.App.Companion.component
 import com.volboy.courseproject.MainActivity.Companion.ownId
 import com.volboy.courseproject.R
+import com.volboy.courseproject.common.ResourceProvider
 import com.volboy.courseproject.model.LoaderMessage
 import com.volboy.courseproject.model.Reaction
 import com.volboy.courseproject.presentation.mvp.presenter.base.RxPresenter
@@ -20,8 +20,12 @@ class MessagesPresenter : RxPresenter<MessagesView>(MessagesView::class.java) {
     @Inject
     lateinit var loaderMessages: LoaderMessage
 
+    @Inject
+    lateinit var res: ResourceProvider
+
     init {
         component.injectLoaderMessages(this)
+        component.injectResourceProvider(this)
     }
 
     fun loadFirstRemoteMessages(streamName: String, topicName: String) {
@@ -30,11 +34,11 @@ class MessagesPresenter : RxPresenter<MessagesView>(MessagesView::class.java) {
             { result ->
                 data = result as MutableList<ViewTyped>
                 view.showMessage(data, 0)
-                writeLog(App.resourceProvider.getString(R.string.msg_network_ok))
+                writeLog(res.getString(R.string.msg_network_ok))
             },
             { error ->
                 view.showError(error.message)
-                writeLog(App.resourceProvider.getString(R.string.msg_network_error))
+                writeLog(res.getString(R.string.msg_network_error))
             }
         ).disposeOnFinish()
     }
@@ -64,11 +68,11 @@ class MessagesPresenter : RxPresenter<MessagesView>(MessagesView::class.java) {
                 }
                 view.showMessage(resultData, msgIndex)
                 data = resultData
-                writeLog(App.resourceProvider.getString(R.string.msg_network_ok))
+                writeLog(res.getString(R.string.msg_network_ok))
             },
             { error ->
                 view.showError(error.message)
-                writeLog(App.resourceProvider.getString(R.string.msg_network_error))
+                writeLog(res.getString(R.string.msg_network_error))
             }
         ).disposeOnFinish()
 
@@ -160,7 +164,7 @@ class MessagesPresenter : RxPresenter<MessagesView>(MessagesView::class.java) {
     }
 
     private fun writeLog(msg: String) {
-        Log.i(App.resourceProvider.getString(R.string.log_string), msg)
+        Log.i(res.getString(R.string.log_string), msg)
     }
 
     private companion object {

@@ -4,10 +4,11 @@ import android.os.Build
 import android.text.Html
 import android.text.Spanned
 import com.google.gson.Gson
-import com.volboy.courseproject.App
 import com.volboy.courseproject.App.Companion.component
 import com.volboy.courseproject.MainActivity.Companion.ownId
 import com.volboy.courseproject.R
+import com.volboy.courseproject.api.ZulipApi
+import com.volboy.courseproject.common.ResourceProvider
 import com.volboy.courseproject.database.AppDatabase
 import com.volboy.courseproject.presentation.messages.DataUi
 import com.volboy.courseproject.presentation.messages.ReactionsUi
@@ -26,8 +27,16 @@ class LoaderMessage {
     @Inject
     lateinit var appDatabase: AppDatabase
 
+    @Inject
+    lateinit var zulipApi: ZulipApi
+
+    @Inject
+    lateinit var res: ResourceProvider
+
     init {
         component.injectDatabase(this)
+        component.injectRetrofit(this)
+        component.injectResourceProvider(this)
     }
 
     fun getMessages(streamName: String, topicName: String): Single<List<ViewTyped>> {
@@ -35,7 +44,7 @@ class LoaderMessage {
         val narrows = listOf(Narrow("stream", streamName), Narrow("topic", topicName))
         val gson = Gson()
         val narrowsJSON = gson.toJson(narrows)
-        return App.instance.zulipApi.getMessages("newest", 20, 0, narrowsJSON)
+        return zulipApi.getMessages("newest", 20, 0, narrowsJSON)
             .subscribeOn(Schedulers.io())
             .map { response ->
                 messagesDao.updateMessages(response.messages)
@@ -49,7 +58,7 @@ class LoaderMessage {
         val narrows = listOf(Narrow("stream", streamName), Narrow("topic", topicName))
         val gson = Gson()
         val narrowsJSON = gson.toJson(narrows)
-        return App.instance.zulipApi.getMessagesNext(startId, 20, 0, narrowsJSON)
+        return zulipApi.getMessagesNext(startId, 20, 0, narrowsJSON)
             .subscribeOn(Schedulers.io())
             //TODO("Не забыть убрать, это для проверки пагинации)
             .delay(2, TimeUnit.SECONDS)
@@ -62,7 +71,7 @@ class LoaderMessage {
         val narrows = listOf(Narrow("stream", streamName), Narrow("topic", topicName))
         val gson = Gson()
         val narrowsJSON = gson.toJson(narrows)
-        return App.instance.zulipApi.getMessagesNext(startId, 0, 0, narrowsJSON)
+        return zulipApi.getMessagesNext(startId, 0, 0, narrowsJSON)
             .subscribeOn(Schedulers.io())
             .map { response -> groupedMessages(response.messages) }
             .map { list -> list.reversed() }
@@ -70,18 +79,18 @@ class LoaderMessage {
     }
 
     fun addEmojiToMessage(messageId: Int, emojiName: String, reactionType: String): Single<AddReactionResponse> =
-        App.instance.zulipApi.addReaction(messageId, emojiName, reactionType)
+        zulipApi.addReaction(messageId, emojiName, reactionType)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
 
 
     fun removeEmojiFromMessage(messageId: Int, emojiName: String, reactionType: String): Single<AddReactionResponse> =
-        App.instance.zulipApi.removeReaction(messageId, emojiName, reactionType)
+        zulipApi.removeReaction(messageId, emojiName, reactionType)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
 
     fun sendMessage(str: String, streamName: String, topicName: String): Single<SendMessageResponse> =
-        App.instance.zulipApi.sendMessage("stream", streamName, str, topicName)
+        zulipApi.sendMessage("stream", streamName, str, topicName)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
 
@@ -115,7 +124,7 @@ class LoaderMessage {
             } else {
                 viewTypedList.add(
                     TextUi(
-                        App.resourceProvider.getString(R.string.you_str),
+                        res.getString(R.string.you_str),
                         formatText(msg.content),
                         msg.avatarUrl,
                         R.layout.item_out_message,
