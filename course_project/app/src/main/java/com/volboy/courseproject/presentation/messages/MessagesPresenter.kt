@@ -2,18 +2,27 @@ package com.volboy.courseproject.presentation.messages
 
 import android.util.Log
 import com.volboy.courseproject.App
-import com.volboy.courseproject.App.Companion.loaderMessages
+import com.volboy.courseproject.App.Companion.component
 import com.volboy.courseproject.MainActivity.Companion.ownId
 import com.volboy.courseproject.R
+import com.volboy.courseproject.model.LoaderMessage
 import com.volboy.courseproject.model.Reaction
 import com.volboy.courseproject.presentation.mvp.presenter.base.RxPresenter
 import com.volboy.courseproject.recyclerview.ViewTyped
 import com.volboy.courseproject.recyclerview.simpleitems.ProgressItem
+import javax.inject.Inject
 
 class MessagesPresenter : RxPresenter<MessagesView>(MessagesView::class.java) {
     private var lastItemId = 0
     private lateinit var data: MutableList<ViewTyped>
     private lateinit var reactionsOfMessage: MutableList<Reaction>
+
+    @Inject
+    lateinit var loaderMessages: LoaderMessage
+
+    init {
+        component.injectLoaderMessages(this)
+    }
 
     fun loadFirstRemoteMessages(streamName: String, topicName: String) {
         val messages = loaderMessages.getMessages(streamName, topicName)

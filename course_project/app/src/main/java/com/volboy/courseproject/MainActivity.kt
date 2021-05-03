@@ -3,15 +3,24 @@ package com.volboy.courseproject
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.volboy.courseproject.App.Companion.loaderUsers
+import com.volboy.courseproject.App.Companion.component
 import com.volboy.courseproject.databinding.ActivityMainBinding
+import com.volboy.courseproject.model.LoaderUsers
 import com.volboy.courseproject.presentation.main.MainFragment
 import io.reactivex.disposables.CompositeDisposable
+import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val mainFragment = MainFragment()
     private val compositeDisposable = CompositeDisposable()
+
+    @Inject
+    lateinit var loaderUsers: LoaderUsers
+
+    init {
+        component.injectLoaderUsers(this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,6 +32,11 @@ class MainActivity : AppCompatActivity() {
             .replace(R.id.container, mainFragment)
             .commit()
         setContentView(binding.root)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        compositeDisposable.clear()
     }
 
     private fun getOwnId() {

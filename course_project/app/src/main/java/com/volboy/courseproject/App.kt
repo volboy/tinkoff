@@ -4,12 +4,11 @@ import android.app.Application
 import android.os.Build
 import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
-import androidx.room.Room
 import com.volboy.courseproject.api.ZulipApi
-import com.volboy.courseproject.database.AppDatabase
-import com.volboy.courseproject.model.LoaderMessage
-import com.volboy.courseproject.model.LoaderStreams
-import com.volboy.courseproject.model.LoaderUsers
+import com.volboy.courseproject.di.AppComponent
+import com.volboy.courseproject.di.DaggerAppComponent
+import com.volboy.courseproject.di.DatabaseModule
+import com.volboy.courseproject.di.LoadersModule
 import com.volboy.courseproject.presentation.details.DetailsPresenter
 import com.volboy.courseproject.presentation.messages.MessagesPresenter
 import com.volboy.courseproject.presentation.profile.ProfilePresenter
@@ -29,23 +28,25 @@ class App : Application() {
 
     companion object {
         lateinit var instance: App
-        lateinit var appDatabase: AppDatabase
-        lateinit var loaderMessages: LoaderMessage
-        lateinit var loaderStreams: LoaderStreams
-        lateinit var loaderUsers: LoaderUsers
         lateinit var resourceProvider: ResourceProvider
         lateinit var streamsPresenter: StreamsPresenter
         lateinit var usersPresenter: UsersPresenter
         lateinit var profilePresenter: ProfilePresenter
         lateinit var detailsPresenter: DetailsPresenter
         lateinit var messagesPresenter: MessagesPresenter
+
+        lateinit var component: AppComponent
     }
 
     override fun onCreate() {
         super.onCreate()
-        instance = this
-        appDatabase = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "zulipAppDatabase")
+        component = DaggerAppComponent
+            .builder()
+            .databaseModule(DatabaseModule(applicationContext))
+            .loadersModule(LoadersModule())
             .build()
+
+        instance = this
         initRetrofit()
         resourceProvider = ResourceProvider()
         streamsPresenter = StreamsPresenter()
@@ -53,9 +54,6 @@ class App : Application() {
         profilePresenter = ProfilePresenter()
         detailsPresenter = DetailsPresenter()
         messagesPresenter = MessagesPresenter()
-        loaderMessages = LoaderMessage()
-        loaderStreams = LoaderStreams()
-        loaderUsers = LoaderUsers()
     }
 
     private fun initRetrofit() {

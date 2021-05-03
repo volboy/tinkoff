@@ -5,8 +5,10 @@ import android.text.Html
 import android.text.Spanned
 import com.google.gson.Gson
 import com.volboy.courseproject.App
+import com.volboy.courseproject.App.Companion.component
 import com.volboy.courseproject.MainActivity.Companion.ownId
 import com.volboy.courseproject.R
+import com.volboy.courseproject.database.AppDatabase
 import com.volboy.courseproject.presentation.messages.DataUi
 import com.volboy.courseproject.presentation.messages.ReactionsUi
 import com.volboy.courseproject.presentation.messages.TextUi
@@ -17,11 +19,19 @@ import io.reactivex.schedulers.Schedulers
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 class LoaderMessage {
 
+    @Inject
+    lateinit var appDatabase: AppDatabase
+
+    init {
+        component.injectDatabase(this)
+    }
+
     fun getMessages(streamName: String, topicName: String): Single<List<ViewTyped>> {
-        val messagesDao = App.appDatabase.messagesDao()
+        val messagesDao = appDatabase.messagesDao()
         val narrows = listOf(Narrow("stream", streamName), Narrow("topic", topicName))
         val gson = Gson()
         val narrowsJSON = gson.toJson(narrows)

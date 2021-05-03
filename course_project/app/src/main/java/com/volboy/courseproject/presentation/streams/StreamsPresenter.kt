@@ -3,10 +3,11 @@ package com.volboy.courseproject.presentation.streams
 import android.util.Log
 import android.widget.EditText
 import androidx.core.widget.addTextChangedListener
-import com.volboy.courseproject.App
-import com.volboy.courseproject.App.Companion.loaderStreams
+import com.volboy.courseproject.App.Companion.component
 import com.volboy.courseproject.App.Companion.resourceProvider
 import com.volboy.courseproject.R
+import com.volboy.courseproject.database.AppDatabase
+import com.volboy.courseproject.model.LoaderStreams
 import com.volboy.courseproject.presentation.mvp.presenter.base.RxPresenter
 import com.volboy.courseproject.recyclerview.ViewTyped
 import com.volboy.courseproject.recyclerview.simpleitems.EmptyView
@@ -15,12 +16,23 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 class StreamsPresenter : RxPresenter<StreamsView>(StreamsView::class.java) {
-    private val appDatabase = App.appDatabase
     private var data = mutableListOf<ViewTyped>()
     private var dataBaseError = false
     private lateinit var searchText: Observable<String>
+
+    @Inject
+    lateinit var loaderStreams: LoaderStreams
+
+    @Inject
+    lateinit var appDatabase: AppDatabase
+
+    init {
+        component.injectLoaderStreams(this)
+        component.injectDatabase(this)
+    }
 
     fun getStreams() {
         loadStreamsFromDatabase()

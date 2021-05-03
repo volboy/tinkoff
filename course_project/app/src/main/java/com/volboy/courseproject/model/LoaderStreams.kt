@@ -1,18 +1,28 @@
 package com.volboy.courseproject.model
 
 import com.volboy.courseproject.App
+import com.volboy.courseproject.App.Companion.component
 import com.volboy.courseproject.R
+import com.volboy.courseproject.database.AppDatabase
 import com.volboy.courseproject.presentation.streams.TitleUi
 import com.volboy.courseproject.recyclerview.ViewTyped
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 class LoaderStreams {
 
+    @Inject
+    lateinit var appDatabase: AppDatabase
+
+    init {
+        component.injectDatabase(this)
+    }
+
     fun getRemoteStreams(): Single<List<ViewTyped>> {
-        val streamsDao = App.appDatabase.streamsDao()
+        val streamsDao = appDatabase.streamsDao()
         return App.instance.zulipApi.getStreams()
             .subscribeOn(Schedulers.io())
             //TODO("Не забыть убрать, это для проверки загрузки данных из БД)
@@ -39,7 +49,7 @@ class LoaderStreams {
 
 
     fun getTopicsOfStreams(id: Int): Single<MutableList<ViewTyped>> {
-        val topicsDao = App.appDatabase.topicsDao()
+        val topicsDao = appDatabase.topicsDao()
         return App.instance.zulipApi.getStreamsTopics(id)
             .subscribeOn(Schedulers.io())
             //TODO Не забыть убрать

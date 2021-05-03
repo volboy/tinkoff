@@ -3,9 +3,10 @@ package com.volboy.courseproject.presentation.users
 import android.util.Log
 import android.widget.EditText
 import androidx.core.widget.addTextChangedListener
-import com.volboy.courseproject.App.Companion.loaderUsers
+import com.volboy.courseproject.App.Companion.component
 import com.volboy.courseproject.App.Companion.resourceProvider
 import com.volboy.courseproject.R
+import com.volboy.courseproject.model.LoaderUsers
 import com.volboy.courseproject.presentation.mvp.presenter.base.RxPresenter
 import com.volboy.courseproject.recyclerview.ViewTyped
 import com.volboy.courseproject.recyclerview.simpleitems.EmptyView
@@ -13,10 +14,18 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 class UsersPresenter : RxPresenter<UsersView>(UsersView::class.java) {
     private lateinit var searchText: Observable<String>
     private var data = mutableListOf<ViewTyped>()
+
+    @Inject
+    lateinit var loaderUsers: LoaderUsers
+
+    init {
+        component.injectLoaderUsers(this)
+    }
 
     fun getUsers() {
         view.showLoading("")

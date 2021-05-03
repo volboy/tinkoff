@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
+import com.volboy.courseproject.App
 import com.volboy.courseproject.App.Companion.streamsPresenter
 import com.volboy.courseproject.R
 import com.volboy.courseproject.databinding.FragmentStreamsBinding
