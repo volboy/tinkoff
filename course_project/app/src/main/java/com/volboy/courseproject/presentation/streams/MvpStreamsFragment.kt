@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
@@ -35,7 +34,6 @@ class MvpStreamsFragment : StreamsView, MvpFragment<StreamsView, StreamsPresente
         binding = FragmentStreamsBinding.inflate(inflater, container, false)
         val holderFactory = UiHolderFactory(this)
         adapter = CommonAdapter(holderFactory, CommonDiffUtilCallback(), null)
-        (requireActivity() as AppCompatActivity).supportActionBar?.show()
         val searchEdit = requireActivity().findViewById<EditText>(R.id.searchEditText)
         binding.rwAllStreams.adapter = adapter
         binding.rwAllStreams.addItemDecoration(StreamsItemDecoration(requireContext()))

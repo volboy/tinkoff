@@ -11,7 +11,6 @@ import javax.inject.Inject
 class MainActivity : MvpActivity<MainView, MainPresenter>(), MainView {
     private lateinit var binding: ActivityMainBinding
     private val mainFragment = MainFragment()
-    private var transaction: Int = 0
 
     @Inject
     lateinit var mainPresenter: MainPresenter
@@ -26,11 +25,10 @@ class MainActivity : MvpActivity<MainView, MainPresenter>(), MainView {
         val searchToolbar = binding.searchToolbar
         setSupportActionBar(searchToolbar)
         mainPresenter.getOwnId()
-        if (mainPresenter.restoreInstance() == 0) {
-            transaction = supportFragmentManager.beginTransaction()
+        if (savedInstanceState == null) {
+            supportFragmentManager.beginTransaction()
                 .replace(R.id.container, mainFragment)
                 .commit()
-            mainPresenter.saveInstance(transaction)
         }
         setContentView(binding.root)
     }

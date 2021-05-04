@@ -1,0 +1,19 @@
+package com.volboy.courseproject.presentation.main
+
+import androidx.fragment.app.Fragment
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.volboy.courseproject.presentation.profile.MvpProfileFragment
+import com.volboy.courseproject.presentation.users.MvpUsersFragment
+
+class MainFragmentAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
+    override fun getItemCount(): Int = 3
+
+    override fun createFragment(position: Int): Fragment {
+        return when (position) {
+            0 -> ChannelsFragment()
+            1 -> MvpUsersFragment()
+            2 -> MvpProfileFragment()
+            else -> ChannelsFragment()
+        }
+    }
+}

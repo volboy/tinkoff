@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
@@ -36,7 +35,6 @@ class MvpUsersFragment : UsersView, MvpFragment<UsersView, UsersPresenter>(), Ui
         val holderFactory = UiHolderFactory(this)
         adapter = CommonAdapter(holderFactory, CommonDiffUtilCallback(), null)
         binding.rwPeople.adapter = adapter
-        (requireActivity() as AppCompatActivity).supportActionBar?.show()
         getPresenter().getUsers()
         val searchEdit = requireActivity().findViewById<EditText>(R.id.searchEditText)
         getPresenter().setSearchObservable(searchEdit)
