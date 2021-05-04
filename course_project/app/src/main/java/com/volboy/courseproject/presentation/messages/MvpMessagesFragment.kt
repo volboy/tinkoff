@@ -104,6 +104,11 @@ class MvpMessagesFragment : MessagesView, MvpFragment<MessagesView, MessagesPres
         binding.recyclerMessage.smoothScrollToPosition(msgPosition)
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        (requireActivity() as AppCompatActivity).supportActionBar?.show()
+    }
+
     override fun showLoading(msg: String) {
         binding.fragmentLoading.root.isVisible = true
         binding.recyclerMessage.isGone = true
