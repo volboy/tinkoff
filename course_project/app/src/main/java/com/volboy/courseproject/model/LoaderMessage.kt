@@ -5,7 +5,7 @@ import android.text.Html
 import android.text.Spanned
 import com.google.gson.Gson
 import com.volboy.courseproject.App.Companion.component
-import com.volboy.courseproject.MainActivity.Companion.ownId
+import com.volboy.courseproject.MainPresenter.Companion.ownId
 import com.volboy.courseproject.R
 import com.volboy.courseproject.api.ZulipApi
 import com.volboy.courseproject.common.ResourceProvider
@@ -46,8 +46,11 @@ class LoaderMessage {
         val narrowsJSON = gson.toJson(narrows)
         return zulipApi.getMessages("newest", 20, 0, narrowsJSON)
             .subscribeOn(Schedulers.io())
-            .map { response ->
+            .flatMap { response ->
                 messagesDao.updateMessages(response.messages)
+                    .andThen(Single.just(response))
+            }
+            .map { response ->
                 groupedMessages(response.messages)
             }
             .map { list -> list.reversed() }
@@ -94,7 +97,7 @@ class LoaderMessage {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
 
-    private fun groupedMessages(messagesJSON: List<MessageJSON>): List<ViewTyped> = messagesJSON
+    fun groupedMessages(messagesJSON: List<MessageJSON>): List<ViewTyped> = messagesJSON
         .groupBy { getDateTime(it.timestamp) }
         .flatMap { (date, msg) ->
             listOf(DataUi(date, R.layout.item_date_divider)) + viewTypedMessages(msg)

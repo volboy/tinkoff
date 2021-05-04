@@ -21,6 +21,8 @@ buildscript {
         room_runtime_version = '2.3.0'
         room_compiler_version = '2.2.6'
         room_rxjava2_version = '2.3.0'
+        dagger_version = '2.35.1'
+        dagger_compiler_version = '2.35.1'
     }
     repositories {
         google()

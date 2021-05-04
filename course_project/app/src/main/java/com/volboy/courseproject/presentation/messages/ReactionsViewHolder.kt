@@ -1,7 +1,7 @@
 package com.volboy.courseproject.presentation.messages
 
 import android.view.View
-import com.volboy.courseproject.MainActivity.Companion.ownId
+import com.volboy.courseproject.MainPresenter.Companion.ownId
 import com.volboy.courseproject.R
 import com.volboy.courseproject.customviews.EmojiView
 import com.volboy.courseproject.customviews.FlexBoxLayout

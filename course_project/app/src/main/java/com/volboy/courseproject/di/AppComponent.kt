@@ -1,6 +1,7 @@
 package com.volboy.courseproject.di
 
 import com.volboy.courseproject.MainActivity
+import com.volboy.courseproject.MainPresenter
 import com.volboy.courseproject.model.LoaderMessage
 import com.volboy.courseproject.model.LoaderStreams
 import com.volboy.courseproject.model.LoaderUsers
@@ -34,7 +35,7 @@ interface AppComponent {
     fun injectLoaderMessages(messagesPresenter: MessagesPresenter)
 
     fun injectLoaderUsers(usersPresenter: UsersPresenter)
-    fun injectLoaderUsers(mainActivity: MainActivity)
+    fun injectLoaderUsers(mainPresenter: MainPresenter)
     fun injectLoaderUsers(detailsPresenter: DetailsPresenter)
     fun injectLoaderUsers(profilePresenter: ProfilePresenter)
 
@@ -57,6 +58,8 @@ interface AppComponent {
     fun injectStreamsPresenter(mvpSubscribedFragment: MvpSubscribedFragment)
 
     fun injectUsersPresenter(mvpUsersFragment: MvpUsersFragment)
+
+    fun injectMainPresenter(mainActivity: MainActivity)
 
     fun injectResourceProvider(loaderMessage: LoaderMessage)
     fun injectResourceProvider(detailsPresenter: DetailsPresenter)

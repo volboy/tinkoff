@@ -98,8 +98,10 @@ class MvpMessagesFragment : MessagesView, MvpFragment<MessagesView, MessagesPres
         adapter.notifyItemChanged(msgPosition)
     }
 
-    override fun sendMessage(message: ViewTyped) {
-        TODO("Not yet implemented")
+    override fun sendMessage(data: List<ViewTyped>, msgPosition: Int) {
+        show()
+        adapter.items = data
+        binding.recyclerMessage.smoothScrollToPosition(msgPosition)
     }
 
     override fun showLoading(msg: String) {

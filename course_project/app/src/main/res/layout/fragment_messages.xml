@@ -53,7 +53,7 @@
         android:background="@drawable/message_box_drw"
         android:fadeScrollbars="true"
         android:hint="@string/make_message_hint"
-        android:inputType="textAutoCorrect"
+        android:inputType="textMultiLine"
         android:maxHeight="102dp"
         android:minHeight="51dp"
         android:paddingLeft="21dp"

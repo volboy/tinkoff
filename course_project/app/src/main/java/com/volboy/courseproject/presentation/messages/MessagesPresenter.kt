@@ -2,14 +2,17 @@ package com.volboy.courseproject.presentation.messages
 
 import android.util.Log
 import com.volboy.courseproject.App.Companion.component
-import com.volboy.courseproject.MainActivity.Companion.ownId
+import com.volboy.courseproject.MainPresenter.Companion.ownId
 import com.volboy.courseproject.R
 import com.volboy.courseproject.common.ResourceProvider
+import com.volboy.courseproject.database.AppDatabase
 import com.volboy.courseproject.model.LoaderMessage
 import com.volboy.courseproject.model.Reaction
 import com.volboy.courseproject.presentation.mvp.presenter.base.RxPresenter
 import com.volboy.courseproject.recyclerview.ViewTyped
 import com.volboy.courseproject.recyclerview.simpleitems.ProgressItem
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 class MessagesPresenter : RxPresenter<MessagesView>(MessagesView::class.java) {
@@ -23,12 +26,23 @@ class MessagesPresenter : RxPresenter<MessagesView>(MessagesView::class.java) {
     @Inject
     lateinit var res: ResourceProvider
 
+    @Inject
+    lateinit var appDatabase: AppDatabase
+
     init {
         component.injectLoaderMessages(this)
         component.injectResourceProvider(this)
+        component.injectDatabase(this)
     }
 
     fun loadFirstRemoteMessages(streamName: String, topicName: String) {
+        appDatabase.messagesDao().getAllMessages()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .map { msg -> loaderMessages.groupedMessages(msg) }
+            .subscribe { viewTypedMsg ->
+                data = viewTypedMsg as MutableList<ViewTyped>
+            }.disposeOnFinish()
         val messages = loaderMessages.getMessages(streamName, topicName)
         messages.subscribe(
             { result ->
@@ -149,8 +163,7 @@ class MessagesPresenter : RxPresenter<MessagesView>(MessagesView::class.java) {
                 getLastMessage.subscribe(
                     { lastMsg ->
                         data.addAll(0, lastMsg)
-                        val newData = ArrayList(data)
-                        view.showMessage(newData, 0)
+                        view.sendMessage(data, 0)
                     },
                     { error ->
                         //TODO отображаем сообщение с ошибкой

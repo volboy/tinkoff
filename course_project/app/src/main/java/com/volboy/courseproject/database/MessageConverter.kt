@@ -14,13 +14,16 @@ class MessageConverter {
         }
         return stringBuilder.toString()
     }
+
     @TypeConverter
     fun toReactions(stringReactions: String): List<ReactionsJSON> {
         val listReactions = mutableListOf<ReactionsJSON>()
-        val stringList = stringReactions.split(",")
-        val stringListGrouped = stringList.groupBy { "?" }
-        stringListGrouped.forEach { (_, list) ->
-            listReactions.add(ReactionsJSON(list[0], list[1], list[2], list[3].toInt()))
+        if (stringReactions.isNotEmpty()) {
+            val stringList = stringReactions.split(",")
+            val stringListGrouped = stringList.groupBy { "?" }
+            stringListGrouped.forEach { (_, list) ->
+                listReactions.add(ReactionsJSON(list[0].removePrefix("?"), list[1], list[2], list[3].toInt()))
+            }
         }
         return listReactions
     }

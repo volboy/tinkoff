@@ -31,8 +31,11 @@ class LoaderStreams {
             .subscribeOn(Schedulers.io())
             //TODO("Не забыть убрать, это для проверки загрузки данных из БД)
             .delay(2, TimeUnit.SECONDS)
-            .map { response ->
+            .flatMap { response ->
                 streamsDao.updateStreams(response.streams)
+                    .andThen(Single.just(response))
+            }
+            .map { response ->
                 viewTypedStreams(response.streams)
             }
             .observeOn(AndroidSchedulers.mainThread())

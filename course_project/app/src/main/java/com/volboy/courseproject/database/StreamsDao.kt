@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.volboy.courseproject.model.StreamJSON
+import io.reactivex.Completable
 import io.reactivex.Maybe
 
 @Dao
@@ -13,5 +14,5 @@ interface StreamsDao {
     fun getAllStreams(): Maybe<List<StreamJSON>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun updateStreams(streamsJSON: List<StreamJSON>)
+    fun updateStreams(streamsJSON: List<StreamJSON>): Completable
 }

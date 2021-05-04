@@ -1,25 +1,23 @@
 package com.volboy.courseproject
 
 import android.os.Bundle
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import com.volboy.courseproject.App.Companion.component
 import com.volboy.courseproject.databinding.ActivityMainBinding
-import com.volboy.courseproject.model.LoaderUsers
 import com.volboy.courseproject.presentation.main.MainFragment
-import io.reactivex.disposables.CompositeDisposable
+import com.volboy.courseproject.presentation.mvp.presenter.MvpActivity
 import javax.inject.Inject
 
-class MainActivity : AppCompatActivity() {
+
+class MainActivity : MvpActivity<MainView, MainPresenter>(), MainView {
     private lateinit var binding: ActivityMainBinding
     private val mainFragment = MainFragment()
-    private val compositeDisposable = CompositeDisposable()
+    private var transaction: Int = 0
 
     @Inject
-    lateinit var loaderUsers: LoaderUsers
+    lateinit var mainPresenter: MainPresenter
 
     init {
-        component.injectLoaderUsers(this)
+        component.injectMainPresenter(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,31 +25,17 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         val searchToolbar = binding.searchToolbar
         setSupportActionBar(searchToolbar)
-        getOwnId()
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.container, mainFragment)
-            .commit()
+        mainPresenter.getOwnId()
+        if (mainPresenter.restoreInstance() == 0) {
+            transaction = supportFragmentManager.beginTransaction()
+                .replace(R.id.container, mainFragment)
+                .commit()
+            mainPresenter.saveInstance(transaction)
+        }
         setContentView(binding.root)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        compositeDisposable.clear()
-    }
+    override fun getPresenter(): MainPresenter = mainPresenter
 
-    private fun getOwnId() {
-        val ownUser = loaderUsers.getOwnUser()
-        compositeDisposable.add(ownUser.subscribe(
-            { result ->
-                ownId = result.user_id
-            },
-            { error ->
-                Toast.makeText(applicationContext, resources.getString(R.string.msg_network_error) + error.message, Toast.LENGTH_SHORT).show()
-            }
-        ))
-    }
-
-    companion object {
-        var ownId = 0
-    }
+    override fun getMvpView(): MainView = this
 }

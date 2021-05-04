@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.volboy.courseproject.model.MessageJSON
+import io.reactivex.Completable
 import io.reactivex.Maybe
 
 @Dao
@@ -13,5 +14,5 @@ interface MessagesDao {
     fun getAllMessages(): Maybe<List<MessageJSON>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun updateMessages(messagesJSON: List<MessageJSON>)
+    fun updateMessages(messagesJSON: List<MessageJSON>): Completable
 }

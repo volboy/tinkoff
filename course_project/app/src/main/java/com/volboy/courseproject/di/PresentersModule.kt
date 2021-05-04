@@ -1,5 +1,6 @@
 package com.volboy.courseproject.di
 
+import com.volboy.courseproject.MainPresenter
 import com.volboy.courseproject.presentation.details.DetailsPresenter
 import com.volboy.courseproject.presentation.messages.MessagesPresenter
 import com.volboy.courseproject.presentation.profile.ProfilePresenter
@@ -39,5 +40,11 @@ class PresentersModule {
     @Provides
     fun provideDetailsPresenter(): DetailsPresenter {
         return DetailsPresenter()
+    }
+
+    @AppScope
+    @Provides
+    fun provideMainPresenter(): MainPresenter {
+        return MainPresenter()
     }
 }
