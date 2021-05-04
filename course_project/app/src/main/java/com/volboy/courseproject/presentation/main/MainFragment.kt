@@ -12,17 +12,15 @@ import com.volboy.courseproject.databinding.FragmentMainBinding
 
 class MainFragment : Fragment() {
     private lateinit var binding: FragmentMainBinding
+    private lateinit var viewPagerAdapter: MainFragmentAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentMainBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        viewPagerAdapter = MainFragmentAdapter(this)
         val viewPager = binding.viewPager
-        val viewPagerAdapter = MainFragmentAdapter(this)
         viewPager.isUserInputEnabled = false
         viewPager.adapter = viewPagerAdapter
+        savedInstanceState?.getInt("SAVED_STATE")?.let { viewPager.currentItem = it }
         viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 when (position) {
@@ -49,6 +47,13 @@ class MainFragment : Fragment() {
             }
             true
         }
+        return binding.root
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putInt("SAVED_STATE", binding.viewPager.currentItem)
+        super.onSaveInstanceState(outState)
+
     }
 }
 

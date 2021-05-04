@@ -40,10 +40,15 @@ class MvpSubscribedFragment : StreamsView, MvpFragment<StreamsView, StreamsPrese
         adapter = CommonAdapter(holderFactory, CommonDiffUtilCallback(), null)
         binding.rwAllStreams.adapter = adapter
         binding.rwAllStreams.addItemDecoration(StreamsItemDecoration(requireContext()))
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         getPresenter().getStreams()
         val searchEdit = requireActivity().findViewById<EditText>(R.id.searchEditText)
         getPresenter().setSearchObservable(searchEdit)
-        return binding.root
+
     }
 
     override fun getPresenter(): StreamsPresenter = streamsPresenter
