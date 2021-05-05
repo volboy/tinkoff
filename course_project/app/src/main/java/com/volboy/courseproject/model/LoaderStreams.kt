@@ -7,6 +7,7 @@ import com.volboy.courseproject.database.AppDatabase
 import com.volboy.courseproject.presentation.streams.allstreams.AllStreamsUi
 import com.volboy.courseproject.presentation.streams.mystreams.TitleUi
 import com.volboy.courseproject.recyclerview.ViewTyped
+import io.reactivex.Maybe
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -27,23 +28,55 @@ class LoaderStreams {
     }
 
     fun getRemoteSubStreams(): Single<List<ViewTyped>> {
+        val subStreamsDao = appDatabase.subStreamsDao()
         return zulipApi.getSubscribedStreams()
             .subscribeOn(Schedulers.io())
             //TODO("Не забыть убрать, это для проверки загрузки данных из БД)
             .delay(2, TimeUnit.SECONDS)
+            .flatMap { response ->
+                subStreamsDao.updateSubStreams(response.subscriptions)
+                    .andThen(Single.just(response))
+            }
             .map { response ->
-                viewTypedSubStreams(response)
+                viewTypedSubStreams(response.subscriptions)
             }
             .observeOn(AndroidSchedulers.mainThread())
     }
 
     fun getRemoteAllStreams(): Single<List<ViewTyped>> {
+        val streamsDao = appDatabase.streamsDao()
         return zulipApi.getStreams()
             .subscribeOn(Schedulers.io())
             //TODO("Не забыть убрать, это для проверки загрузки данных из БД)
             .delay(2, TimeUnit.SECONDS)
+            .flatMap { response ->
+                streamsDao.updateStreams(response.streams)
+                    .andThen(Single.just(response))
+            }
             .map { response ->
                 viewTypedStreams(response.streams)
+            }
+            .observeOn(AndroidSchedulers.mainThread())
+    }
+
+    fun getTopicsOfStreams(id: Int): Single<MutableList<ViewTyped>> {
+        val topicsDao = appDatabase.topicsDao()
+        return zulipApi.getStreamsTopics(id)
+            .subscribeOn(Schedulers.io())
+            //TODO Не забыть убрать
+            .delay(2, TimeUnit.SECONDS)
+            .map { response ->
+                topicsDao.updateTopics(response.topics)
+                viewTypedTopics(response.topics, id)
+            }
+            .observeOn(AndroidSchedulers.mainThread())
+    }
+
+    fun getSubStreamsFromDB(): Maybe<List<ViewTyped>> {
+        return appDatabase.subStreamsDao().getSubStreams()
+            .subscribeOn(Schedulers.io())
+            .map { streams ->
+                viewTypedSubStreams(streams)
             }
             .observeOn(AndroidSchedulers.mainThread())
     }
@@ -54,7 +87,7 @@ class LoaderStreams {
             .observeOn(AndroidSchedulers.mainThread())
     }
 
-    private fun viewTypedSubStreams(subStreamResponse: SubStreamResponse): List<ViewTyped> = subStreamResponse.subscriptions
+    private fun viewTypedSubStreams(subStreamsJSON: List<SubStreamJSON>): List<ViewTyped> = subStreamsJSON
         .map { stream ->
             TitleUi(
                 stream.name,
@@ -76,20 +109,6 @@ class LoaderStreams {
                 stream.streamId.toString()
             )
         }
-
-
-    fun getTopicsOfStreams(id: Int): Single<MutableList<ViewTyped>> {
-        val topicsDao = appDatabase.topicsDao()
-        return zulipApi.getStreamsTopics(id)
-            .subscribeOn(Schedulers.io())
-            //TODO Не забыть убрать
-            .delay(2, TimeUnit.SECONDS)
-            .map { response ->
-                topicsDao.updateTopics(response.topics)
-                viewTypedTopics(response.topics, id)
-            }
-            .observeOn(AndroidSchedulers.mainThread())
-    }
 
     private fun viewTypedTopics(topicsJSON: List<TopicJSON>, streamId: Int): MutableList<ViewTyped> {
         val viewTypedList = mutableListOf<ViewTyped>()

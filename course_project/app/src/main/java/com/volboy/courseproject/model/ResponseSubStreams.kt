@@ -1,10 +1,15 @@
 package com.volboy.courseproject.model
 
+import androidx.room.Entity
 import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
 import com.google.gson.annotations.SerializedName
+import com.volboy.courseproject.database.SubStreamsConverter
 
 class SubStreamResponse(val subscriptions: List<SubStreamJSON>)
 
+@Entity
+@TypeConverters(SubStreamsConverter::class)
 class SubStreamJSON(
     @PrimaryKey
     @SerializedName("stream_id")
@@ -17,17 +22,17 @@ class SubStreamJSON(
     val dateCreated: Int,
     @SerializedName("invite_only")
     val inviteOnly: Boolean,
-    val subscribers: Array<Int>,
+    val subscribers: ArrayList<Int>?,
     @SerializedName("desktop_notifications")
     val desktopNotifications: Boolean,
-    @SerializedName("emailNotifications")
-    val email_notifications: Boolean,
+    @SerializedName("email_notifications")
+    val emailNotifications: Boolean,
     @SerializedName("wildcard_mentions_notify")
     val wildcardMentionsNotify: Boolean,
     @SerializedName("push_notifications")
     val pushNotifications: Boolean,
-    @SerializedName("audibleNotifications")
-    val audible_notifications: Boolean,
+    @SerializedName("audible_notifications")
+    val audibleNotifications: Boolean,
     @SerializedName("pin_to_top")
     val pinToTop: Boolean,
     @SerializedName("email_address")

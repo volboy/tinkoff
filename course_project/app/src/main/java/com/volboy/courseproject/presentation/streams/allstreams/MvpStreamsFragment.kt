@@ -11,6 +11,7 @@ import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import com.volboy.courseproject.App.Companion.component
 import com.volboy.courseproject.R
+import com.volboy.courseproject.databinding.FragmentStreamsBinding
 import com.volboy.courseproject.databinding.FragmentSubscribedBinding
 import com.volboy.courseproject.presentation.messages.MvpMessagesFragment
 import com.volboy.courseproject.presentation.mvp.presenter.MvpFragment
@@ -24,7 +25,7 @@ import javax.inject.Inject
 
 class MvpStreamsFragment : AllStreamsView, MvpFragment<AllStreamsView, AllStreamsPresenter>(),
     UiHolderFactory.ChannelsInterface {
-    private lateinit var binding: FragmentSubscribedBinding
+    private lateinit var binding: FragmentStreamsBinding
     private lateinit var adapter: CommonAdapter<ViewTyped>
     private lateinit var clickedStream: TitleUi
 
@@ -36,7 +37,7 @@ class MvpStreamsFragment : AllStreamsView, MvpFragment<AllStreamsView, AllStream
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        binding = FragmentSubscribedBinding.inflate(inflater, container, false)
+        binding = FragmentStreamsBinding.inflate(inflater, container, false)
         val holderFactory = UiHolderFactory(this)
         adapter = CommonAdapter(holderFactory, CommonDiffUtilCallback(), null)
         val searchEdit = requireActivity().findViewById<EditText>(R.id.searchEditText)

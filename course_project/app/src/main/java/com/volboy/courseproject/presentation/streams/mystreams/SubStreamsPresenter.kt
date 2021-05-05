@@ -1,6 +1,5 @@
 package com.volboy.courseproject.presentation.streams.mystreams
 
-import android.util.Log
 import android.widget.EditText
 import androidx.core.widget.addTextChangedListener
 import com.volboy.courseproject.App.Companion.component
@@ -18,9 +17,11 @@ import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class StreamsPresenter : RxPresenter<StreamsView>(StreamsView::class.java) {
+class SubStreamsPresenter : RxPresenter<SubStreamsView>(SubStreamsView::class.java) {
     private var data = mutableListOf<ViewTyped>()
+    private var dataFromDatabase = mutableListOf<ViewTyped>()
     private var dataBaseError = false
+
     private lateinit var searchText: Observable<String>
 
     @Inject
@@ -39,7 +40,34 @@ class StreamsPresenter : RxPresenter<StreamsView>(StreamsView::class.java) {
     }
 
     fun getStreams() {
-        loadStreamsFromDatabase()
+        if (dataFromDatabase.isNotEmpty()) {
+            view.showData(dataFromDatabase)
+            loadRemoteStreams()
+        } else {
+            loadStreamsFromDatabase()
+        }
+    }
+
+    fun getTopics(position: Int) {
+        val clickedStream = data[position] as TitleUi
+        clickedStream.imageId = R.drawable.ic_arrow_down
+        data[position] = clickedStream
+        loadRemoteTopics(clickedStream.uid.toInt())
+    }
+
+    fun removeTopics(position: Int) {
+        val newData = mutableListOf<ViewTyped>()
+        data.forEach { item ->
+            if ((item as TitleUi).streamsId != data[position].uid.toInt()) {
+                if (item.uid == data[position].uid) {
+                    item.imageId = R.drawable.ic_arrow_down
+                }
+                newData.add(item)
+            }
+        }
+        view.hideData(newData)
+        data = newData
+
     }
 
     fun setSearchObservable(searchEdit: EditText) {
@@ -74,26 +102,44 @@ class StreamsPresenter : RxPresenter<StreamsView>(StreamsView::class.java) {
         }
     }
 
-    fun getTopics(position: Int) {
-        val clickedStream = data[position] as TitleUi
-        clickedStream.imageId = R.drawable.ic_arrow_down
-        data[position] = clickedStream
-        loadRemoteTopics(clickedStream.uid.toInt())
+    private fun loadStreamsFromDatabase() {
+        loaderStreams.getSubStreamsFromDB().subscribe(
+            { subStreams ->
+                if (subStreams.isNotEmpty()) {
+                    data = subStreams as MutableList<ViewTyped>
+                    dataFromDatabase = subStreams
+                    view.showData(data)
+                }
+            },
+            { error ->
+                view.showMessage(res.getString(R.string.msg_database_error) + error.message)
+            },
+            {
+                view.showMessage(res.getString(R.string.msg_database_empty))
+            })
+            .disposeOnFinish()
+        loadRemoteStreams()
     }
 
-    fun removeTopics(position: Int) {
-        val newData = mutableListOf<ViewTyped>()
-        data.forEach { item ->
-            if ((item as TitleUi).streamsId != data[position].uid.toInt()) {
-                if (item.uid == data[position].uid) {
-                    item.imageId = R.drawable.ic_arrow_down
+    private fun loadRemoteStreams() {
+        view.showLoading("")
+        loaderStreams.getRemoteSubStreams().subscribe(
+            { result ->
+                data = result as MutableList<ViewTyped>
+                view.showData(data)
+            },
+            { error ->
+                if (dataFromDatabase.isEmpty()) {
+                    view.showError(error.message)
+                } else {
+                    view.showData(data)
                 }
-                newData.add(item)
             }
-        }
-        view.hideData(newData)
-        data = newData
+        ).disposeOnFinish()
+    }
 
+    private fun loadTopicFromDatabase(streamId: Int) {
+        //TODO ("Сделать сохранение и загрузку топиков в БД")
     }
 
     private fun loadRemoteTopics(streamId: Int) {
@@ -114,72 +160,11 @@ class StreamsPresenter : RxPresenter<StreamsView>(StreamsView::class.java) {
                 newData.remove(ProgressItem)
                 view.showData(newData)
                 data = newData
-                writeLog(res.getString(R.string.msg_network_ok))
             },
             {
-                writeLog(res.getString(R.string.msg_network_error))
+                view.showMessage(res.getString(R.string.msg_network_error))
             }
         ).disposeOnFinish()
-    }
-
-    private fun loadTopicFromDatabase(streamId: Int) {
-        //TODO ("Сделать сохранение и загрузку топиков в БД")
-    }
-
-    private fun loadStreamsFromDatabase() {
-        val streamsDao = appDatabase.streamsDao()
-        streamsDao.getAllStreams()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .map { streams -> loaderStreams.viewTypedStreams(streams) }
-            .subscribe(
-                { viewTypedStreams ->
-                    writeLog(res.getString(R.string.msg_database_ok) + " , размер БД " + viewTypedStreams?.size?.toString())
-                    if (viewTypedStreams.isEmpty()) {
-                        view.showLoading("")
-                        dataBaseError = true
-                    } else {
-                        data = viewTypedStreams as MutableList<ViewTyped>
-                        view.showData(data)
-                        dataBaseError = false
-                    }
-                },
-                { error ->
-                    writeLog(res.getString(R.string.msg_database_error) + error.message)
-                    dataBaseError = true
-                },
-                {
-                    writeLog(res.getString(R.string.msg_database_empty))
-                    dataBaseError = true
-                })
-            .disposeOnFinish()
-        loadRemoteStreams()
-    }
-
-    private fun loadRemoteStreams() {
-        view.showLoading("")
-        val streams = loaderStreams.getRemoteSubStreams()
-        streams.subscribe(
-            { result ->
-                data = result as MutableList<ViewTyped>
-                view.showData(data)
-                writeLog(res.getString(R.string.msg_network_ok))
-            },
-            { error ->
-                if (dataBaseError) {
-                    view.showError(error.message)
-                } else {
-                    view.showData(data)
-                }
-                view.showError(error.message)
-                writeLog(res.getString(R.string.msg_network_error) + error.message)
-            }
-        )
-            .disposeOnFinish()
-    }
-
-    private fun writeLog(msg: String) {
-        Log.i(res.getString(R.string.log_string), msg)
     }
 
     companion object {

@@ -16,7 +16,7 @@ import com.volboy.courseproject.presentation.profile.ProfilePresenter
 import com.volboy.courseproject.presentation.streams.allstreams.AllStreamsPresenter
 import com.volboy.courseproject.presentation.streams.allstreams.MvpStreamsFragment
 import com.volboy.courseproject.presentation.streams.mystreams.MvpSubscribedFragment
-import com.volboy.courseproject.presentation.streams.mystreams.StreamsPresenter
+import com.volboy.courseproject.presentation.streams.mystreams.SubStreamsPresenter
 import com.volboy.courseproject.presentation.users.MvpUsersFragment
 import com.volboy.courseproject.presentation.users.UsersPresenter
 import dagger.Component
@@ -33,7 +33,7 @@ import dagger.Component
 @AppScope
 interface AppComponent {
 
-    fun injectLoaderStreams(streamsPresenter: StreamsPresenter)
+    fun injectLoaderStreams(subStreamsPresenter: SubStreamsPresenter)
     fun injectLoaderStreams(allStreamsPresenter: AllStreamsPresenter)
     fun injectLoaderStreams(addStreamPresenter: AddStreamPresenter)
 
@@ -44,7 +44,7 @@ interface AppComponent {
     fun injectLoaderUsers(detailsPresenter: DetailsPresenter)
     fun injectLoaderUsers(profilePresenter: ProfilePresenter)
 
-    fun injectDatabase(streamsPresenter: StreamsPresenter)
+    fun injectDatabase(subStreamsPresenter: SubStreamsPresenter)
     fun injectDatabase(allStreamsPresenter: AllStreamsPresenter)
     fun injectDatabase(messagesPresenter: MessagesPresenter)
     fun injectDatabase(loaderStreams: LoaderStreams)
@@ -74,7 +74,7 @@ interface AppComponent {
     fun injectResourceProvider(mvpDetailsFragment: MvpDetailsFragment)
     fun injectResourceProvider(messagesPresenter: MessagesPresenter)
     fun injectResourceProvider(profilePresenter: ProfilePresenter)
-    fun injectResourceProvider(streamsPresenter: StreamsPresenter)
+    fun injectResourceProvider(subStreamsPresenter: SubStreamsPresenter)
     fun injectResourceProvider(allStreamsPresenter: AllStreamsPresenter)
     fun injectResourceProvider(usersPresenter: UsersPresenter)
     fun injectResourceProvider(addStreamPresenter: AddStreamPresenter)
