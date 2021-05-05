@@ -18,16 +18,16 @@ interface ZulipApi {
     @GET("messages?json=true")
     fun getMessages(
         @Query("anchor") anchor: String,
-        @Query("num_before") num_before: Int,
-        @Query("num_after") num_after: Int,
+        @Query("num_before") numBefore: Int,
+        @Query("num_after") numAfter: Int,
         @Query("narrow") narrow: String
     ): Single<MessageResponse>
 
     @GET("messages?json=true")
     fun getMessagesNext(
         @Query("anchor") anchor: Int,
-        @Query("num_before") num_before: Int,
-        @Query("num_after") num_after: Int,
+        @Query("num_before") numBefore: Int,
+        @Query("num_after") numAfter: Int,
         @Query("narrow") narrow: String
     ): Single<MessageResponse>
 
@@ -43,9 +43,9 @@ interface ZulipApi {
     @POST("messages/{message_id}/reactions")
     @FormUrlEncoded
     fun addReaction(
-        @Path("message_id") message_id: Int,
-        @Field("emoji_name") emoji_name: String,
-        @Field("reaction_type") reaction_type: String
+        @Path("message_id") messageId: Int,
+        @Field("emoji_name") emojiName: String,
+        @Field("reaction_type") reactionType: String
     ): Single<AddReactionResponse>
 
     @POST("users/me/subscriptions")
@@ -57,9 +57,9 @@ interface ZulipApi {
 
     @DELETE("messages/{message_id}/reactions")
     fun removeReaction(
-        @Path("message_id") message_id: Int,
-        @Query("emoji_name") emoji_name: String,
-        @Query("reaction_type") reaction_type: String
+        @Path("message_id") messageId: Int,
+        @Query("emoji_name") emojiName: String,
+        @Query("reaction_type") reactionType: String
     ): Single<AddReactionResponse>
 
     @POST("messages")
