@@ -25,7 +25,7 @@ class AllStreamsViewHolder(val view: View, private val channelsInterface: UiHold
             channelsInterface.getClickedView(view, adapterPosition, item.viewType)
         }
         switch.setOnCheckedChangeListener { _, isChecked ->
-            channelsInterface.getCheckedSwitch(isChecked, adapterPosition)
+            channelsInterface.getCheckedSwitch(switch, isChecked, adapterPosition)
         }
         title.text = item.title
         switch.isChecked = item.isChecked

@@ -4,6 +4,7 @@ import com.volboy.courseproject.App.Companion.component
 import com.volboy.courseproject.R
 import com.volboy.courseproject.api.ZulipApi
 import com.volboy.courseproject.database.AppDatabase
+import com.volboy.courseproject.presentation.streams.allstreams.AllStreamsUi
 import com.volboy.courseproject.presentation.streams.mystreams.TitleUi
 import com.volboy.courseproject.recyclerview.ViewTyped
 import io.reactivex.Single
@@ -62,13 +63,10 @@ class LoaderStreams {
 
     fun viewTypedStreams(streamsJSON: List<StreamJSON>): List<ViewTyped> = streamsJSON
         .map { stream ->
-            TitleUi(
+            AllStreamsUi(
                 stream.name,
-                0,
                 false,
-                null,
-                R.drawable.ic_arrow_down,
-                R.layout.item_collapse,
+                R.layout.item_subto_stream,
                 stream.streamId.toString()
             )
         }

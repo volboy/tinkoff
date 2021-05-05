@@ -23,7 +23,7 @@
     </style>
 
     <style name="ZulipSwitch" parent="Theme.AppCompat.Light">
-        <item name="colorControlActivated">@color/header_color</item>
+        <item name="colorControlActivated">@color/profile_status_color_green</item>
         <item name="colorSwitchThumbNormal">@color/ev_selected</item>
         <item name="android:colorForeground">@color/message_box_color</item>
         <item name="trackColorActive">@color/profile_status_color_green</item>

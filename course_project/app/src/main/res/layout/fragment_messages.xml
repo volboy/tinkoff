@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/ev_unselected">
+    android:background="@color/main_background">
 
     <TextView
         android:id="@+id/topicName"
@@ -26,7 +26,6 @@
         android:id="@+id/recyclerMessage"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@color/recycler_message_background"
         android:paddingStart="10dp"
         android:paddingTop="10dp"
         android:paddingEnd="10dp"

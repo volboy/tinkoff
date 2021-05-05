@@ -3,16 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/ev_unselected"
+    android:background="@color/main_background"
     android:orientation="vertical">
 
-    <TextView
+    <Button
+        android:id="@+id/createStream"
         android:layout_width="match_parent"
         android:layout_height="43dp"
         android:layout_margin="16dp"
         android:background="@drawable/btn_log_out_drw"
         android:gravity="center"
         android:text="@string/create_new_stream_str"
+        android:textAllCaps="false"
         android:textColor="@color/white"
         android:textSize="18sp" />
 

@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import androidx.appcompat.widget.SwitchCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
@@ -116,7 +117,8 @@ class MvpSubscribedFragment : StreamsView, MvpFragment<StreamsView, StreamsPrese
         }
     }
 
-    override fun getCheckedSwitch(isChecked: Boolean, position: Int) {
+    override fun getCheckedSwitch(view: SwitchCompat, isChecked: Boolean, position: Int) {
         TODO("Not yet implemented")
     }
+
 }

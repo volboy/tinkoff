@@ -1,6 +1,7 @@
 package com.volboy.courseproject.presentation.streams
 
 import android.view.View
+import androidx.appcompat.widget.SwitchCompat
 import com.volboy.courseproject.R
 import com.volboy.courseproject.presentation.streams.allstreams.AllStreamsViewHolder
 import com.volboy.courseproject.presentation.streams.mystreams.StreamsViewHolder
@@ -21,6 +22,6 @@ class UiHolderFactory(private val channelsInterface: ChannelsInterface) : Holder
 
     interface ChannelsInterface {
         fun getClickedView(view: View, position: Int, viewType: Int)
-        fun getCheckedSwitch(isChecked: Boolean, position: Int)
+        fun getCheckedSwitch(view: SwitchCompat, isChecked: Boolean, position: Int)
     }
 }

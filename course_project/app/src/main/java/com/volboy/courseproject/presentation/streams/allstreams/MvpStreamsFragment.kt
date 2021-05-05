@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import androidx.appcompat.widget.SwitchCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
@@ -13,6 +14,7 @@ import com.volboy.courseproject.R
 import com.volboy.courseproject.databinding.FragmentSubscribedBinding
 import com.volboy.courseproject.presentation.messages.MvpMessagesFragment
 import com.volboy.courseproject.presentation.mvp.presenter.MvpFragment
+import com.volboy.courseproject.presentation.mvp.presenter.addstream.MvpAddStream
 import com.volboy.courseproject.presentation.streams.UiHolderFactory
 import com.volboy.courseproject.presentation.streams.mystreams.TitleUi
 import com.volboy.courseproject.recyclerview.CommonAdapter
@@ -39,6 +41,12 @@ class MvpStreamsFragment : AllStreamsView, MvpFragment<AllStreamsView, AllStream
         adapter = CommonAdapter(holderFactory, CommonDiffUtilCallback(), null)
         val searchEdit = requireActivity().findViewById<EditText>(R.id.searchEditText)
         binding.rwAllStreams.adapter = adapter
+        binding.createStream.setOnClickListener {
+            requireActivity().supportFragmentManager.beginTransaction()
+                .add(R.id.container, MvpAddStream())
+                .addToBackStack("MvpUsersFragment.FROM_USERS_TO_USERPROFILE")
+                .commit()
+        }
         getPresenter().getStreams()
         getPresenter().setSearchObservable(searchEdit)
         return binding.root
@@ -107,7 +115,7 @@ class MvpStreamsFragment : AllStreamsView, MvpFragment<AllStreamsView, AllStream
         }
     }
 
-    override fun getCheckedSwitch(isChecked: Boolean, position: Int) {
-        TODO("Not yet implemented")
+    override fun getCheckedSwitch(view: SwitchCompat, isChecked: Boolean, position: Int) {
+        val chek = view.isChecked
     }
 }

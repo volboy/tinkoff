@@ -31,5 +31,9 @@
     <string name="people_str">People</string>
     <string name="profile_str">Profile</string>
     <string name="create_new_stream_str">Create new stream</string>
+    <string name="name_str">Name</string>
+    <string name="description_str">Description</string>
+    <string name="private_str">Private</string>
+    <string name="create_str">Create</string>
 
 </resources>
