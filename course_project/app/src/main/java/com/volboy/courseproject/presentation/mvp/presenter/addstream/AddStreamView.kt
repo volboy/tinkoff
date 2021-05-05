@@ -1,8 +1,7 @@
 package com.volboy.courseproject.presentation.mvp.presenter.addstream
 
-import com.volboy.courseproject.model.OwnUser
-import com.volboy.courseproject.presentation.mvp.view.LoadErrorView
+interface AddStreamView {
+    fun showData(title: String, msg: String?)
 
-interface AddStreamView : LoadErrorView {
-    fun showData(user: OwnUser)
+    fun showLoading()
 }

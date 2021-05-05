@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/main_background"
-    android:orientation="vertical">
+    android:background="@color/main_background">
 
     <TextView
         android:id="@+id/txtName"
@@ -85,15 +84,16 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/txtLock" />
 
-    <Button
+    <TextView
         android:id="@+id/createStream"
         android:layout_width="0dp"
-        android:layout_height="43dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginTop="64dp"
         android:layout_marginEnd="32dp"
         android:background="@drawable/btn_log_out_drw"
         android:gravity="center"
+        android:padding="10dp"
         android:text="@string/create_str"
         android:textAllCaps="false"
         android:textColor="@color/white"
@@ -101,4 +101,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtLock" />
+
+    <include
+        android:id="@+id/fragment_loading"
+        layout="@layout/fragment_loading"
+        android:visibility="gone" />
+
+    <include
+        android:id="@+id/fragment_success"
+        layout="@layout/fragment_success"
+        android:visibility="gone" />
 </androidx.constraintlayout.widget.ConstraintLayout>

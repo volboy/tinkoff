@@ -5,9 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import com.volboy.courseproject.App
 import com.volboy.courseproject.databinding.FragmentAddStreamBinding
-import com.volboy.courseproject.model.OwnUser
 import com.volboy.courseproject.presentation.mvp.presenter.MvpFragment
 import javax.inject.Inject
 
@@ -35,16 +36,29 @@ class MvpAddStreamFragment : AddStreamView, MvpFragment<AddStreamView, AddStream
         (requireActivity() as AppCompatActivity).supportActionBar?.show()
     }
 
-    override fun showData(user: OwnUser) {
-        TODO("Not yet implemented")
+    override fun showData(title: String, msg: String?) {
+        hideViews()
+        binding.fragmentLoading.root.isGone = true
+        binding.fragmentSuccess.root.isVisible = true
+        binding.fragmentSuccess.successTitle.text = title
+        binding.fragmentSuccess.successText.text = msg
+        binding.fragmentSuccess.okText.setOnClickListener { requireActivity().supportFragmentManager.popBackStack() }
     }
 
-    override fun showLoading(msg: String) {
-        TODO("Not yet implemented")
+    override fun showLoading() {
+        hideViews()
+        binding.fragmentSuccess.root.isGone = true
+        binding.fragmentLoading.root.isVisible = true
     }
 
-    override fun showError(error: String?) {
-        TODO("Not yet implemented")
+    private fun hideViews() {
+        binding.editDescription.isGone = true
+        binding.txtDescription.isGone = true
+        binding.streamSwitch.isGone = true
+        binding.createStream.isGone = true
+        binding.txtLock.isGone = true
+        binding.txtName.isGone = true
+        binding.editName.isGone = true
     }
 
     override fun getPresenter(): AddStreamPresenter = addStreamPresenter
