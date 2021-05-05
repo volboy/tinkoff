@@ -5,7 +5,7 @@ import com.volboy.courseproject.reflection.ReflectionUtils
 
 abstract class BasePresenter<View> protected constructor(
     viewClass: Class<View>
-): Presenter<View> {
+) : Presenter<View> {
 
     private val stubView: View =
         ReflectionUtils.createStub(viewClass)

@@ -12,7 +12,6 @@ import androidx.core.view.isVisible
 import com.volboy.courseproject.App.Companion.component
 import com.volboy.courseproject.R
 import com.volboy.courseproject.databinding.FragmentStreamsBinding
-import com.volboy.courseproject.databinding.FragmentSubscribedBinding
 import com.volboy.courseproject.presentation.messages.MvpMessagesFragment
 import com.volboy.courseproject.presentation.mvp.presenter.MvpFragment
 import com.volboy.courseproject.presentation.mvp.presenter.addstream.MvpAddStreamFragment

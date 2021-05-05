@@ -1,4 +1,4 @@
-package com.volboy.courseproject.di;
+package com.volboy.courseproject.di
 
 import android.content.Context
 import com.volboy.courseproject.common.ResourceProvider

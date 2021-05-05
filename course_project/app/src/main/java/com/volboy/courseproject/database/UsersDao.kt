@@ -10,7 +10,7 @@ import io.reactivex.Maybe
 @Dao
 interface UsersDao {
     @Query("SELECT * FROM UserJSON")
-    fun getAllUsers():Maybe<List<UserJSON>>
+    fun getAllUsers(): Maybe<List<UserJSON>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun updateUsers(userJSON: UserJSON)
