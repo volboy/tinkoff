@@ -4,7 +4,8 @@ import com.volboy.courseproject.MainPresenter
 import com.volboy.courseproject.presentation.details.DetailsPresenter
 import com.volboy.courseproject.presentation.messages.MessagesPresenter
 import com.volboy.courseproject.presentation.profile.ProfilePresenter
-import com.volboy.courseproject.presentation.streams.StreamsPresenter
+import com.volboy.courseproject.presentation.streams.allstreams.AllStreamsPresenter
+import com.volboy.courseproject.presentation.streams.mystreams.StreamsPresenter
 import com.volboy.courseproject.presentation.users.UsersPresenter
 import dagger.Module
 import dagger.Provides
@@ -16,6 +17,12 @@ class PresentersModule {
     @Provides
     fun provideStreamsPresenter(): StreamsPresenter {
         return StreamsPresenter()
+    }
+
+    @AppScope
+    @Provides
+    fun provideAllStreamsPresenter(): AllStreamsPresenter {
+        return AllStreamsPresenter()
     }
 
     @AppScope

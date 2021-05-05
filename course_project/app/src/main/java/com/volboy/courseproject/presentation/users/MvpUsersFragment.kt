@@ -82,6 +82,10 @@ class MvpUsersFragment : UsersView, MvpFragment<UsersView, UsersPresenter>(), Ui
             .commit()
     }
 
+    override fun getCheckedSwitch(isChecked: Boolean, position: Int) {
+        TODO("Not yet implemented")
+    }
+
     companion object {
         const val ARG_NAME = "name"
         const val ARG_EMAIL = "email"

@@ -1,35 +1,33 @@
-package com.volboy.courseproject.presentation.streams
+package com.volboy.courseproject.presentation.streams.allstreams
 
 import android.view.View
-import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.widget.SwitchCompat
 import com.volboy.courseproject.R
+import com.volboy.courseproject.presentation.streams.UiHolderFactory
 import com.volboy.courseproject.recyclerview.BaseViewHolder
 import com.volboy.courseproject.recyclerview.ViewTyped
 
-class TitleUi(
+class AllStreamsUi(
     val title: String,
-    var count: Int = 0,
-    var isSelected: Boolean,
-    var streamsId: Int?,
-    var imageId: Int,
+    var isChecked: Boolean = false,
     override val viewType: Int,
     override var uid: String
 ) : ViewTyped
 
 class AllStreamsViewHolder(val view: View, private val channelsInterface: UiHolderFactory.ChannelsInterface) :
-    BaseViewHolder<TitleUi>(view) {
+    BaseViewHolder<AllStreamsUi>(view) {
     private val title: TextView = view.findViewById(R.id.streamText)
-    private val count: TextView = view.findViewById(R.id.messagesCount)
-    private val image: ImageView = view.findViewById(R.id.streamImage)
+    private val switch: SwitchCompat = view.findViewById(R.id.streamSwitch)
 
-    override fun bind(item: TitleUi) {
+    override fun bind(item: AllStreamsUi) {
         view.setOnClickListener {
             channelsInterface.getClickedView(view, adapterPosition, item.viewType)
         }
+        switch.setOnCheckedChangeListener { _, isChecked ->
+            channelsInterface.getCheckedSwitch(isChecked, adapterPosition)
+        }
         title.text = item.title
-        count.text = item.count.toString()
-        image.setImageResource(item.imageId)
+        switch.isChecked = item.isChecked
     }
 }
-

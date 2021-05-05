@@ -1,4 +1,4 @@
-package com.volboy.courseproject.presentation.streams
+package com.volboy.courseproject.presentation.streams.mystreams
 
 import android.content.Context
 import android.graphics.Canvas

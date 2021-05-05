@@ -2,8 +2,8 @@ package com.volboy.courseproject.presentation.main
 
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.volboy.courseproject.presentation.streams.MvpStreamsFragment
-import com.volboy.courseproject.presentation.streams.MvpSubscribedFragment
+import com.volboy.courseproject.presentation.streams.allstreams.MvpStreamsFragment
+import com.volboy.courseproject.presentation.streams.mystreams.MvpSubscribedFragment
 
 class ChannelsFragmentAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
     override fun getItemCount(): Int = 2

@@ -1,9 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/ev_unselected">
+    android:background="@color/ev_unselected"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="43dp"
+        android:layout_margin="16dp"
+        android:background="@drawable/btn_log_out_drw"
+        android:gravity="center"
+        android:text="@string/create_new_stream_str"
+        android:textColor="@color/white"
+        android:textSize="18sp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rwAllStreams"
@@ -21,4 +32,4 @@
         layout="@layout/fragment_loading"
         android:visibility="gone" />
 
-</FrameLayout>
+</LinearLayout>

@@ -11,9 +11,10 @@ import com.volboy.courseproject.presentation.messages.MessagesPresenter
 import com.volboy.courseproject.presentation.messages.MvpMessagesFragment
 import com.volboy.courseproject.presentation.profile.MvpProfileFragment
 import com.volboy.courseproject.presentation.profile.ProfilePresenter
-import com.volboy.courseproject.presentation.streams.MvpStreamsFragment
-import com.volboy.courseproject.presentation.streams.MvpSubscribedFragment
-import com.volboy.courseproject.presentation.streams.StreamsPresenter
+import com.volboy.courseproject.presentation.streams.allstreams.AllStreamsPresenter
+import com.volboy.courseproject.presentation.streams.allstreams.MvpStreamsFragment
+import com.volboy.courseproject.presentation.streams.mystreams.MvpSubscribedFragment
+import com.volboy.courseproject.presentation.streams.mystreams.StreamsPresenter
 import com.volboy.courseproject.presentation.users.MvpUsersFragment
 import com.volboy.courseproject.presentation.users.UsersPresenter
 import dagger.Component
@@ -31,6 +32,7 @@ import dagger.Component
 interface AppComponent {
 
     fun injectLoaderStreams(streamsPresenter: StreamsPresenter)
+    fun injectLoaderStreams(allStreamsPresenter: AllStreamsPresenter)
 
     fun injectLoaderMessages(messagesPresenter: MessagesPresenter)
 
@@ -40,6 +42,7 @@ interface AppComponent {
     fun injectLoaderUsers(profilePresenter: ProfilePresenter)
 
     fun injectDatabase(streamsPresenter: StreamsPresenter)
+    fun injectDatabase(allStreamsPresenter: AllStreamsPresenter)
     fun injectDatabase(messagesPresenter: MessagesPresenter)
     fun injectDatabase(loaderStreams: LoaderStreams)
     fun injectDatabase(loaderMessage: LoaderMessage)
@@ -67,6 +70,7 @@ interface AppComponent {
     fun injectResourceProvider(messagesPresenter: MessagesPresenter)
     fun injectResourceProvider(profilePresenter: ProfilePresenter)
     fun injectResourceProvider(streamsPresenter: StreamsPresenter)
+    fun injectResourceProvider(allStreamsPresenter: AllStreamsPresenter)
     fun injectResourceProvider(usersPresenter: UsersPresenter)
 
 }

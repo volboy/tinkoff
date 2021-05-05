@@ -4,7 +4,7 @@ import com.volboy.courseproject.App.Companion.component
 import com.volboy.courseproject.R
 import com.volboy.courseproject.api.ZulipApi
 import com.volboy.courseproject.database.AppDatabase
-import com.volboy.courseproject.presentation.streams.TitleUi
+import com.volboy.courseproject.presentation.streams.mystreams.TitleUi
 import com.volboy.courseproject.recyclerview.ViewTyped
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -25,21 +25,40 @@ class LoaderStreams {
         component.injectRetrofit(this)
     }
 
-    fun getRemoteStreams(): Single<List<ViewTyped>> {
-        val streamsDao = appDatabase.streamsDao()
+    fun getRemoteSubStreams(): Single<List<ViewTyped>> {
+        return zulipApi.getSubscribedStreams()
+            .subscribeOn(Schedulers.io())
+            //TODO("Не забыть убрать, это для проверки загрузки данных из БД)
+            .delay(2, TimeUnit.SECONDS)
+            .map { response ->
+                viewTypedSubStreams(response)
+            }
+            .observeOn(AndroidSchedulers.mainThread())
+    }
+
+    fun getRemoteAllStreams(): Single<List<ViewTyped>> {
         return zulipApi.getStreams()
             .subscribeOn(Schedulers.io())
             //TODO("Не забыть убрать, это для проверки загрузки данных из БД)
             .delay(2, TimeUnit.SECONDS)
-            .flatMap { response ->
-                streamsDao.updateStreams(response.streams)
-                    .andThen(Single.just(response))
-            }
             .map { response ->
                 viewTypedStreams(response.streams)
             }
             .observeOn(AndroidSchedulers.mainThread())
     }
+
+    private fun viewTypedSubStreams(subStreamResponse: SubStreamResponse): List<ViewTyped> = subStreamResponse.subscriptions
+        .map { stream ->
+            TitleUi(
+                stream.name,
+                0,
+                false,
+                null,
+                R.drawable.ic_arrow_down,
+                R.layout.item_collapse,
+                stream.streamId.toString()
+            )
+        }
 
     fun viewTypedStreams(streamsJSON: List<StreamJSON>): List<ViewTyped> = streamsJSON
         .map { stream ->

@@ -1,4 +1,4 @@
-package com.volboy.courseproject.presentation.streams
+package com.volboy.courseproject.presentation.streams.mystreams
 
 import android.util.Log
 import android.widget.EditText
@@ -158,7 +158,7 @@ class StreamsPresenter : RxPresenter<StreamsView>(StreamsView::class.java) {
 
     private fun loadRemoteStreams() {
         view.showLoading("")
-        val streams = loaderStreams.getRemoteStreams()
+        val streams = loaderStreams.getRemoteSubStreams()
         streams.subscribe(
             { result ->
                 data = result as MutableList<ViewTyped>

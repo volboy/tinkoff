@@ -9,6 +9,9 @@ interface ZulipApi {
     @GET("streams?json=true")
     fun getStreams(): Single<StreamResponse>
 
+    @GET("users/me/subscriptions?json=true")
+    fun getSubscribedStreams(): Single<SubStreamResponse>
+
     @GET("users/me/{id}/topics?json=true")
     fun getStreamsTopics(@Path("id") id: Int): Single<TopicResponse>
 
