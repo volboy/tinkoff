@@ -11,7 +11,6 @@ import io.reactivex.Maybe
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class LoaderStreams {
@@ -31,8 +30,6 @@ class LoaderStreams {
         val subStreamsDao = appDatabase.subStreamsDao()
         return zulipApi.getSubscribedStreams()
             .subscribeOn(Schedulers.io())
-            //TODO("Не забыть убрать, это для проверки загрузки данных из БД)
-            .delay(2, TimeUnit.SECONDS)
             .flatMap { response ->
                 subStreamsDao.updateSubStreams(response.subscriptions)
                     .andThen(Single.just(response))
@@ -47,8 +44,6 @@ class LoaderStreams {
         val streamsDao = appDatabase.streamsDao()
         return zulipApi.getStreams()
             .subscribeOn(Schedulers.io())
-            //TODO("Не забыть убрать, это для проверки загрузки данных из БД)
-            .delay(2, TimeUnit.SECONDS)
             .flatMap { response ->
                 streamsDao.updateStreams(response.streams)
                     .andThen(Single.just(response))
@@ -63,11 +58,29 @@ class LoaderStreams {
         val topicsDao = appDatabase.topicsDao()
         return zulipApi.getStreamsTopics(id)
             .subscribeOn(Schedulers.io())
-            //TODO Не забыть убрать
-            .delay(2, TimeUnit.SECONDS)
+            .flatMap { response ->
+                val topicsForDB = mutableListOf<TopicForDB>()
+                response.topics.forEach { topic ->
+                    topicsForDB.add(TopicForDB(topic.maxId, topic.name, id))
+                }
+                topicsDao.updateTopics(topicsForDB)
+                    .andThen(Single.just(response))
+            }
             .map { response ->
-                topicsDao.updateTopics(response.topics)
                 viewTypedTopics(response.topics, id)
+            }
+            .observeOn(AndroidSchedulers.mainThread())
+    }
+
+    fun getTopicsOfStreamsFromDB(id: Int): Maybe<MutableList<ViewTyped>> {
+        return appDatabase.topicsDao().getTopicsOfStream(id)
+            .subscribeOn(Schedulers.io())
+            .map { topics ->
+                val topicsJSON = mutableListOf<TopicJSON>()
+                topics.forEach { topic ->
+                    topicsJSON.add(TopicJSON(topic.maxId, topic.name))
+                }
+                viewTypedTopics(topicsJSON, id)
             }
             .observeOn(AndroidSchedulers.mainThread())
     }

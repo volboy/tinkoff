@@ -10,5 +10,5 @@ interface SubStreamsView : LoadErrorView {
 
     fun hideData(data: List<ViewTyped>)
 
-    fun showMessage(msg: String)
+    fun showMessage(title: String, msg: String)
 }

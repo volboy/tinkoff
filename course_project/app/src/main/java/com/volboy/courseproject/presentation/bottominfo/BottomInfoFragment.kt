@@ -12,11 +12,13 @@ class BottomInfoFragment : BottomSheetDialogFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = DialogBottomInfoBinding.inflate(inflater, container, false)
-        binding.errorText.text = requireArguments().getString(ARG_INFO_FRAGMENT)
+        binding.title.text = requireArguments().getString(ARG_INFO_TITLE)
+        binding.message.text = requireArguments().getString(ARG_INFO_TEXT)
         return binding.root
     }
 
     companion object {
-        const val ARG_INFO_FRAGMENT = "BottomInfoFragment"
+        const val ARG_INFO_TITLE = "BottomInfoFragmentTitle"
+        const val ARG_INFO_TEXT = "BottomInfoFragmentText"
     }
 }

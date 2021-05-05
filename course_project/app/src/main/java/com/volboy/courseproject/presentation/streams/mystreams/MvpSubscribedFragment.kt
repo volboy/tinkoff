@@ -13,7 +13,8 @@ import com.volboy.courseproject.App.Companion.component
 import com.volboy.courseproject.R
 import com.volboy.courseproject.databinding.FragmentSubscribedBinding
 import com.volboy.courseproject.presentation.bottominfo.BottomInfoFragment
-import com.volboy.courseproject.presentation.bottominfo.BottomInfoFragment.Companion.ARG_INFO_FRAGMENT
+import com.volboy.courseproject.presentation.bottominfo.BottomInfoFragment.Companion.ARG_INFO_TEXT
+import com.volboy.courseproject.presentation.bottominfo.BottomInfoFragment.Companion.ARG_INFO_TITLE
 import com.volboy.courseproject.presentation.messages.MvpMessagesFragment
 import com.volboy.courseproject.presentation.messages.MvpMessagesFragment.Companion.ARG_LAST_MSG_ID_IN_TOPIC
 import com.volboy.courseproject.presentation.messages.MvpMessagesFragment.Companion.ARG_STREAM
@@ -79,9 +80,12 @@ class MvpSubscribedFragment : SubStreamsView, MvpFragment<SubStreamsView, SubStr
         adapter.items = data
     }
 
-    override fun showMessage(msg: String) {
+    override fun showMessage(title: String, msg: String) {
         val bottomInfoFragment = BottomInfoFragment()
-        bottomInfoFragment.arguments = bundleOf(ARG_INFO_FRAGMENT to msg)
+        bottomInfoFragment.arguments = bundleOf(
+            ARG_INFO_TITLE to title,
+            ARG_INFO_TEXT to msg
+        )
         bottomInfoFragment.show(parentFragmentManager, bottomInfoFragment.tag)
     }
 

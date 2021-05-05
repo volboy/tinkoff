@@ -5,12 +5,10 @@ import androidx.core.widget.addTextChangedListener
 import com.volboy.courseproject.App.Companion.component
 import com.volboy.courseproject.R
 import com.volboy.courseproject.common.ResourceProvider
-import com.volboy.courseproject.database.AppDatabase
 import com.volboy.courseproject.model.LoaderStreams
 import com.volboy.courseproject.presentation.mvp.presenter.base.RxPresenter
 import com.volboy.courseproject.recyclerview.ViewTyped
 import com.volboy.courseproject.recyclerview.simpleitems.EmptyView
-import com.volboy.courseproject.recyclerview.simpleitems.ProgressItem
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -20,22 +18,17 @@ import javax.inject.Inject
 class SubStreamsPresenter : RxPresenter<SubStreamsView>(SubStreamsView::class.java) {
     private var data = mutableListOf<ViewTyped>()
     private var dataFromDatabase = mutableListOf<ViewTyped>()
-    private var dataBaseError = false
-
+    private var topicsFromDB = mutableListOf<ViewTyped>()
     private lateinit var searchText: Observable<String>
 
     @Inject
     lateinit var loaderStreams: LoaderStreams
 
     @Inject
-    lateinit var appDatabase: AppDatabase
-
-    @Inject
     lateinit var res: ResourceProvider
 
     init {
         component.injectLoaderStreams(this)
-        component.injectDatabase(this)
         component.injectResourceProvider(this)
     }
 
@@ -112,10 +105,13 @@ class SubStreamsPresenter : RxPresenter<SubStreamsView>(SubStreamsView::class.ja
                 }
             },
             { error ->
-                view.showMessage(res.getString(R.string.msg_database_error) + error.message)
+                view.showMessage(res.getString(R.string.msg_database_error), error.message.toString())
             },
             {
-                view.showMessage(res.getString(R.string.msg_database_empty))
+                view.showMessage(
+                    res.getString(R.string.msg_database_error),
+                    res.getString(R.string.msg_database_empty)
+                )
             })
             .disposeOnFinish()
         loadRemoteStreams()
@@ -138,11 +134,8 @@ class SubStreamsPresenter : RxPresenter<SubStreamsView>(SubStreamsView::class.ja
         ).disposeOnFinish()
     }
 
-    private fun loadTopicFromDatabase(streamId: Int) {
-        //TODO ("Сделать сохранение и загрузку топиков в БД")
-    }
-
     private fun loadRemoteTopics(streamId: Int) {
+        loadTopicFromDB(streamId)
         val topic = loaderStreams.getTopicsOfStreams(streamId)
         val stream = data.firstOrNull { item -> item.uid == streamId.toString() }
         val streamIndex = if (stream != null) {
@@ -150,19 +143,45 @@ class SubStreamsPresenter : RxPresenter<SubStreamsView>(SubStreamsView::class.ja
         } else {
             0
         }
-        data.add(streamIndex + 1, ProgressItem)
-        view.updateData(data, streamIndex + 1)
         topic.subscribe(
             { result ->
                 (stream as TitleUi).imageId = R.drawable.ic_arrow_up
                 val newData = ArrayList(data)
                 newData.addAll(streamIndex + 1, result)
-                newData.remove(ProgressItem)
                 view.showData(newData)
                 data = newData
             },
+            { error ->
+                if (topicsFromDB.isNotEmpty()) {
+                    (stream as TitleUi).imageId = R.drawable.ic_arrow_up
+                    val newData = ArrayList(data)
+                    newData.addAll(streamIndex + 1, topicsFromDB)
+                    view.showData(newData)
+                    data = newData
+                } else {
+                    view.showMessage(res.getString(R.string.error_str), error.message.toString())
+                }
+
+            }
+        ).disposeOnFinish()
+    }
+
+    private fun loadTopicFromDB(streamId: Int) {
+        loaderStreams.getTopicsOfStreamsFromDB(streamId).subscribe(
+            { result ->
+                topicsFromDB = result
+            },
             {
-                view.showMessage(res.getString(R.string.msg_network_error))
+                view.showMessage(
+                    res.getString(R.string.error_str),
+                    res.getString(R.string.something_wrong)
+                )
+            },
+            {
+                view.showMessage(
+                    res.getString(R.string.error_str),
+                    res.getString(R.string.something_wrong)
+                )
             }
         ).disposeOnFinish()
     }

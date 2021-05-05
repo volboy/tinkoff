@@ -14,7 +14,7 @@
     <string name="email_str">darell@company.com</string>
     <string name="search_str">Search…</string>
     <string name="msg_network_error">Ошибка сети </string>
-    <string name="msg_database_error">Ошибка БД </string>
+    <string name="msg_database_error">Ошибка базы данных :( </string>
     <string name="msg_network_ok">Данные загружены из сети </string>
     <string name="msg_database_ok">Данные загружены из БД </string>
     <string name="last_emoji_str">002B</string>

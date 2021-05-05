@@ -13,3 +13,11 @@ class TopicJSON(
     val maxId: Int,
     val name: String
 )
+
+@Entity
+class TopicForDB(
+    @PrimaryKey
+    val maxId: Int,
+    val name: String,
+    val streamId: Int
+)
