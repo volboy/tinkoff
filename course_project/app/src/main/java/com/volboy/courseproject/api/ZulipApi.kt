@@ -48,6 +48,12 @@ interface ZulipApi {
         @Field("reaction_type") reaction_type: String
     ): Single<AddReactionResponse>
 
+    @POST("users/me/subscriptions")
+    @FormUrlEncoded
+    fun subscribeToStream(
+        @Field("subscriptions") subscriptions: String
+    ): Single<SubscribedJSON>
+
     @DELETE("messages/{message_id}/reactions")
     fun removeReaction(
         @Path("message_id") message_id: Int,

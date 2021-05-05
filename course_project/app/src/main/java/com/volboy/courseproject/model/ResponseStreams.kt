@@ -6,6 +6,8 @@ import com.google.gson.annotations.SerializedName
 
 class StreamResponse(val msg: String, val result: String, val streams: List<StreamJSON>)
 
+class Request(val name: String, val description: String)
+
 @Entity
 class StreamJSON(
     @PrimaryKey
@@ -31,5 +33,12 @@ class StreamJSON(
     val isAnnouncementOnly: Boolean,
     @SerializedName("is_default")
     val isDefault: Boolean
+)
+
+class SubscribedJSON(
+    val subscribed: Map<String, List<String>>,
+    @SerializedName("already_subscribed")
+    val alreadySubscribed: Map<String, List<String>>,
+    val unauthorized: List<String>
 )
 

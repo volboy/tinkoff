@@ -14,7 +14,7 @@ import com.volboy.courseproject.R
 import com.volboy.courseproject.databinding.FragmentSubscribedBinding
 import com.volboy.courseproject.presentation.messages.MvpMessagesFragment
 import com.volboy.courseproject.presentation.mvp.presenter.MvpFragment
-import com.volboy.courseproject.presentation.mvp.presenter.addstream.MvpAddStream
+import com.volboy.courseproject.presentation.mvp.presenter.addstream.MvpAddStreamFragment
 import com.volboy.courseproject.presentation.streams.UiHolderFactory
 import com.volboy.courseproject.presentation.streams.mystreams.TitleUi
 import com.volboy.courseproject.recyclerview.CommonAdapter
@@ -43,7 +43,7 @@ class MvpStreamsFragment : AllStreamsView, MvpFragment<AllStreamsView, AllStream
         binding.rwAllStreams.adapter = adapter
         binding.createStream.setOnClickListener {
             requireActivity().supportFragmentManager.beginTransaction()
-                .add(R.id.container, MvpAddStream())
+                .add(R.id.container, MvpAddStreamFragment())
                 .addToBackStack("MvpUsersFragment.FROM_USERS_TO_USERPROFILE")
                 .commit()
         }

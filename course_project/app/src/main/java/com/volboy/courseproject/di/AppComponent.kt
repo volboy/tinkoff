@@ -9,6 +9,8 @@ import com.volboy.courseproject.presentation.details.DetailsPresenter
 import com.volboy.courseproject.presentation.details.MvpDetailsFragment
 import com.volboy.courseproject.presentation.messages.MessagesPresenter
 import com.volboy.courseproject.presentation.messages.MvpMessagesFragment
+import com.volboy.courseproject.presentation.mvp.presenter.addstream.AddStreamPresenter
+import com.volboy.courseproject.presentation.mvp.presenter.addstream.MvpAddStreamFragment
 import com.volboy.courseproject.presentation.profile.MvpProfileFragment
 import com.volboy.courseproject.presentation.profile.ProfilePresenter
 import com.volboy.courseproject.presentation.streams.allstreams.AllStreamsPresenter
@@ -33,6 +35,7 @@ interface AppComponent {
 
     fun injectLoaderStreams(streamsPresenter: StreamsPresenter)
     fun injectLoaderStreams(allStreamsPresenter: AllStreamsPresenter)
+    fun injectLoaderStreams(addStreamPresenter: AddStreamPresenter)
 
     fun injectLoaderMessages(messagesPresenter: MessagesPresenter)
 
@@ -64,6 +67,8 @@ interface AppComponent {
 
     fun injectMainPresenter(mainActivity: MainActivity)
 
+    fun injectAddStreamPresenter(mvpAddStreamFragment: MvpAddStreamFragment)
+
     fun injectResourceProvider(loaderMessage: LoaderMessage)
     fun injectResourceProvider(detailsPresenter: DetailsPresenter)
     fun injectResourceProvider(mvpDetailsFragment: MvpDetailsFragment)
@@ -72,5 +77,6 @@ interface AppComponent {
     fun injectResourceProvider(streamsPresenter: StreamsPresenter)
     fun injectResourceProvider(allStreamsPresenter: AllStreamsPresenter)
     fun injectResourceProvider(usersPresenter: UsersPresenter)
+    fun injectResourceProvider(addStreamPresenter: AddStreamPresenter)
 
 }

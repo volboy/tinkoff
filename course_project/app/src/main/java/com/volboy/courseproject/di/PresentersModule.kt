@@ -3,6 +3,7 @@ package com.volboy.courseproject.di
 import com.volboy.courseproject.MainPresenter
 import com.volboy.courseproject.presentation.details.DetailsPresenter
 import com.volboy.courseproject.presentation.messages.MessagesPresenter
+import com.volboy.courseproject.presentation.mvp.presenter.addstream.AddStreamPresenter
 import com.volboy.courseproject.presentation.profile.ProfilePresenter
 import com.volboy.courseproject.presentation.streams.allstreams.AllStreamsPresenter
 import com.volboy.courseproject.presentation.streams.mystreams.StreamsPresenter
@@ -47,6 +48,12 @@ class PresentersModule {
     @Provides
     fun provideDetailsPresenter(): DetailsPresenter {
         return DetailsPresenter()
+    }
+
+    @AppScope
+    @Provides
+    fun provideAddStreamPresenter(): AddStreamPresenter {
+        return AddStreamPresenter()
     }
 
     @AppScope
