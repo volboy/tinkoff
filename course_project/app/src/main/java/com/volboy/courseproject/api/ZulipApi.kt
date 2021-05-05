@@ -51,7 +51,8 @@ interface ZulipApi {
     @POST("users/me/subscriptions")
     @FormUrlEncoded
     fun subscribeToStream(
-        @Field("subscriptions") subscriptions: String
+        @Field("subscriptions") subscriptions: String,
+        @Field("invite_only") inviteOnly: Boolean
     ): Single<SubscribedJSON>
 
     @DELETE("messages/{message_id}/reactions")

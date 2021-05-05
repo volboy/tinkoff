@@ -48,8 +48,8 @@ class LoaderStreams {
             .observeOn(AndroidSchedulers.mainThread())
     }
 
-    fun subscribeToStream(subscriptions: String): Single<SubscribedJSON> {
-        return zulipApi.subscribeToStream(subscriptions)
+    fun subscribeToStream(subscriptions: String, inviteOnly: Boolean): Single<SubscribedJSON> {
+        return zulipApi.subscribeToStream(subscriptions, inviteOnly)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
     }

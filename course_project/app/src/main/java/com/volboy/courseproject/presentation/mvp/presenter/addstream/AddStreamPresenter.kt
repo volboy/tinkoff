@@ -22,12 +22,12 @@ class AddStreamPresenter : RxPresenter<AddStreamView>(AddStreamView::class.java)
         App.component.injectResourceProvider(this)
     }
 
-    fun createNewStream(name: String, description: String) {
+    fun createNewStream(name: String, description: String, inviteOnly: Boolean) {
         view.showLoading()
         val request = listOf(Request(name, description))
         val gson = Gson()
         val requestJSON = gson.toJson(request)
-        val createNewStream = loaderStreams.subscribeToStream(requestJSON)
+        val createNewStream = loaderStreams.subscribeToStream(requestJSON, inviteOnly)
         createNewStream.subscribe(
             { result ->
                 val countSubscribed = result.subscribed.keys.size

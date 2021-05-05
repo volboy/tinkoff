@@ -26,7 +26,11 @@ class MvpAddStreamFragment : AddStreamView, MvpFragment<AddStreamView, AddStream
         binding = FragmentAddStreamBinding.inflate(inflater, container, false)
         (requireActivity() as AppCompatActivity).supportActionBar?.hide()
         binding.createStream.setOnClickListener {
-            addStreamPresenter.createNewStream(binding.editName.text.toString(), binding.editDescription.text.toString())
+            addStreamPresenter.createNewStream(
+                binding.editName.text.toString(),
+                binding.editDescription.text.toString(),
+                binding.inviteOnly.isChecked
+            )
         }
         return binding.root
     }
@@ -54,7 +58,7 @@ class MvpAddStreamFragment : AddStreamView, MvpFragment<AddStreamView, AddStream
     private fun hideViews() {
         binding.editDescription.isGone = true
         binding.txtDescription.isGone = true
-        binding.streamSwitch.isGone = true
+        binding.inviteOnly.isGone = true
         binding.createStream.isGone = true
         binding.txtLock.isGone = true
         binding.txtName.isGone = true

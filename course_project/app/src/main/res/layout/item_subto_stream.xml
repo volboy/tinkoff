@@ -18,7 +18,7 @@
         android:textSize="18sp" />
 
     <androidx.appcompat.widget.SwitchCompat
-        android:id="@+id/streamSwitch"
+        android:id="@+id/inviteOnly"
         android:layout_width="wrap_content"
         android:layout_height="22dp"
         android:layout_marginStart="10dp"

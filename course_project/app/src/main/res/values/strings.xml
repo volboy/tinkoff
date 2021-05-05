@@ -36,7 +36,7 @@
     <string name="private_str">Private</string>
     <string name="create_str">Create</string>
     <string name="stream_was_created_str">Канал был успешно создан</string>
-    <string name="count_of_subs_str">Кол-во подписчиков </string>
+    <string name="count_of_subs_str">Кол-во подписчиков \u0032</string>
     <string name="stream_already_was_str">Стрим с таким именем уже есть</string>
     <string name="something_wrong">Что-то пошло не так</string>
     <string name="ok_str">OK</string>

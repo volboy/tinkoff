@@ -18,7 +18,7 @@ class AllStreamsUi(
 class AllStreamsViewHolder(val view: View, private val channelsInterface: UiHolderFactory.ChannelsInterface) :
     BaseViewHolder<AllStreamsUi>(view) {
     private val title: TextView = view.findViewById(R.id.streamText)
-    private val switch: SwitchCompat = view.findViewById(R.id.streamSwitch)
+    private val switch: SwitchCompat = view.findViewById(R.id.inviteOnly)
 
     override fun bind(item: AllStreamsUi) {
         view.setOnClickListener {
