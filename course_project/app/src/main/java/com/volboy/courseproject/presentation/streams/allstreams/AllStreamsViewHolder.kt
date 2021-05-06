@@ -10,7 +10,7 @@ import com.volboy.courseproject.recyclerview.ViewTyped
 
 class AllStreamsUi(
     val title: String,
-    var isChecked: Boolean = false,
+    var isChecked: Boolean,
     override val viewType: Int,
     override var uid: String
 ) : ViewTyped

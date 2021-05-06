@@ -96,7 +96,7 @@ class AllStreamsPresenter : RxPresenter<AllStreamsView>(AllStreamsView::class.ja
         loaderStreams.getRemoteAllStreams().subscribe(
             { result ->
                 allStreams = result as MutableList<ViewTyped>
-                view.showData(allStreams)
+                view.showData(resultStreams(allStreams, subStreams))
             },
             { error ->
                 if (allStreamsDB.isEmpty()) {
@@ -141,11 +141,13 @@ class AllStreamsPresenter : RxPresenter<AllStreamsView>(AllStreamsView::class.ja
     }
 
     private fun resultStreams(allStreams: MutableList<ViewTyped>, subStreams: MutableList<ViewTyped>) =
-        allStreams.map { allStream ->
-            if (subStreams.contains(allStream)) {
-                (allStream as AllStreamsUi).isChecked = true
+        allStreams
+            .map { allStream ->
+                allStream as AllStreamsUi
+                if (subStreams.firstOrNull { subStreams -> subStreams.uid == allStream.uid } != null)
+                    allStream.isChecked = true
+                allStream as ViewTyped
             }
-        }
 
     companion object {
         private const val TIME_SEARCH_DELAY = 500L
