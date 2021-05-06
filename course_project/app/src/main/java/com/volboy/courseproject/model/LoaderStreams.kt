@@ -122,7 +122,7 @@ class LoaderStreams {
             )
         }
 
-    fun viewTypedStreams(streamsJSON: List<StreamJSON>): List<ViewTyped> = streamsJSON
+    private fun viewTypedStreams(streamsJSON: List<StreamJSON>): List<ViewTyped> = streamsJSON
         .map { stream ->
             AllStreamsUi(
                 stream.name,

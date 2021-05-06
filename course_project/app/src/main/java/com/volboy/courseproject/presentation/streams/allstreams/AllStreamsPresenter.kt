@@ -22,6 +22,7 @@ class AllStreamsPresenter : RxPresenter<AllStreamsView>(AllStreamsView::class.ja
     private lateinit var searchText: Observable<String>
     private var allStreams = mutableListOf<ViewTyped>()
     private var allStreamsDB = mutableListOf<ViewTyped>()
+    private var subStreams = mutableListOf<ViewTyped>()
 
     @Inject
     lateinit var loaderStreams: LoaderStreams
@@ -39,10 +40,10 @@ class AllStreamsPresenter : RxPresenter<AllStreamsView>(AllStreamsView::class.ja
     }
 
     fun getStreams() {
+        loadSubStreamsFromDatabase()
         if (allStreamsDB.isNotEmpty()) {
             view.showData(allStreamsDB)
             loadRemoteStreams()
-
         } else {
             loadStreamsFromDatabase()
         }
@@ -72,18 +73,16 @@ class AllStreamsPresenter : RxPresenter<AllStreamsView>(AllStreamsView::class.ja
 
     private fun loadSubStreamsFromDatabase() {
         loaderStreams.getSubStreamsFromDB().subscribe(
-            { subStreams ->
-                if (subStreams.isNotEmpty()) {
-                    allStreams = subStreams as MutableList<ViewTyped>
-                    allStreamsDB = subStreams
-                    view.showData(allStreams)
+            { result ->
+                if (result.isNotEmpty()) {
+                    subStreams = result as MutableList<ViewTyped>
                 }
             },
             { error ->
-                view.showMessage(res.getString(R.string.msg_database_error), error.message.toString())
+                Log.i(res.getString(R.string.msg_database_error), error.message.toString())
             },
             {
-                view.showMessage(
+                Log.i(
                     res.getString(R.string.msg_database_error),
                     res.getString(R.string.msg_database_empty)
                 )
@@ -141,9 +140,12 @@ class AllStreamsPresenter : RxPresenter<AllStreamsView>(AllStreamsView::class.ja
         }
     }
 
-    private fun writeLog(msg: String) {
-        Log.i(res.getString(R.string.log_string), msg)
-    }
+    private fun resultStreams(allStreams: MutableList<ViewTyped>, subStreams: MutableList<ViewTyped>) =
+        allStreams.map { allStream ->
+            if (subStreams.contains(allStream)) {
+                (allStream as AllStreamsUi).isChecked = true
+            }
+        }
 
     companion object {
         private const val TIME_SEARCH_DELAY = 500L
