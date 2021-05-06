@@ -1,4 +1,4 @@
-package com.volboy.courseproject.presentation.mvp.presenter.addstream
+package com.volboy.courseproject.presentation.addstream
 
 import com.google.gson.Gson
 import com.volboy.courseproject.App

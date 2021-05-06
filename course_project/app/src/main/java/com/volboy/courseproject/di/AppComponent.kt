@@ -5,12 +5,12 @@ import com.volboy.courseproject.MainPresenter
 import com.volboy.courseproject.model.LoaderMessage
 import com.volboy.courseproject.model.LoaderStreams
 import com.volboy.courseproject.model.LoaderUsers
+import com.volboy.courseproject.presentation.addstream.AddStreamPresenter
+import com.volboy.courseproject.presentation.addstream.MvpAddStreamFragment
 import com.volboy.courseproject.presentation.details.DetailsPresenter
 import com.volboy.courseproject.presentation.details.MvpDetailsFragment
 import com.volboy.courseproject.presentation.messages.MessagesPresenter
 import com.volboy.courseproject.presentation.messages.MvpMessagesFragment
-import com.volboy.courseproject.presentation.mvp.presenter.addstream.AddStreamPresenter
-import com.volboy.courseproject.presentation.mvp.presenter.addstream.MvpAddStreamFragment
 import com.volboy.courseproject.presentation.profile.MvpProfileFragment
 import com.volboy.courseproject.presentation.profile.ProfilePresenter
 import com.volboy.courseproject.presentation.streams.allstreams.AllStreamsPresenter

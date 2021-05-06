@@ -21,7 +21,6 @@ class TitleUi(
 class StreamsViewHolder(val view: View, private val channelsInterface: UiHolderFactory.ChannelsInterface) :
     BaseViewHolder<TitleUi>(view) {
     private val title: TextView = view.findViewById(R.id.streamText)
-    private val count: TextView = view.findViewById(R.id.messagesCount)
     private val image: ImageView = view.findViewById(R.id.streamImage)
 
     override fun bind(item: TitleUi) {
@@ -29,7 +28,6 @@ class StreamsViewHolder(val view: View, private val channelsInterface: UiHolderF
             channelsInterface.getClickedView(view, adapterPosition, item.viewType)
         }
         title.text = item.title
-        count.text = item.count.toString()
         image.setImageResource(item.imageId)
     }
 }

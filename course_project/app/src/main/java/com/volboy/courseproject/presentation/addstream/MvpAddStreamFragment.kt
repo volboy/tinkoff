@@ -1,4 +1,4 @@
-package com.volboy.courseproject.presentation.mvp.presenter.addstream
+package com.volboy.courseproject.presentation.addstream
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isGone
-import androidx.core.view.isVisible
 import com.volboy.courseproject.App
 import com.volboy.courseproject.databinding.FragmentAddStreamBinding
 import com.volboy.courseproject.presentation.mvp.presenter.MvpFragment

@@ -12,9 +12,10 @@ import androidx.core.view.isVisible
 import com.volboy.courseproject.App.Companion.component
 import com.volboy.courseproject.R
 import com.volboy.courseproject.databinding.FragmentStreamsBinding
+import com.volboy.courseproject.presentation.addstream.MvpAddStreamFragment
+import com.volboy.courseproject.presentation.bottominfo.BottomInfoFragment
 import com.volboy.courseproject.presentation.messages.MvpMessagesFragment
 import com.volboy.courseproject.presentation.mvp.presenter.MvpFragment
-import com.volboy.courseproject.presentation.mvp.presenter.addstream.MvpAddStreamFragment
 import com.volboy.courseproject.presentation.streams.UiHolderFactory
 import com.volboy.courseproject.presentation.streams.mystreams.TitleUi
 import com.volboy.courseproject.recyclerview.CommonAdapter
@@ -73,6 +74,15 @@ class MvpStreamsFragment : AllStreamsView, MvpFragment<AllStreamsView, AllStream
 
     override fun hideData(data: List<ViewTyped>) {
         adapter.items = data
+    }
+
+    override fun showMessage(title: String, msg: String) {
+        val bottomInfoFragment = BottomInfoFragment()
+        bottomInfoFragment.arguments = bundleOf(
+            BottomInfoFragment.ARG_INFO_TITLE to title,
+            BottomInfoFragment.ARG_INFO_TEXT to msg
+        )
+        bottomInfoFragment.show(parentFragmentManager, bottomInfoFragment.tag)
     }
 
     override fun showError(error: String?) {

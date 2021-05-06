@@ -11,4 +11,6 @@ interface AllStreamsView : LoadErrorView {
 
     fun hideData(data: List<ViewTyped>)
 
+    fun showMessage(title: String, msg: String)
+
 }

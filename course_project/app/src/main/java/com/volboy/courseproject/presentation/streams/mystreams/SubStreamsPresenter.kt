@@ -128,7 +128,7 @@ class SubStreamsPresenter : RxPresenter<SubStreamsView>(SubStreamsView::class.ja
                 if (dataFromDatabase.isEmpty()) {
                     view.showError(error.message)
                 } else {
-                    view.showData(data)
+                    view.showData(dataFromDatabase)
                 }
             }
         ).disposeOnFinish()

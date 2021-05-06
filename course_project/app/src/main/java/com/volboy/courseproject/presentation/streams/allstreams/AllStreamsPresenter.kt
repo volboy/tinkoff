@@ -19,9 +19,9 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class AllStreamsPresenter : RxPresenter<AllStreamsView>(AllStreamsView::class.java) {
-    private var data = mutableListOf<ViewTyped>()
-    private var dataBaseError = false
     private lateinit var searchText: Observable<String>
+    private var allStreams = mutableListOf<ViewTyped>()
+    private var allStreamsDB = mutableListOf<ViewTyped>()
 
     @Inject
     lateinit var loaderStreams: LoaderStreams
@@ -39,7 +39,74 @@ class AllStreamsPresenter : RxPresenter<AllStreamsView>(AllStreamsView::class.ja
     }
 
     fun getStreams() {
-        loadStreamsFromDatabase()
+        if (allStreamsDB.isNotEmpty()) {
+            view.showData(allStreamsDB)
+            loadRemoteStreams()
+
+        } else {
+            loadStreamsFromDatabase()
+        }
+    }
+
+    private fun loadStreamsFromDatabase() {
+        loaderStreams.getAllStreamsFromDB().subscribe(
+            { subStreams ->
+                if (subStreams.isNotEmpty()) {
+                    allStreams = subStreams as MutableList<ViewTyped>
+                    allStreamsDB = subStreams
+                    view.showData(allStreams)
+                }
+            },
+            { error ->
+                view.showMessage(res.getString(R.string.msg_database_error), error.message.toString())
+            },
+            {
+                view.showMessage(
+                    res.getString(R.string.msg_database_error),
+                    res.getString(R.string.msg_database_empty)
+                )
+            })
+            .disposeOnFinish()
+        loadRemoteStreams()
+    }
+
+    private fun loadSubStreamsFromDatabase() {
+        loaderStreams.getSubStreamsFromDB().subscribe(
+            { subStreams ->
+                if (subStreams.isNotEmpty()) {
+                    allStreams = subStreams as MutableList<ViewTyped>
+                    allStreamsDB = subStreams
+                    view.showData(allStreams)
+                }
+            },
+            { error ->
+                view.showMessage(res.getString(R.string.msg_database_error), error.message.toString())
+            },
+            {
+                view.showMessage(
+                    res.getString(R.string.msg_database_error),
+                    res.getString(R.string.msg_database_empty)
+                )
+            })
+            .disposeOnFinish()
+        loadRemoteStreams()
+    }
+
+    private fun loadRemoteStreams() {
+        view.showLoading("")
+        loaderStreams.getRemoteAllStreams().subscribe(
+            { result ->
+                allStreams = result as MutableList<ViewTyped>
+                view.showData(allStreams)
+            },
+            { error ->
+                if (allStreamsDB.isEmpty()) {
+                    view.showError(error.message)
+                } else {
+                    view.showData(allStreamsDB)
+                }
+            }
+        ).disposeOnFinish()
     }
 
     fun setSearchObservable(searchEdit: EditText) {
@@ -56,7 +123,7 @@ class AllStreamsPresenter : RxPresenter<AllStreamsView>(AllStreamsView::class.ja
 
             searchText.subscribe(
                 { inputText ->
-                    val filteredStreams = data.filter { stream ->
+                    val filteredStreams = allStreams.filter { stream ->
                         val item = stream as TitleUi
                         item.title.contains(inputText, ignoreCase = true)
                     }
@@ -66,64 +133,12 @@ class AllStreamsPresenter : RxPresenter<AllStreamsView>(AllStreamsView::class.ja
                         view.showData(filteredStreams)
                     }
                 },
-                { error -> view.showData(data) }
+                { error -> view.showData(allStreams) }
             ).disposeOnFinish()
             if (text.isNullOrEmpty()) {
-                view.showData(data)
+                view.showData(allStreams)
             }
         }
-    }
-
-    private fun loadStreamsFromDatabase() {
-        val streamsDao = appDatabase.streamsDao()
-        streamsDao.getAllStreams()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .map { streams -> loaderStreams.viewTypedStreams(streams) }
-            .subscribe(
-                { viewTypedStreams ->
-                    writeLog(res.getString(R.string.msg_database_ok) + " , размер БД " + viewTypedStreams?.size?.toString())
-                    if (viewTypedStreams.isEmpty()) {
-                        view.showLoading("")
-                        dataBaseError = true
-                    } else {
-                        data = viewTypedStreams as MutableList<ViewTyped>
-                        view.showData(data)
-                        dataBaseError = false
-                    }
-                },
-                { error ->
-                    writeLog(res.getString(R.string.msg_database_error) + error.message)
-                    dataBaseError = true
-                },
-                {
-                    writeLog(res.getString(R.string.msg_database_empty))
-                    dataBaseError = true
-                })
-            .disposeOnFinish()
-        loadRemoteStreams()
-    }
-
-    private fun loadRemoteStreams() {
-        view.showLoading("")
-        val streams = loaderStreams.getRemoteAllStreams()
-        streams.subscribe(
-            { result ->
-                data = result as MutableList<ViewTyped>
-                view.showData(data)
-                writeLog(res.getString(R.string.msg_network_ok))
-            },
-            { error ->
-                if (dataBaseError) {
-                    view.showError(error.message)
-                } else {
-                    view.showData(data)
-                }
-                view.showError(error.message)
-                writeLog(res.getString(R.string.msg_network_error) + error.message)
-            }
-        )
-            .disposeOnFinish()
     }
 
     private fun writeLog(msg: String) {

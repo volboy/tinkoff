@@ -94,6 +94,15 @@ class LoaderStreams {
             .observeOn(AndroidSchedulers.mainThread())
     }
 
+    fun getAllStreamsFromDB(): Maybe<List<ViewTyped>> {
+        return appDatabase.streamsDao().getAllStreams()
+            .subscribeOn(Schedulers.io())
+            .map { streams ->
+                viewTypedStreams(streams)
+            }
+            .observeOn(AndroidSchedulers.mainThread())
+    }
+
     fun subscribeToStream(subscriptions: String, inviteOnly: Boolean): Single<SubscribedJSON> {
         return zulipApi.subscribeToStream(subscriptions, inviteOnly)
             .subscribeOn(Schedulers.io())
