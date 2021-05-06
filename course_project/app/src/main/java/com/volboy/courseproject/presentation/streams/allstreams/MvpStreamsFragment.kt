@@ -100,29 +100,7 @@ class MvpStreamsFragment : AllStreamsView, MvpFragment<AllStreamsView, AllStream
     }
 
     override fun getClickedView(view: View, position: Int, viewType: Int) {
-        when (viewType) {
-            R.layout.item_collapse -> {
-                clickedStream = adapter.items[position] as TitleUi
-                clickedStream.isSelected = !clickedStream.isSelected
-                if (clickedStream.isSelected) {
 
-                } else {
-
-                }
-            }
-            R.layout.item_expand -> {
-                val messagesFragment = MvpMessagesFragment()
-                messagesFragment.arguments = bundleOf(
-                    MvpMessagesFragment.ARG_TOPIC to (adapter.items[position] as TitleUi).title,
-                    MvpMessagesFragment.ARG_LAST_MSG_ID_IN_TOPIC to (adapter.items[position] as TitleUi).uid,
-                    MvpMessagesFragment.ARG_STREAM to clickedStream.title
-                )
-                requireActivity().supportFragmentManager.beginTransaction()
-                    .addToBackStack(MvpMessagesFragment.FROM_TOPIC_TO_MESSAGE)
-                    .add(R.id.container, messagesFragment)
-                    .commit()
-            }
-        }
     }
 
     override fun getClickedSwitch(view: SwitchCompat, streamName: String) {

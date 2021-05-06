@@ -40,5 +40,6 @@
     <string name="stream_already_was_str">Стрим с таким именем уже есть</string>
     <string name="something_wrong">Что-то пошло не так</string>
     <string name="ok_str">OK</string>
+    <string name="write_topic_str">Укажите топик</string>
 
 </resources>
