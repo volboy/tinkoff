@@ -22,6 +22,6 @@ class UiHolderFactory(private val channelsInterface: ChannelsInterface) : Holder
 
     interface ChannelsInterface {
         fun getClickedView(view: View, position: Int, viewType: Int)
-        fun getCheckedSwitch(view: SwitchCompat, isChecked: Boolean, position: Int)
+        fun getClickedSwitch(view: SwitchCompat, streamName: String)
     }
 }

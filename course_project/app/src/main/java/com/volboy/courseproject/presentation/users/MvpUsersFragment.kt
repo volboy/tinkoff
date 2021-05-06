@@ -83,7 +83,7 @@ class MvpUsersFragment : UsersView, MvpFragment<UsersView, UsersPresenter>(), Ui
             .commit()
     }
 
-    override fun getCheckedSwitch(view: SwitchCompat, isChecked: Boolean, position: Int) {
+    override fun getClickedSwitch(view: SwitchCompat, streamName: String) {
         TODO("Not yet implemented")
     }
 

@@ -3,13 +3,14 @@ package com.volboy.courseproject.presentation.streams.allstreams
 import android.util.Log
 import android.widget.EditText
 import androidx.core.widget.addTextChangedListener
+import com.google.gson.Gson
 import com.volboy.courseproject.App
 import com.volboy.courseproject.R
 import com.volboy.courseproject.common.ResourceProvider
 import com.volboy.courseproject.database.AppDatabase
 import com.volboy.courseproject.model.LoaderStreams
+import com.volboy.courseproject.model.Request
 import com.volboy.courseproject.presentation.mvp.presenter.base.RxPresenter
-import com.volboy.courseproject.presentation.streams.mystreams.TitleUi
 import com.volboy.courseproject.recyclerview.ViewTyped
 import com.volboy.courseproject.recyclerview.simpleitems.EmptyView
 import io.reactivex.Observable
@@ -47,6 +48,52 @@ class AllStreamsPresenter : RxPresenter<AllStreamsView>(AllStreamsView::class.ja
         } else {
             loadStreamsFromDatabase()
         }
+    }
+
+    fun setSearchObservable(searchEdit: EditText) {
+        searchEdit.addTextChangedListener { text ->
+            searchText = Observable.create { emitter ->
+                emitter.onNext(text.toString())
+            }
+            searchText
+                .filter { inputText -> inputText.isNotEmpty() && inputText[0] != ' ' }
+                .distinctUntilChanged()
+                .debounce(TIME_SEARCH_DELAY, TimeUnit.SECONDS)
+                .subscribeOn(Schedulers.single())
+                .observeOn(AndroidSchedulers.mainThread())
+
+            searchText.subscribe(
+                { inputText ->
+                    val filteredStreams = allStreams.filter { stream ->
+                        val item = stream as AllStreamsUi
+                        item.title.contains(inputText, ignoreCase = true)
+                    }
+                    if (filteredStreams.isEmpty()) {
+                        view.showData(listOf(EmptyView))
+                    } else {
+                        view.showData(filteredStreams)
+                    }
+                },
+                { error -> view.showData(allStreams) }
+            ).disposeOnFinish()
+            if (text.isNullOrEmpty()) {
+                view.showData(allStreams)
+            }
+        }
+    }
+
+    fun subscribeToStream(streamName: String) {
+        val request = listOf(Request(streamName, ""))
+        val gson = Gson()
+        val requestJSON = gson.toJson(request)
+        loaderStreams.subscribeToStream(requestJSON, false).subscribe(
+            { Log.i(res.getString(R.string.log_string), res.getString(R.string.ok_str)) },
+            { view.showMessage(res.getString(R.string.error_str), res.getString(R.string.something_wrong)) }
+        ).disposeOnFinish()
+    }
+
+    fun unSubscribeToStream() {
+
     }
 
     private fun loadStreamsFromDatabase() {
@@ -106,38 +153,6 @@ class AllStreamsPresenter : RxPresenter<AllStreamsView>(AllStreamsView::class.ja
                 }
             }
         ).disposeOnFinish()
-    }
-
-    fun setSearchObservable(searchEdit: EditText) {
-        searchEdit.addTextChangedListener { text ->
-            searchText = Observable.create { emitter ->
-                emitter.onNext(text.toString())
-            }
-            searchText
-                .filter { inputText -> inputText.isNotEmpty() && inputText[0] != ' ' }
-                .distinctUntilChanged()
-                .debounce(TIME_SEARCH_DELAY, TimeUnit.SECONDS)
-                .subscribeOn(Schedulers.single())
-                .observeOn(AndroidSchedulers.mainThread())
-
-            searchText.subscribe(
-                { inputText ->
-                    val filteredStreams = allStreams.filter { stream ->
-                        val item = stream as TitleUi
-                        item.title.contains(inputText, ignoreCase = true)
-                    }
-                    if (filteredStreams.isEmpty()) {
-                        view.showData(listOf(EmptyView))
-                    } else {
-                        view.showData(filteredStreams)
-                    }
-                },
-                { error -> view.showData(allStreams) }
-            ).disposeOnFinish()
-            if (text.isNullOrEmpty()) {
-                view.showData(allStreams)
-            }
-        }
     }
 
     private fun resultStreams(allStreams: MutableList<ViewTyped>, subStreams: MutableList<ViewTyped>) =

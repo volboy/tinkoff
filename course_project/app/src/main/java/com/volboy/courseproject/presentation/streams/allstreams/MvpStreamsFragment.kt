@@ -125,7 +125,11 @@ class MvpStreamsFragment : AllStreamsView, MvpFragment<AllStreamsView, AllStream
         }
     }
 
-    override fun getCheckedSwitch(view: SwitchCompat, isChecked: Boolean, position: Int) {
-        val chek = view.isChecked
+    override fun getClickedSwitch(view: SwitchCompat, streamName: String) {
+        if (view.isChecked) {
+            allStreamsPresenter.subscribeToStream(streamName)
+        } else {
+            allStreamsPresenter.unSubscribeToStream()
+        }
     }
 }
