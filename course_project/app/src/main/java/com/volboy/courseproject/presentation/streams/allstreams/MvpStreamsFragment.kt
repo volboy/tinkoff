@@ -129,7 +129,7 @@ class MvpStreamsFragment : AllStreamsView, MvpFragment<AllStreamsView, AllStream
         if (view.isChecked) {
             allStreamsPresenter.subscribeToStream(streamName)
         } else {
-            allStreamsPresenter.unSubscribeToStream()
+            allStreamsPresenter.unSubscribeToStream(streamName)
         }
     }
 }

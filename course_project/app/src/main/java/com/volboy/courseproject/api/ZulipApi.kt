@@ -55,6 +55,11 @@ interface ZulipApi {
         @Field("invite_only") inviteOnly: Boolean
     ): Single<SubscribedJSON>
 
+    @DELETE("users/me/subscriptions")
+    fun unSubscribeToStream(
+        @Query("subscriptions") subscriptions: String,
+    ): Single<SubscribedJSON>
+
     @DELETE("messages/{message_id}/reactions")
     fun removeReaction(
         @Path("message_id") messageId: Int,

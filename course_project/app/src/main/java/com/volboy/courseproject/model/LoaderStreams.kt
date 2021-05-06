@@ -109,6 +109,12 @@ class LoaderStreams {
             .observeOn(AndroidSchedulers.mainThread())
     }
 
+    fun unSubscribeToStream(subscriptions: String): Single<SubscribedJSON> {
+        return zulipApi.unSubscribeToStream(subscriptions)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+    }
+
     private fun viewTypedSubStreams(subStreamsJSON: List<SubStreamJSON>): List<ViewTyped> = subStreamsJSON
         .map { stream ->
             TitleUi(

@@ -24,6 +24,7 @@ class AllStreamsPresenter : RxPresenter<AllStreamsView>(AllStreamsView::class.ja
     private var allStreams = mutableListOf<ViewTyped>()
     private var allStreamsDB = mutableListOf<ViewTyped>()
     private var subStreams = mutableListOf<ViewTyped>()
+    val gson = Gson()
 
     @Inject
     lateinit var loaderStreams: LoaderStreams
@@ -84,7 +85,6 @@ class AllStreamsPresenter : RxPresenter<AllStreamsView>(AllStreamsView::class.ja
 
     fun subscribeToStream(streamName: String) {
         val request = listOf(Request(streamName, ""))
-        val gson = Gson()
         val requestJSON = gson.toJson(request)
         loaderStreams.subscribeToStream(requestJSON, false).subscribe(
             { Log.i(res.getString(R.string.log_string), res.getString(R.string.ok_str)) },
@@ -92,8 +92,12 @@ class AllStreamsPresenter : RxPresenter<AllStreamsView>(AllStreamsView::class.ja
         ).disposeOnFinish()
     }
 
-    fun unSubscribeToStream() {
+    fun unSubscribeToStream(streamName: String) {
 
+        loaderStreams.unSubscribeToStream(gson.toJson(listOf(streamName))).subscribe(
+            { Log.i(res.getString(R.string.log_string), res.getString(R.string.ok_str)) },
+            { view.showMessage(res.getString(R.string.error_str), res.getString(R.string.something_wrong)) }
+        ).disposeOnFinish()
     }
 
     private fun loadStreamsFromDatabase() {
