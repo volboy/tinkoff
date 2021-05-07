@@ -13,6 +13,7 @@ import javax.inject.Inject
 class AllMessagesPresenter : RxPresenter<AllMessagesView>(AllMessagesView::class.java) {
     private lateinit var data: MutableList<ViewTyped>
     private var lastItemId = 0
+    private var prevLastItemId = 0
 
     @Inject
     lateinit var loaderMessages: LoaderMessage
@@ -51,24 +52,26 @@ class AllMessagesPresenter : RxPresenter<AllMessagesView>(AllMessagesView::class
             msgIndex = data.indexOf(lastItem)
             lastItemId = lastItem.uid.toInt()
         }
-        val buffer = ArrayList(data)
-        buffer.add(ProgressItem)
-        view.showMessage(buffer, buffer.size - 1)
-        val messages = loaderMessages.getStreamMessagesNext(lastItemId, streamName)
-        messages.subscribe(
-            { result ->
-                val resultData = ArrayList(buffer)
-                resultData.remove(ProgressItem)
-                data = resultData.union(result).toMutableList()
-                view.showMessage(data, msgIndex)
-                writeLog(res.getString(R.string.msg_network_ok))
-            },
-            { error ->
-                view.showError(error.message)
-                writeLog(res.getString(R.string.msg_network_error))
-            }
-        ).disposeOnFinish()
-
+        if (lastItemId != prevLastItemId) {
+            val buffer = ArrayList(data)
+            buffer.add(ProgressItem)
+            view.showMessage(buffer, buffer.size - 1)
+            val messages = loaderMessages.getStreamMessagesNext(lastItemId, streamName)
+            messages.subscribe(
+                { result ->
+                    val resultData = ArrayList(buffer)
+                    resultData.remove(ProgressItem)
+                    data = resultData.union(result).toMutableList()
+                    view.showMessage(data, msgIndex)
+                    prevLastItemId = lastItemId
+                    writeLog(res.getString(R.string.msg_network_ok))
+                },
+                { error ->
+                    view.showError(error.message)
+                    writeLog(res.getString(R.string.msg_network_error))
+                }
+            ).disposeOnFinish()
+        }
     }
 
     fun sendMessage(str: String, streamName: String, topicName: String) {

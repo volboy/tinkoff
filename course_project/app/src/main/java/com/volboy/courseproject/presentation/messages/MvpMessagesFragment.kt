@@ -91,7 +91,6 @@ class MvpMessagesFragment : MessagesView, MvpFragment<MessagesView, MessagesPres
     override fun showMessage(data: List<ViewTyped>, position: Int) {
         show()
         adapter.items = data
-        binding.recyclerMessage.smoothScrollToPosition(position)
     }
 
     override fun updateMessage(data: List<ViewTyped>, msgPosition: Int) {

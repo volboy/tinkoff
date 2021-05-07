@@ -8,6 +8,7 @@ import com.volboy.courseproject.MainPresenter
 import com.volboy.courseproject.R
 import com.volboy.courseproject.common.ResourceProvider
 import com.volboy.courseproject.presentation.messages.DataUi
+import com.volboy.courseproject.presentation.messages.ReactionsUi
 import com.volboy.courseproject.presentation.messages.TextUi
 import com.volboy.courseproject.recyclerview.ViewTyped
 import java.text.SimpleDateFormat
@@ -55,6 +56,13 @@ class ViewTypedMapper {
                         msg.id.toString()
                     )
                 )
+                viewTypedList.add(
+                    ReactionsUi(
+                        recountReactions(msg.reactions),
+                        R.layout.item_messages_reactions,
+                        msg.id.toString() + msg.reactions.toString()
+                    )
+                )
             } else {
                 viewTypedList.add(
                     TextUi(
@@ -63,6 +71,13 @@ class ViewTypedMapper {
                         msg.avatarUrl,
                         R.layout.item_out_message,
                         msg.id.toString()
+                    )
+                )
+                viewTypedList.add(
+                    ReactionsUi(
+                        recountReactions(msg.reactions),
+                        R.layout.item_messages_reactions_out,
+                        msg.id.toString() + msg.reactions.toString()
                     )
                 )
             }
