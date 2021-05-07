@@ -5,15 +5,15 @@ import com.volboy.courseproject.MainPresenter
 import com.volboy.courseproject.model.LoaderMessage
 import com.volboy.courseproject.model.LoaderStreams
 import com.volboy.courseproject.model.LoaderUsers
-import com.volboy.courseproject.model.ViewTypedMapper
+import com.volboy.courseproject.model.MessageMapper
 import com.volboy.courseproject.presentation.addstream.AddStreamPresenter
 import com.volboy.courseproject.presentation.addstream.MvpAddStreamFragment
 import com.volboy.courseproject.presentation.details.DetailsPresenter
 import com.volboy.courseproject.presentation.details.MvpDetailsFragment
 import com.volboy.courseproject.presentation.messages.MessagesPresenter
 import com.volboy.courseproject.presentation.messages.MvpMessagesFragment
-import com.volboy.courseproject.presentation.msgstream.AllMessagesOfStream
-import com.volboy.courseproject.presentation.msgstream.AllMessagesPresenter
+import com.volboy.courseproject.presentation.msgstream.MessagesOfStream
+import com.volboy.courseproject.presentation.msgstream.MessagesOfStreamsPresenter
 import com.volboy.courseproject.presentation.profile.MvpProfileFragment
 import com.volboy.courseproject.presentation.profile.ProfilePresenter
 import com.volboy.courseproject.presentation.streams.allstreams.AllStreamsPresenter
@@ -41,7 +41,7 @@ interface AppComponent {
     fun injectLoaderStreams(addStreamPresenter: AddStreamPresenter)
 
     fun injectLoaderMessages(messagesPresenter: MessagesPresenter)
-    fun injectLoaderMessages(allMessagesPresenter: AllMessagesPresenter)
+    fun injectLoaderMessages(messagesOfStreamsPresenter: MessagesOfStreamsPresenter)
 
     fun injectLoaderUsers(usersPresenter: UsersPresenter)
     fun injectLoaderUsers(mainPresenter: MainPresenter)
@@ -72,9 +72,9 @@ interface AppComponent {
 
     fun injectAddStreamPresenter(mvpAddStreamFragment: MvpAddStreamFragment)
 
-    fun injectAllMessagesPresenter(allMessagesOfStream: AllMessagesOfStream)
+    fun injectAllMessagesPresenter(messagesOfStream: MessagesOfStream)
 
-    fun injectResourceProvider(viewTypedMapper: ViewTypedMapper)
+    fun injectResourceProvider(messageMapper: MessageMapper)
     fun injectResourceProvider(detailsPresenter: DetailsPresenter)
     fun injectResourceProvider(mvpDetailsFragment: MvpDetailsFragment)
     fun injectResourceProvider(messagesPresenter: MessagesPresenter)
@@ -83,6 +83,6 @@ interface AppComponent {
     fun injectResourceProvider(allStreamsPresenter: AllStreamsPresenter)
     fun injectResourceProvider(usersPresenter: UsersPresenter)
     fun injectResourceProvider(addStreamPresenter: AddStreamPresenter)
-    fun injectResourceProvider(allMessagesPresenter: AllMessagesPresenter)
+    fun injectResourceProvider(messagesOfStreamsPresenter: MessagesOfStreamsPresenter)
 
 }

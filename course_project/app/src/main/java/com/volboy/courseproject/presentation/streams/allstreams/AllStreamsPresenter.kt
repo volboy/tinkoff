@@ -87,7 +87,7 @@ class AllStreamsPresenter : RxPresenter<AllStreamsView>(AllStreamsView::class.ja
         val request = listOf(Request(streamName, ""))
         val requestJSON = gson.toJson(request)
         loaderStreams.subscribeToStream(requestJSON, false).subscribe(
-            { Log.i(res.getString(R.string.log_string), res.getString(R.string.ok_str)) },
+            { Log.i(res.getString(R.string.log_string), res.getString(R.string.error_str)) },
             { view.showMessage(res.getString(R.string.error_str), res.getString(R.string.something_wrong)) }
         ).disposeOnFinish()
     }

@@ -15,7 +15,7 @@ import com.volboy.courseproject.databinding.FragmentStreamsBinding
 import com.volboy.courseproject.presentation.addstream.MvpAddStreamFragment
 import com.volboy.courseproject.presentation.bottominfo.BottomInfoFragment
 import com.volboy.courseproject.presentation.messages.MvpMessagesFragment
-import com.volboy.courseproject.presentation.msgstream.AllMessagesOfStream
+import com.volboy.courseproject.presentation.msgstream.MessagesOfStream
 import com.volboy.courseproject.presentation.mvp.presenter.MvpFragment
 import com.volboy.courseproject.presentation.streams.UiHolderFactory
 import com.volboy.courseproject.recyclerview.CommonAdapter
@@ -101,10 +101,10 @@ class MvpStreamsFragment : AllStreamsView, MvpFragment<AllStreamsView, AllStream
 
     override fun getClickedView(view: View, position: Int, viewType: Int) {
         clickedStream = adapter.items[position] as AllStreamsUi
-        val messagesFragment = AllMessagesOfStream()
+        val messagesFragment = MessagesOfStream()
         messagesFragment.arguments = bundleOf(
             MvpMessagesFragment.ARG_STREAM to clickedStream.title,
-            MvpMessagesFragment.ARG_STREAM_ID to clickedStream.uid
+            MvpMessagesFragment.ARG_STREAM_ID to clickedStream.uid.toInt()
         )
         requireActivity().supportFragmentManager.beginTransaction()
             .addToBackStack(MvpMessagesFragment.FROM_TOPIC_TO_MESSAGE)

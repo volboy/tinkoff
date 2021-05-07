@@ -10,7 +10,7 @@ import com.volboy.courseproject.recyclerview.ViewTyped
 import com.volboy.courseproject.recyclerview.simpleitems.ProgressItem
 import javax.inject.Inject
 
-class AllMessagesPresenter : RxPresenter<AllMessagesView>(AllMessagesView::class.java) {
+class MessagesOfStreamsPresenter : RxPresenter<MessagesOfStreamView>(MessagesOfStreamView::class.java) {
     private lateinit var data: MutableList<ViewTyped>
     private var lastItemId = 0
     private var prevLastItemId = 0
@@ -27,10 +27,6 @@ class AllMessagesPresenter : RxPresenter<AllMessagesView>(AllMessagesView::class
     }
 
     fun loadMessageOfStream(streamName: String, streamId: Int) {
-        loaderMessages.getMessageFromDB(streamId)
-            .subscribe { viewTypedMsg ->
-                data = viewTypedMsg as MutableList<ViewTyped>
-            }.disposeOnFinish()
         val messages = loaderMessages.getStreamMessages(streamName)
         messages.subscribe(
             { result ->
@@ -39,8 +35,8 @@ class AllMessagesPresenter : RxPresenter<AllMessagesView>(AllMessagesView::class
                 writeLog(res.getString(R.string.msg_network_ok))
             },
             { error ->
-                view.showError(error.message)
-                writeLog(res.getString(R.string.msg_network_error))
+                view.showInfo(res.getString(R.string.msg_network_error), error.message.toString())
+                loadMsgOfStreamFromDB(streamId)
             }
         ).disposeOnFinish()
     }
@@ -67,11 +63,28 @@ class AllMessagesPresenter : RxPresenter<AllMessagesView>(AllMessagesView::class
                     writeLog(res.getString(R.string.msg_network_ok))
                 },
                 { error ->
-                    view.showError(error.message)
+                    view.showMessage(data, msgIndex)
                     writeLog(res.getString(R.string.msg_network_error))
                 }
             ).disposeOnFinish()
         }
+    }
+
+    private fun loadMsgOfStreamFromDB(streamId: Int) {
+        loaderMessages.getMessageOfStreamFromDB(streamId)
+            .subscribe(
+                { viewTypedMsg ->
+                    data = viewTypedMsg as MutableList<ViewTyped>
+                    view.showMessage(data, 0)
+                },
+                { error -> view.showInfo(res.getString(R.string.msg_database_error), error.message.toString()) },
+                {
+                    view.showInfo(
+                        res.getString(R.string.msg_database_error),
+                        res.getString(R.string.msg_database_empty)
+                    )
+                }
+            ).disposeOnFinish()
     }
 
     fun sendMessage(str: String, streamName: String, topicName: String) {

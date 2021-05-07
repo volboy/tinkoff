@@ -15,7 +15,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
-class ViewTypedMapper {
+class MessageMapper {
 
     @Inject
     lateinit var res: ResourceProvider

@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 class LoaderMessage {
     val gson = Gson()
-    val viewTypedMapper = ViewTypedMapper()
+    val viewTypedMapper = MessageMapper()
 
     @Inject
     lateinit var appDatabase: AppDatabase
@@ -34,7 +34,7 @@ class LoaderMessage {
         return zulipApi.getMessages("newest", 20, 0, narrowsJSON)
             .subscribeOn(Schedulers.io())
             .flatMap { response ->
-                messagesDao.updateMessages(response.messages.take(50))
+                messagesDao.updateMessages(response.messages)
                     .andThen(Single.just(response))
             }
             .map { response ->
@@ -63,6 +63,13 @@ class LoaderMessage {
             .map { msg -> viewTypedMapper.groupedMessages(msg) }
     }
 
+    fun getMessageOfStreamFromDB(streamId: Int): Maybe<List<ViewTyped>> {
+        return appDatabase.messagesDao().getAllMessages(streamId)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .map { msg -> viewTypedMapper.groupedStreamMessages(msg) }
+    }
+
     fun getStreamMessages(streamName: String): Single<List<ViewTyped>> {
         val messagesDao = appDatabase.messagesDao()
         val narrows = listOf(Narrow("stream", streamName))
@@ -81,15 +88,10 @@ class LoaderMessage {
     }
 
     fun getStreamMessagesNext(startId: Int, streamName: String): Single<List<ViewTyped>> {
-        val messagesDao = appDatabase.messagesDao()
         val narrows = listOf(Narrow("stream", streamName))
         val narrowsJSON = gson.toJson(narrows)
         return zulipApi.getMessagesNext(startId, 20, 0, narrowsJSON)
             .subscribeOn(Schedulers.io())
-            .flatMap { response ->
-                messagesDao.updateMessages(response.messages)
-                    .andThen(Single.just(response))
-            }
             .map { response ->
                 viewTypedMapper.groupedStreamMessages(response.messages)
             }

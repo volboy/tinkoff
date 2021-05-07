@@ -8,16 +8,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import com.volboy.courseproject.App
 import com.volboy.courseproject.R
 import com.volboy.courseproject.databinding.FragmentMsgStreamBinding
+import com.volboy.courseproject.presentation.bottominfo.BottomInfoFragment
 import com.volboy.courseproject.presentation.mvp.presenter.MvpFragment
 import com.volboy.courseproject.recyclerview.*
 import javax.inject.Inject
 
-class AllMessagesOfStream : AllMessagesView, MvpFragment<AllMessagesView, AllMessagesPresenter>(), MessageHolderFactory.MessageInterface {
+class MessagesOfStream : MessagesOfStreamView, MvpFragment<MessagesOfStreamView, MessagesOfStreamsPresenter>(), MessageHolderFactory.MessageInterface {
 
     private lateinit var binding: FragmentMsgStreamBinding
     private lateinit var adapter: CommonAdapter<ViewTyped>
@@ -25,7 +27,7 @@ class AllMessagesOfStream : AllMessagesView, MvpFragment<AllMessagesView, AllMes
     private var streamId = 0
 
     @Inject
-    lateinit var allMessagePresenter: AllMessagesPresenter
+    lateinit var messageOfStreamsPresenter: MessagesOfStreamsPresenter
 
     init {
         App.component.injectAllMessagesPresenter(this)
@@ -73,9 +75,9 @@ class AllMessagesOfStream : AllMessagesView, MvpFragment<AllMessagesView, AllMes
         })
     }
 
-    override fun getPresenter(): AllMessagesPresenter = allMessagePresenter
+    override fun getPresenter(): MessagesOfStreamsPresenter = messageOfStreamsPresenter
 
-    override fun getMvpView(): AllMessagesView = this
+    override fun getMvpView(): MessagesOfStreamView = this
 
     override fun showMessage(data: List<ViewTyped>, position: Int) {
         show()
@@ -92,6 +94,15 @@ class AllMessagesOfStream : AllMessagesView, MvpFragment<AllMessagesView, AllMes
         show()
         adapter.items = data
         binding.recyclerMessage.smoothScrollToPosition(msgPosition)
+    }
+
+    override fun showInfo(title: String, msg: String) {
+        val bottomInfoFragment = BottomInfoFragment()
+        bottomInfoFragment.arguments = bundleOf(
+            BottomInfoFragment.ARG_INFO_TITLE to title,
+            BottomInfoFragment.ARG_INFO_TEXT to msg
+        )
+        bottomInfoFragment.show(parentFragmentManager, bottomInfoFragment.tag)
     }
 
     override fun showLoading(msg: String) {
