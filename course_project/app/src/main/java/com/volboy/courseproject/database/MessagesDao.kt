@@ -10,8 +10,8 @@ import io.reactivex.Maybe
 
 @Dao
 interface MessagesDao {
-    @Query("SELECT * FROM MessageJSON")
-    fun getAllMessages(): Maybe<List<MessageJSON>>
+    @Query("SELECT * FROM MessageJSON WHERE streamId=:id")
+    fun getAllMessages(id: Int): Maybe<List<MessageJSON>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun updateMessages(messagesJSON: List<MessageJSON>): Completable

@@ -11,8 +11,6 @@ import com.volboy.courseproject.model.Reaction
 import com.volboy.courseproject.presentation.mvp.presenter.base.RxPresenter
 import com.volboy.courseproject.recyclerview.ViewTyped
 import com.volboy.courseproject.recyclerview.simpleitems.ProgressItem
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 class MessagesPresenter : RxPresenter<MessagesView>(MessagesView::class.java) {
@@ -35,11 +33,8 @@ class MessagesPresenter : RxPresenter<MessagesView>(MessagesView::class.java) {
         component.injectDatabase(this)
     }
 
-    fun loadFirstRemoteMessages(streamName: String, topicName: String) {
-        appDatabase.messagesDao().getAllMessages()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .map { msg -> loaderMessages.groupedMessages(msg) }
+    fun loadFirstRemoteMessages(streamName: String, topicName: String, streamId:Int) {
+        loaderMessages.getMessageFromDB(streamId)
             .subscribe { viewTypedMsg ->
                 data = viewTypedMsg as MutableList<ViewTyped>
             }.disposeOnFinish()

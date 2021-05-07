@@ -15,9 +15,9 @@ import com.volboy.courseproject.databinding.FragmentStreamsBinding
 import com.volboy.courseproject.presentation.addstream.MvpAddStreamFragment
 import com.volboy.courseproject.presentation.bottominfo.BottomInfoFragment
 import com.volboy.courseproject.presentation.messages.MvpMessagesFragment
+import com.volboy.courseproject.presentation.msgstream.AllMessagesOfStream
 import com.volboy.courseproject.presentation.mvp.presenter.MvpFragment
 import com.volboy.courseproject.presentation.streams.UiHolderFactory
-import com.volboy.courseproject.presentation.streams.mystreams.TitleUi
 import com.volboy.courseproject.recyclerview.CommonAdapter
 import com.volboy.courseproject.recyclerview.CommonDiffUtilCallback
 import com.volboy.courseproject.recyclerview.ViewTyped
@@ -27,7 +27,7 @@ class MvpStreamsFragment : AllStreamsView, MvpFragment<AllStreamsView, AllStream
     UiHolderFactory.ChannelsInterface {
     private lateinit var binding: FragmentStreamsBinding
     private lateinit var adapter: CommonAdapter<ViewTyped>
-    private lateinit var clickedStream: TitleUi
+    private lateinit var clickedStream: AllStreamsUi
 
     @Inject
     lateinit var allStreamsPresenter: AllStreamsPresenter
@@ -100,7 +100,16 @@ class MvpStreamsFragment : AllStreamsView, MvpFragment<AllStreamsView, AllStream
     }
 
     override fun getClickedView(view: View, position: Int, viewType: Int) {
-
+        clickedStream = adapter.items[position] as AllStreamsUi
+        val messagesFragment = AllMessagesOfStream()
+        messagesFragment.arguments = bundleOf(
+            MvpMessagesFragment.ARG_STREAM to clickedStream.title,
+            MvpMessagesFragment.ARG_STREAM_ID to clickedStream.uid
+        )
+        requireActivity().supportFragmentManager.beginTransaction()
+            .addToBackStack(MvpMessagesFragment.FROM_TOPIC_TO_MESSAGE)
+            .add(R.id.container, messagesFragment)
+            .commit()
     }
 
     override fun getClickedSwitch(view: SwitchCompat, streamName: String) {

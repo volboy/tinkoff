@@ -13,10 +13,7 @@ class MessageHolderFactory(private val messageInterface: MessageInterface) : Hol
             R.layout.item_out_message -> MessageViewHolder(view, messageInterface)
             R.layout.item_date_divider -> DataViewHolder(view)
             R.layout.item_messages_reactions -> ReactionsViewHolder(view, messageInterface)
-            R.layout.item_messages_reactions_out -> ReactionsViewHolder(
-                view,
-                messageInterface
-            )
+            R.layout.item_messages_reactions_out -> ReactionsViewHolder(view, messageInterface)
             else -> null
         }
     }

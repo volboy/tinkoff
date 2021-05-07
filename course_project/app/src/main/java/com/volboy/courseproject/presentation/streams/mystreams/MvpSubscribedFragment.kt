@@ -18,6 +18,7 @@ import com.volboy.courseproject.presentation.bottominfo.BottomInfoFragment.Compa
 import com.volboy.courseproject.presentation.messages.MvpMessagesFragment
 import com.volboy.courseproject.presentation.messages.MvpMessagesFragment.Companion.ARG_LAST_MSG_ID_IN_TOPIC
 import com.volboy.courseproject.presentation.messages.MvpMessagesFragment.Companion.ARG_STREAM
+import com.volboy.courseproject.presentation.messages.MvpMessagesFragment.Companion.ARG_STREAM_ID
 import com.volboy.courseproject.presentation.messages.MvpMessagesFragment.Companion.ARG_TOPIC
 import com.volboy.courseproject.presentation.messages.MvpMessagesFragment.Companion.FROM_TOPIC_TO_MESSAGE
 import com.volboy.courseproject.presentation.mvp.presenter.MvpFragment
@@ -119,7 +120,8 @@ class MvpSubscribedFragment : SubStreamsView, MvpFragment<SubStreamsView, SubStr
                 messagesFragment.arguments = bundleOf(
                     ARG_TOPIC to (adapter.items[position] as TitleUi).title,
                     ARG_LAST_MSG_ID_IN_TOPIC to (adapter.items[position] as TitleUi).uid,
-                    ARG_STREAM to clickedStream.title
+                    ARG_STREAM to clickedStream.title,
+                    ARG_STREAM_ID to clickedStream.uid
                 )
                 requireActivity().supportFragmentManager.beginTransaction()
                     .addToBackStack(FROM_TOPIC_TO_MESSAGE)

@@ -5,6 +5,7 @@ import com.volboy.courseproject.MainPresenter
 import com.volboy.courseproject.model.LoaderMessage
 import com.volboy.courseproject.model.LoaderStreams
 import com.volboy.courseproject.model.LoaderUsers
+import com.volboy.courseproject.model.ViewTypedMapper
 import com.volboy.courseproject.presentation.addstream.AddStreamPresenter
 import com.volboy.courseproject.presentation.addstream.MvpAddStreamFragment
 import com.volboy.courseproject.presentation.details.DetailsPresenter
@@ -73,7 +74,7 @@ interface AppComponent {
 
     fun injectAllMessagesPresenter(allMessagesOfStream: AllMessagesOfStream)
 
-    fun injectResourceProvider(loaderMessage: LoaderMessage)
+    fun injectResourceProvider(viewTypedMapper: ViewTypedMapper)
     fun injectResourceProvider(detailsPresenter: DetailsPresenter)
     fun injectResourceProvider(mvpDetailsFragment: MvpDetailsFragment)
     fun injectResourceProvider(messagesPresenter: MessagesPresenter)

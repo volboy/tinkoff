@@ -24,6 +24,7 @@ class MvpMessagesFragment : MessagesView, MvpFragment<MessagesView, MessagesPres
     private lateinit var adapter: CommonAdapter<ViewTyped>
     private lateinit var topicName: String
     private lateinit var streamName: String
+    private var streamId = 0
     private var positionMsgOnLongClick = 0
 
     @Inject
@@ -38,13 +39,14 @@ class MvpMessagesFragment : MessagesView, MvpFragment<MessagesView, MessagesPres
         val holderFactory = MessageHolderFactory(this)
         topicName = requireArguments().getString(ARG_TOPIC).toString()
         streamName = requireArguments().getString(ARG_STREAM).toString()
+        streamId = requireArguments().getInt(ARG_STREAM_ID)
         adapter = CommonAdapter(
             holderFactory,
             CommonDiffUtilCallback(),
             PaginationAdapterHelper { getPresenter().loadNextRemoteMessages(streamName, topicName) })
         binding.recyclerMessage.adapter = adapter
         (requireActivity() as AppCompatActivity).supportActionBar?.hide()
-        getPresenter().loadFirstRemoteMessages(streamName, topicName)
+        getPresenter().loadFirstRemoteMessages(streamName, topicName, streamId)
         return binding.root
     }
 
@@ -153,6 +155,7 @@ class MvpMessagesFragment : MessagesView, MvpFragment<MessagesView, MessagesPres
     companion object {
         const val ARG_TOPIC = "topic"
         const val ARG_STREAM = "stream"
+        const val ARG_STREAM_ID = "streamId"
         const val ARG_LAST_MSG_ID_IN_TOPIC = "lastId"
         const val FROM_TOPIC_TO_MESSAGE = "FromTopicToMessageFragment"
     }
