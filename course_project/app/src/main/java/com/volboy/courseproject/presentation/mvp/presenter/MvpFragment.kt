@@ -13,8 +13,8 @@ abstract class MvpFragment<View, P : Presenter<View>> : Fragment(),
         )
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onViewCreated(view: android.view.View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         mvpHelper.create()
     }
 
