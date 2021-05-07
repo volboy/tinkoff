@@ -31,8 +31,11 @@ class LoaderStreams {
         return zulipApi.getSubscribedStreams()
             .subscribeOn(Schedulers.io())
             .flatMap { response ->
-                subStreamsDao.updateSubStreams(response.subscriptions)
-                    .andThen(Single.just(response))
+                subStreamsDao.deleteSubStreams()
+                    .andThen(
+                        subStreamsDao.updateSubStreams(response.subscriptions)
+                            .andThen(Single.just(response))
+                    )
             }
             .map { response ->
                 viewTypedSubStreams(response.subscriptions)

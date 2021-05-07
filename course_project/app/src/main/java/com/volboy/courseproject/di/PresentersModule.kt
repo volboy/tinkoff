@@ -4,6 +4,7 @@ import com.volboy.courseproject.MainPresenter
 import com.volboy.courseproject.presentation.addstream.AddStreamPresenter
 import com.volboy.courseproject.presentation.details.DetailsPresenter
 import com.volboy.courseproject.presentation.messages.MessagesPresenter
+import com.volboy.courseproject.presentation.msgstream.AllMessagesPresenter
 import com.volboy.courseproject.presentation.profile.ProfilePresenter
 import com.volboy.courseproject.presentation.streams.allstreams.AllStreamsPresenter
 import com.volboy.courseproject.presentation.streams.mystreams.SubStreamsPresenter
@@ -30,6 +31,12 @@ class PresentersModule {
     @Provides
     fun provideMessagePresenter(): MessagesPresenter {
         return MessagesPresenter()
+    }
+
+    @AppScope
+    @Provides
+    fun provideAllMessagePresenter(): AllMessagesPresenter {
+        return AllMessagesPresenter()
     }
 
     @AppScope

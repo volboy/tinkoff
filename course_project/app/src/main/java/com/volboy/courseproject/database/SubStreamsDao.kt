@@ -13,6 +13,9 @@ interface SubStreamsDao {
     @Query("SELECT * FROM SubStreamJSON")
     fun getSubStreams(): Maybe<List<SubStreamJSON>>
 
+    @Query("DELETE FROM SubStreamJSON")
+    fun deleteSubStreams(): Completable
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun updateSubStreams(subStreamJSON: List<SubStreamJSON>): Completable
 }

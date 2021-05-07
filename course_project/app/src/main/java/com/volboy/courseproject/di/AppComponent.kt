@@ -47,7 +47,6 @@ interface AppComponent {
     fun injectLoaderUsers(detailsPresenter: DetailsPresenter)
     fun injectLoaderUsers(profilePresenter: ProfilePresenter)
 
-    fun injectDatabase(subStreamsPresenter: SubStreamsPresenter)
     fun injectDatabase(allStreamsPresenter: AllStreamsPresenter)
     fun injectDatabase(messagesPresenter: MessagesPresenter)
     fun injectDatabase(loaderStreams: LoaderStreams)
