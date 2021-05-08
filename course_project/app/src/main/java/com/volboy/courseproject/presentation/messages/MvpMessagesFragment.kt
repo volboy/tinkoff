@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.setFragmentResultListener
+import com.google.android.material.snackbar.Snackbar
 import com.volboy.courseproject.App.Companion.component
 import com.volboy.courseproject.R
 import com.volboy.courseproject.databinding.FragmentMessagesBinding
@@ -53,11 +54,23 @@ class MvpMessagesFragment : MessagesView, MvpFragment<MessagesView, MessagesPres
         super.onViewCreated(view, savedInstanceState)
         binding.topicName.text = resources.getString(R.string.topic_name, topicName)
         getPresenter().loadFirstRemoteMessages(streamName, topicName, streamId)
-        setFragmentResultListener(EmojiBottomFragment.ARG_BOTTOM_FRAGMENT) { _, bundle ->
+        setFragmentResultListener(EmojiBottomFragment.ACTION_EMOJI) { _, bundle ->
             val emojiList: ArrayList<String>? = bundle.getStringArrayList(EmojiBottomFragment.ARG_EMOJI)
             if (emojiList != null) {
                 getPresenter().addOrDeleteReaction(positionMsgOnLongClick, emojiList)
             }
+        }
+        setFragmentResultListener(EmojiBottomFragment.ACTION_DELETE) { _, _ ->
+            Snackbar.make(binding.root, "Удалено", Snackbar.LENGTH_SHORT).show()
+        }
+        setFragmentResultListener(EmojiBottomFragment.ACTION_EDIT) { _, _ ->
+            Snackbar.make(binding.root, "Сохранено", Snackbar.LENGTH_SHORT).show()
+        }
+        setFragmentResultListener(EmojiBottomFragment.ACTION_CHANGE) { _, _ ->
+            Snackbar.make(binding.root, "Перенесено", Snackbar.LENGTH_SHORT).show()
+        }
+        setFragmentResultListener(EmojiBottomFragment.ACTION_COPY) { _, _ ->
+            Snackbar.make(binding.root, "Скопированно", Snackbar.LENGTH_SHORT).show()
         }
         binding.recyclerMessage.addOnLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
             if (bottom < oldBottom) {

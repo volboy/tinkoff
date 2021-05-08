@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:background="@color/ev_unselected">
+    android:background="@color/ev_unselected"
+    android:orientation="vertical">
 
     <ImageView
         android:layout_width="wrap_content"
@@ -12,15 +12,40 @@
         android:layout_gravity="center"
         android:layout_marginTop="8dp"
         android:contentDescription="@string/error_str"
+        android:paddingBottom="16dp"
         android:src="@drawable/ic_bottom_line" />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/dialog_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/ev_unselected"
+        app:itemIconTint="@color/icon_bottom_menu_color"
+        app:itemTextColor="@color/icon_bottom_menu_color"
+        app:menu="@menu/message_menu" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerEmoji"
         android:layout_width="match_parent"
         android:layout_height="346dp"
         android:paddingStart="8dp"
-        android:paddingTop="40dp"
         android:paddingEnd="8dp"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:spanCount="7" />
+
+    <include
+        android:id="@+id/dialog_delete"
+        layout="@layout/dialog_delete"
+        android:visibility="gone" />
+
+    <include
+        android:id="@+id/dialog_edit"
+        layout="@layout/dialog_edit"
+        android:visibility="gone" />
+
+    <include
+        android:id="@+id/dialog_change"
+        layout="@layout/dialog_change_topic"
+        android:visibility="gone" />
+
 </LinearLayout>

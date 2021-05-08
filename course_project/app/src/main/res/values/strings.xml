@@ -41,5 +41,17 @@
     <string name="something_wrong">Что-то пошло не так</string>
     <string name="ok_str">OK</string>
     <string name="write_topic_str">Укажите топик</string>
+    <string name="emoji_str">Emoji</string>
+    <string name="delete_str">Delete</string>
+    <string name="edit_str">Edit</string>
+    <string name="change_str">Change</string>
+    <string name="copy_str">Copy</string>
+    <string name="dialog_delete_str">Вы действительно хотите \n удалить это сообщение?</string>
+    <string name="yes_str">Да</string>
+    <string name="cancel_str">Отмена</string>
+    <string name="change_ok_str">Перенести</string>
+    <string name="change_text_str">Введите название другого или нового топика</string>
+    <string name="copy_done_str">Текст сообщения скопирован</string>
+    <string name="save_str">Сохранить</string>
 
 </resources>
