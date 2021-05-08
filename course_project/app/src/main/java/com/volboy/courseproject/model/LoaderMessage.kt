@@ -13,8 +13,8 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class LoaderMessage {
-    val gson = Gson()
-    val viewTypedMapper = MessageMapper()
+    private val gson = Gson()
+    private val viewTypedMapper = MessageMapper()
 
     @Inject
     lateinit var appDatabase: AppDatabase

@@ -38,7 +38,7 @@ class ReactionsViewHolder(view: View, private val messageInterface: MessageHolde
         val emojiView = EmojiView(context)
         emojiView.text = countReactions.toString()
         emojiView.emoji = emojiCode
-        emojiView.setOnClickListener { messageInterface.getClickedEmoji(emojiCode, emojiName, adapterPosition) }
+        emojiView.setOnClickListener { messageInterface.getClickedView(emojiCode, emojiName, adapterPosition) }
         emojiView.isSelected = ownEmoji
         if (isLastView) {
             flexBoxLayout.addLastView(emojiView)

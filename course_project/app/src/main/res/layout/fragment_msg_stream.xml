@@ -58,6 +58,7 @@
         android:textColor="@color/ev_text_color"
         android:textColorHint="@color/ev_text_color"
         android:textSize="20sp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/messageBox"
         app:layout_constraintEnd_toStartOf="@id/messageBtn"
         app:layout_constraintStart_toStartOf="parent"

@@ -44,11 +44,12 @@ class MessagesOfStream : MessagesOfStreamView, MvpFragment<MessagesOfStreamView,
             PaginationAdapterHelper { getPresenter().loadMessageOfStreamNext(streamName) })
         binding.recyclerMessage.adapter = adapter
         (requireActivity() as AppCompatActivity).supportActionBar?.hide()
-        getPresenter().loadMessageOfStream(streamName, streamId)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        getPresenter().loadMessageOfStream(streamName, streamId)
         binding.recyclerMessage.addOnLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
             if (bottom < oldBottom) {
                 binding.recyclerMessage.smoothScrollToPosition(0)
@@ -68,8 +69,10 @@ class MessagesOfStream : MessagesOfStreamView, MvpFragment<MessagesOfStreamView,
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (binding.messageBox.text.isNotEmpty()) {
                     binding.messageBtn.setImageResource(R.drawable.ic_send_message)
+                    binding.topicBox.isVisible = true
                 } else {
                     binding.messageBtn.setImageResource(R.drawable.ic_add_message)
+                    binding.topicBox.isGone = true
                 }
             }
         })
@@ -128,8 +131,8 @@ class MessagesOfStream : MessagesOfStreamView, MvpFragment<MessagesOfStreamView,
         return true
     }
 
-    override fun getClickedEmoji(emojiCode: String, emojiName: String, position: Int) {
-        Log.i(getString(R.string.log_string), "Клик")
+    override fun getClickedView(viewCode: String, viewName: String, position: Int) {
+        Log.i(getString(R.string.log_string), viewName)
     }
 
     override fun onDestroyView() {
@@ -141,7 +144,6 @@ class MessagesOfStream : MessagesOfStreamView, MvpFragment<MessagesOfStreamView,
         binding.recyclerMessage.isVisible = true
         binding.messageBox.isVisible = true
         binding.messageBtn.isVisible = true
-        binding.topicBox.isVisible = true
         binding.fragmentError.root.isGone = true
         binding.fragmentLoading.root.isGone = true
     }

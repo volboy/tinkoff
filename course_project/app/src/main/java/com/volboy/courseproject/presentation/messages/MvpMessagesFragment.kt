@@ -46,12 +46,13 @@ class MvpMessagesFragment : MessagesView, MvpFragment<MessagesView, MessagesPres
             PaginationAdapterHelper { getPresenter().loadNextRemoteMessages(streamName, topicName) })
         binding.recyclerMessage.adapter = adapter
         (requireActivity() as AppCompatActivity).supportActionBar?.hide()
-        getPresenter().loadFirstRemoteMessages(streamName, topicName, streamId)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         binding.topicName.text = resources.getString(R.string.topic_name, topicName)
+        getPresenter().loadFirstRemoteMessages(streamName, topicName, streamId)
         setFragmentResultListener(EmojiBottomFragment.ARG_BOTTOM_FRAGMENT) { _, bundle ->
             val emojiList: ArrayList<String>? = bundle.getStringArrayList(EmojiBottomFragment.ARG_EMOJI)
             if (emojiList != null) {
@@ -133,13 +134,13 @@ class MvpMessagesFragment : MessagesView, MvpFragment<MessagesView, MessagesPres
         return true
     }
 
-    override fun getClickedEmoji(emojiCode: String, emojiName: String, position: Int) {
-        if (emojiName.isEmpty()) {
+    override fun getClickedView(viewCode: String, viewName: String, position: Int) {
+        if (viewName.isEmpty()) {
             positionMsgOnLongClick = position
             val emojiBottomFragment = EmojiBottomFragment()
             emojiBottomFragment.show(parentFragmentManager, emojiBottomFragment.tag)
         } else {
-            getPresenter().addOrDeleteReaction(position, arrayListOf(emojiName, emojiCode))
+            getPresenter().addOrDeleteReaction(position, arrayListOf(viewName, viewCode))
         }
     }
 

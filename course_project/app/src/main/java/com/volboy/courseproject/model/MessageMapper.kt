@@ -10,6 +10,7 @@ import com.volboy.courseproject.common.ResourceProvider
 import com.volboy.courseproject.presentation.messages.DataUi
 import com.volboy.courseproject.presentation.messages.ReactionsUi
 import com.volboy.courseproject.presentation.messages.TextUi
+import com.volboy.courseproject.presentation.msgstream.TopicUi
 import com.volboy.courseproject.recyclerview.ViewTyped
 import java.text.SimpleDateFormat
 import java.util.*
@@ -40,7 +41,7 @@ class MessageMapper {
     private fun groupByTopic(messagesJSON: List<MessageJSON>) = messagesJSON
         .groupBy { it.subject }
         .flatMap { (topic, msg) ->
-            listOf(DataUi(topic, R.layout.item_date_divider)) + viewTypedMessages(msg)
+            listOf(TopicUi(topic, R.layout.item_topic_divider)) + viewTypedMessages(msg)
         }
 
     private fun viewTypedMessages(messagesJSON: List<MessageJSON>): MutableList<ViewTyped> {
@@ -86,7 +87,7 @@ class MessageMapper {
     }
 
     private fun getDateTime(seconds: Long): String {
-        val formatter = SimpleDateFormat("dd/MM", Locale.getDefault())
+        val formatter = SimpleDateFormat("dd MMM", Locale.getDefault())
         return formatter.format(seconds * 1000)
     }
 
