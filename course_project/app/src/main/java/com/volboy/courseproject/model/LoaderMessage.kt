@@ -99,6 +99,17 @@ class LoaderMessage {
             .observeOn(AndroidSchedulers.mainThread())
     }
 
+    fun getTopicsOfStreams(id: Int): Single<List<String>> {
+        return zulipApi.getStreamsTopics(id)
+            .subscribeOn(Schedulers.io())
+            .map { response ->
+                response.topics.map { topic ->
+                    topic.name
+                }
+            }
+            .observeOn(AndroidSchedulers.mainThread())
+    }
+
     fun getLastMessage(startId: Int, streamName: String, topicName: String): Single<List<ViewTyped>> {
         val narrows = listOf(Narrow("stream", streamName), Narrow("topic", topicName))
         val gson = Gson()

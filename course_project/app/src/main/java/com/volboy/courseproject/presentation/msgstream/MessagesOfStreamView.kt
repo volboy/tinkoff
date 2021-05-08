@@ -8,6 +8,8 @@ interface MessagesOfStreamView : LoadErrorView {
 
     fun showInfo(title: String, msg: String)
 
+    fun setArrayAdapter(topics: List<String>)
+
     fun updateMessage(data: List<ViewTyped>, msgPosition: Int)
 
     fun sendMessage(data: List<ViewTyped>, msgPosition: Int)

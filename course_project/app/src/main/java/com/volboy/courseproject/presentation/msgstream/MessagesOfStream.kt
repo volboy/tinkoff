@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.core.view.isGone
@@ -50,6 +51,7 @@ class MessagesOfStream : MessagesOfStreamView, MvpFragment<MessagesOfStreamView,
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         getPresenter().loadMessageOfStream(streamName, streamId)
+        getPresenter().loadAllTopicsOfStream(streamId)
         binding.recyclerMessage.addOnLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
             if (bottom < oldBottom) {
                 binding.recyclerMessage.smoothScrollToPosition(0)
@@ -81,6 +83,16 @@ class MessagesOfStream : MessagesOfStreamView, MvpFragment<MessagesOfStreamView,
     override fun getPresenter(): MessagesOfStreamsPresenter = messageOfStreamsPresenter
 
     override fun getMvpView(): MessagesOfStreamView = this
+
+    override fun setArrayAdapter(topics: List<String>) {
+        binding.topicBox.setAdapter(
+            ArrayAdapter(
+                requireContext(),
+                R.layout.item_autocomplete,
+                topics
+            )
+        )
+    }
 
     override fun showMessage(data: List<ViewTyped>, position: Int) {
         show()

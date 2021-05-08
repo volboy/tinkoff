@@ -39,7 +39,7 @@
         app:reverseLayout="true"
         tools:listitem="@layout/item_out_message" />
 
-    <EditText
+    <AutoCompleteTextView
         android:id="@+id/topicBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

@@ -26,9 +26,17 @@ class MessagesOfStreamsPresenter : RxPresenter<MessagesOfStreamView>(MessagesOfS
         App.component.injectResourceProvider(this)
     }
 
+    fun loadAllTopicsOfStream(streamId: Int) {
+        loaderMessages.getTopicsOfStreams(streamId).subscribe(
+            { result ->
+                view.setArrayAdapter(result)
+            },
+            { error -> writeLog(error.message.toString()) }
+        ).disposeOnFinish()
+    }
+
     fun loadMessageOfStream(streamName: String, streamId: Int) {
-        val messages = loaderMessages.getStreamMessages(streamName)
-        messages.subscribe(
+        loaderMessages.getStreamMessages(streamName).subscribe(
             { result ->
                 data = result as MutableList<ViewTyped>
                 view.showMessage(data, 0)
