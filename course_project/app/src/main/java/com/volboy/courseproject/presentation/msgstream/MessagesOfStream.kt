@@ -16,8 +16,10 @@ import com.volboy.courseproject.App
 import com.volboy.courseproject.R
 import com.volboy.courseproject.databinding.FragmentMsgStreamBinding
 import com.volboy.courseproject.presentation.bottominfo.BottomInfoFragment
+import com.volboy.courseproject.presentation.messages.MvpMessagesFragment
 import com.volboy.courseproject.presentation.mvp.presenter.MvpFragment
 import com.volboy.courseproject.recyclerview.*
+import com.volboy.courseproject.recyclerview.simpleitems.EmptyView
 import javax.inject.Inject
 
 class MessagesOfStream : MessagesOfStreamView, MvpFragment<MessagesOfStreamView, MessagesOfStreamsPresenter>(), MessageHolderFactory.MessageInterface {
@@ -144,7 +146,19 @@ class MessagesOfStream : MessagesOfStreamView, MvpFragment<MessagesOfStreamView,
     }
 
     override fun getClickedView(viewCode: String, viewName: String, position: Int) {
-        Log.i(getString(R.string.log_string), viewName)
+        if (viewCode == "itIsTopic") {
+            val messagesFragment = MvpMessagesFragment()
+            messagesFragment.arguments = bundleOf(
+                MvpMessagesFragment.ARG_TOPIC to viewName,
+                MvpMessagesFragment.ARG_LAST_MSG_ID_IN_TOPIC to (adapter.items[position] as TopicUi).uid,
+                MvpMessagesFragment.ARG_STREAM to streamName,
+                MvpMessagesFragment.ARG_STREAM_ID to streamId
+            )
+            requireActivity().supportFragmentManager.beginTransaction()
+                .addToBackStack(MvpMessagesFragment.FROM_TOPIC_TO_MESSAGE)
+                .add(R.id.container, messagesFragment)
+                .commit()
+        }
     }
 
     override fun onDestroyView() {

@@ -19,7 +19,7 @@ class TopicViewHolder(view: View, private val messageInterface: MessageHolderFac
     private val topic: TextView = itemTopicDividerBinding.topic
 
     init {
-        topic.setOnClickListener { messageInterface.getClickedView("", topic.text.toString(), adapterPosition) }
+        topic.setOnClickListener { messageInterface.getClickedView("itIsTopic", topic.text.toString(), adapterPosition) }
     }
 
     override fun bind(item: TopicUi) {

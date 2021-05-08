@@ -16,6 +16,7 @@ class CommonAdapter<T : ViewTyped>(
 
     override fun onBindViewHolder(holder: BaseViewHolder<ViewTyped>, position: Int) {
         super.onBindViewHolder(holder, position)
+
         paginationAdapterHelper?.onBind(position, items.size)
 
     }
