@@ -11,8 +11,8 @@ import com.volboy.courseproject.recyclerview.MessageHolderFactory
 import com.volboy.courseproject.recyclerview.ViewTyped
 
 class TextUi(
-    val title: String,
-    val message: Spanned?,
+    var title: String,
+    var message: Spanned?,
     val imageURL: String,
     override val viewType: Int = R.layout.item_in_message,
     override val uid: String = ""

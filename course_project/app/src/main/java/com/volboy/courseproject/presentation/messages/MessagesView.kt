@@ -9,4 +9,8 @@ interface MessagesView : LoadErrorView {
     fun updateMessage(data: List<ViewTyped>, msgPosition: Int)
 
     fun sendMessage(data: List<ViewTyped>, msgPosition: Int)
+
+    fun deleteMessage(data: List<ViewTyped>, msgPosition: Int)
+
+    fun showInfo(title: String, msg: String)
 }

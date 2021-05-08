@@ -31,6 +31,9 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/messageMarginRight"
         android:layout_marginBottom="@dimen/messageMarginBottom"
+        android:maxWidth="220dp"
+        android:paddingStart="1dp"
+        android:paddingEnd="5dp"
         android:text="@string/message_str"
         android:textColor="@color/message_color"
         android:textSize="@dimen/message_text_size" />

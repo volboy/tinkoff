@@ -1,6 +1,7 @@
 package com.volboy.courseproject.presentation.messages
 
 import android.util.Log
+import androidx.core.text.toSpanned
 import com.volboy.courseproject.App.Companion.component
 import com.volboy.courseproject.MainPresenter.Companion.ownId
 import com.volboy.courseproject.R
@@ -15,6 +16,7 @@ import javax.inject.Inject
 
 class MessagesPresenter : RxPresenter<MessagesView>(MessagesView::class.java) {
     private var lastItemId = 0
+    private var prevLastItemId = 0
     private lateinit var data: MutableList<ViewTyped>
     private lateinit var reactionsOfMessage: MutableList<Reaction>
 
@@ -33,7 +35,7 @@ class MessagesPresenter : RxPresenter<MessagesView>(MessagesView::class.java) {
         component.injectDatabase(this)
     }
 
-    fun loadFirstRemoteMessages(streamName: String, topicName: String, streamId:Int) {
+    fun loadFirstRemoteMessages(streamName: String, topicName: String, streamId: Int) {
         loaderMessages.getMessageFromDB(streamId)
             .subscribe { viewTypedMsg ->
                 data = viewTypedMsg as MutableList<ViewTyped>
@@ -59,32 +61,54 @@ class MessagesPresenter : RxPresenter<MessagesView>(MessagesView::class.java) {
             msgIndex = data.indexOf(lastItem)
             lastItemId = lastItem.uid.toInt()
         }
-        val buffer = ArrayList(data)
-        buffer.add(msgIndex + 2, ProgressItem)
-        view.showMessage(buffer, buffer.size - 1)
-        val messages = loaderMessages.getMessagesNext(lastItemId, streamName, topicName)
-        messages.subscribe(
-            { result ->
-                val resultData = ArrayList(buffer)
-                with(resultData) {
-                    addAll(msgIndex + 2, result)
-                    removeAt(msgIndex + 1) //удаляем реакции под старым сообщением
-                    if (resultData[msgIndex - 1].uid == "date") {
-                        removeAt(msgIndex - 1)
-                    }
-                    removeAt(msgIndex) //удаляем старое сообщение
-                    remove(ProgressItem)
+        if (lastItemId != prevLastItemId) {
+            val buffer = ArrayList(data)
+            buffer.add(ProgressItem)
+            view.showMessage(buffer, buffer.size - 1)
+            val messages = loaderMessages.getMessagesNext(lastItemId, streamName, topicName)
+            messages.subscribe(
+                { result ->
+                    val resultData = ArrayList(buffer)
+                    resultData.remove(ProgressItem)
+                    data = resultData.union(result).toMutableList()
+                    view.showMessage(data, msgIndex)
+                    prevLastItemId = lastItemId
+                    writeLog(res.getString(R.string.msg_network_ok))
+                },
+                { error ->
+                    view.showMessage(data, msgIndex)
+                    writeLog(res.getString(R.string.msg_network_error))
                 }
-                view.showMessage(resultData, msgIndex)
-                data = resultData
-                writeLog(res.getString(R.string.msg_network_ok))
-            },
-            { error ->
-                view.showError(error.message)
-                writeLog(res.getString(R.string.msg_network_error))
-            }
-        ).disposeOnFinish()
+            ).disposeOnFinish()
+        }
+    }
 
+    fun deleteMessage(messageId: Int, position: Int) {
+        loaderMessages.deleteMessage(messageId).subscribe(
+            { response ->
+                if (response.result == "success") {
+                    data.removeAt(position)
+                    view.deleteMessage(data, position)
+                } else {
+                    view.showInfo(res.getString(R.string.something_wrong), response.msg)
+                }
+            },
+            { error -> view.showInfo(res.getString(R.string.something_wrong), error.message.toString()) }
+        ).disposeOnFinish()
+    }
+
+    fun editMessage(messageId: Int, position: Int, content: String) {
+        loaderMessages.editMessage(messageId, content).subscribe(
+            { response ->
+                if (response.result == "success") {
+                    (data[position] as TextUi).message = content.toSpanned()
+                    view.updateMessage(data, position)
+                } else {
+                    view.showInfo(res.getString(R.string.something_wrong), response.msg)
+                }
+            },
+            { error -> view.showInfo(res.getString(R.string.something_wrong), error.message.toString()) }
+        ).disposeOnFinish()
     }
 
     fun addOrDeleteReaction(indexMsg: Int, emojiList: ArrayList<String>) {

@@ -55,18 +55,6 @@ interface ZulipApi {
         @Field("invite_only") inviteOnly: Boolean
     ): Single<SubscribedJSON>
 
-    @DELETE("users/me/subscriptions")
-    fun unSubscribeToStream(
-        @Query("subscriptions") subscriptions: String,
-    ): Single<SubscribedJSON>
-
-    @DELETE("messages/{message_id}/reactions")
-    fun removeReaction(
-        @Path("message_id") messageId: Int,
-        @Query("emoji_name") emojiName: String,
-        @Query("reaction_type") reactionType: String
-    ): Single<AddReactionResponse>
-
     @POST("messages")
     @FormUrlEncoded
     fun sendMessage(
@@ -83,5 +71,28 @@ interface ZulipApi {
         @Field("op") op: String,
         @Field("flag") flag: String
     ): Call<UpdateMessageFlag>
+
+    @DELETE("users/me/subscriptions")
+    fun unSubscribeToStream(
+        @Query("subscriptions") subscriptions: String,
+    ): Single<SubscribedJSON>
+
+    @DELETE("messages/{message_id}/reactions")
+    fun removeReaction(
+        @Path("message_id") messageId: Int,
+        @Query("emoji_name") emojiName: String,
+        @Query("reaction_type") reactionType: String
+    ): Single<AddReactionResponse>
+
+    @DELETE("messages/{message_id}")
+    fun deleteMessage(
+        @Path("message_id") messageId: Int
+    ): Single<DeleteMessageResponse>
+
+    @PATCH("messages/{message_id}")
+    fun editMessage(
+        @Path("message_id") messageId: Int,
+        @Query("content") content: String,
+    ): Single<DeleteMessageResponse>
 
 }

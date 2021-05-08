@@ -132,10 +132,18 @@ class LoaderMessage {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
 
+    fun deleteMessage(messageId: Int): Single<DeleteMessageResponse> =
+        zulipApi.deleteMessage(messageId)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+
+    fun editMessage(messageId: Int, content: String) =
+        zulipApi.editMessage(messageId, content)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+
     fun sendMessage(str: String, streamName: String, topicName: String): Single<SendMessageResponse> =
         zulipApi.sendMessage("stream", streamName, str, topicName)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-
-
 }

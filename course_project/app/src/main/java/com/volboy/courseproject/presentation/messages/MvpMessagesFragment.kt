@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.setFragmentResultListener
@@ -15,6 +16,8 @@ import com.volboy.courseproject.App.Companion.component
 import com.volboy.courseproject.R
 import com.volboy.courseproject.databinding.FragmentMessagesBinding
 import com.volboy.courseproject.presentation.bottomfragment.EmojiBottomFragment
+import com.volboy.courseproject.presentation.bottomfragment.EmojiBottomFragment.Companion.ARG_MESSAGE
+import com.volboy.courseproject.presentation.bottominfo.BottomInfoFragment
 import com.volboy.courseproject.presentation.mvp.presenter.MvpFragment
 import com.volboy.courseproject.recyclerview.*
 import java.util.*
@@ -27,6 +30,7 @@ class MvpMessagesFragment : MessagesView, MvpFragment<MessagesView, MessagesPres
     private lateinit var streamName: String
     private var streamId = 0
     private var positionMsgOnLongClick = 0
+    private var messageId = 0
 
     @Inject
     lateinit var messagePresenter: MessagesPresenter
@@ -61,10 +65,10 @@ class MvpMessagesFragment : MessagesView, MvpFragment<MessagesView, MessagesPres
             }
         }
         setFragmentResultListener(EmojiBottomFragment.ACTION_DELETE) { _, _ ->
-            Snackbar.make(binding.root, "Удалено", Snackbar.LENGTH_SHORT).show()
+            getPresenter().deleteMessage(messageId, positionMsgOnLongClick + 1)
         }
-        setFragmentResultListener(EmojiBottomFragment.ACTION_EDIT) { _, _ ->
-            Snackbar.make(binding.root, "Сохранено", Snackbar.LENGTH_SHORT).show()
+        setFragmentResultListener(EmojiBottomFragment.ACTION_EDIT) { _, bundle ->
+            getPresenter().editMessage(messageId, positionMsgOnLongClick + 1, bundle.getString(ARG_MESSAGE).toString())
         }
         setFragmentResultListener(EmojiBottomFragment.ACTION_CHANGE) { _, _ ->
             Snackbar.make(binding.root, "Перенесено", Snackbar.LENGTH_SHORT).show()
@@ -116,12 +120,23 @@ class MvpMessagesFragment : MessagesView, MvpFragment<MessagesView, MessagesPres
     override fun sendMessage(data: List<ViewTyped>, msgPosition: Int) {
         show()
         adapter.items = data
+        adapter.notifyItemInserted(msgPosition)
         binding.recyclerMessage.smoothScrollToPosition(msgPosition)
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        (requireActivity() as AppCompatActivity).supportActionBar?.show()
+    override fun deleteMessage(data: List<ViewTyped>, msgPosition: Int) {
+        adapter.items = data
+        adapter.notifyItemRemoved(msgPosition)
+        Snackbar.make(binding.root, "Удалено", Snackbar.LENGTH_SHORT).show()
+    }
+
+    override fun showInfo(title: String, msg: String) {
+        val bottomInfoFragment = BottomInfoFragment()
+        bottomInfoFragment.arguments = bundleOf(
+            BottomInfoFragment.ARG_INFO_TITLE to title,
+            BottomInfoFragment.ARG_INFO_TEXT to msg
+        )
+        bottomInfoFragment.show(parentFragmentManager, bottomInfoFragment.tag)
     }
 
     override fun showLoading(msg: String) {
@@ -140,9 +155,18 @@ class MvpMessagesFragment : MessagesView, MvpFragment<MessagesView, MessagesPres
         binding.messageBtn.isGone = true
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        (requireActivity() as AppCompatActivity).supportActionBar?.show()
+    }
+
     override fun getLongClickedView(position: Int): Boolean {
+        messageId = adapter.items[position].uid.toInt()
         positionMsgOnLongClick = position - 1 //+1 потому, что реакции отдельным ViewType и находятся ниже сообщения
         val emojiBottomFragment = EmojiBottomFragment()
+        emojiBottomFragment.arguments = bundleOf(
+            ARG_MESSAGE to (adapter.items[position] as TextUi).message.toString()
+        )
         emojiBottomFragment.show(parentFragmentManager, emojiBottomFragment.tag)
         return true
     }

@@ -35,6 +35,11 @@ class UpdateMessageFlag(
     val result: String
 )
 
+class DeleteMessageResponse(
+    val code: String,
+    val msg: String,
+    val result: String
+)
 
 @Entity
 @TypeConverters(MessageConverter::class)
