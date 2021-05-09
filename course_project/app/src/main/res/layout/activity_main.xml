@@ -11,7 +11,7 @@
         android:id="@+id/searchToolbar"
         android:layout_width="match_parent"
         android:layout_height="65dp"
-        android:background="@color/app_background"
+        android:background="@color/component_color"
         android:gravity="center"
         android:paddingStart="20dp"
         android:paddingEnd="20dp"
@@ -24,6 +24,7 @@
             android:autofillHints="@string/search_str"
             android:hint="@string/search_str"
             android:inputType="text"
+            android:backgroundTint="@color/search_line_color"
             android:textColor="@color/white"
             android:textColorHint="@color/white"
             android:textSize="22sp" />

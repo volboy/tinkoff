@@ -13,14 +13,17 @@
     <color name="expand_item_color_two">#E9C46A</color>
     <color name="tab_indicator_color">#219653</color>
     <color name="message_color">#FAFAFA</color>
-    <color name="app_background">#1E1E1E</color>
+    <color name="component_color">#1E1E1E</color>
     <color name="main_background">#121212</color>
     <color name="date_divider_color">#070707</color>
     <color name="date_divider_text_color">#999999</color>
     <color name="message_box_color">#282828</color>
     <color name="icon_bottom_menu_color">#919191</color>
+    <color name="icon_bottom_menu_checked">#FAFAFA</color>
     <color name="profile_status_color_green">#4AB54D</color>
     <color name="profile_status_color_orange">#FF5722</color>
     <color name="profile_status_color_red">#D50000</color>
     <color name="email_text_color">#A1A1A1</color>
+    <color name="stream_divider_line">#282828</color>
+    <color name="search_line_color">#323232</color>
 </resources>

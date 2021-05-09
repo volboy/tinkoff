@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
@@ -50,8 +51,13 @@ class MvpMessagesFragment : MessagesView, MvpFragment<MessagesView, MessagesPres
             CommonDiffUtilCallback(),
             PaginationAdapterHelper { getPresenter().loadNextRemoteMessages(streamName, topicName) })
         binding.recyclerMessage.adapter = adapter
-        (requireActivity() as AppCompatActivity).supportActionBar?.hide()
         return binding.root
+    }
+
+    override fun onStart() {
+        super.onStart()
+        (requireActivity() as AppCompatActivity).supportActionBar?.hide()
+        (requireActivity() as AppCompatActivity).window.statusBarColor = ContextCompat.getColor(requireActivity(), R.color.header_color)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -82,18 +88,18 @@ class MvpMessagesFragment : MessagesView, MvpFragment<MessagesView, MessagesPres
             }
         }
         binding.messageBtn.setOnClickListener {
-            val str = binding.messageBox.text.toString()
+            val str = binding.messageEdit.text.toString()
             if (str.isNotEmpty()) {
                 getPresenter().sendMessage(str, streamName, topicName)
-                binding.messageBox.text.clear()
+                binding.messageEdit.text.clear()
             }
             binding.messageBtn.setImageResource(R.drawable.ic_add_message)
         }
-        binding.messageBox.addTextChangedListener(object : TextWatcher {
+        binding.messageEdit.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {}
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (binding.messageBox.text.isNotEmpty()) {
+                if (binding.messageEdit.text.isNotEmpty()) {
                     binding.messageBtn.setImageResource(R.drawable.ic_send_message)
                 } else {
                     binding.messageBtn.setImageResource(R.drawable.ic_add_message)
@@ -140,24 +146,15 @@ class MvpMessagesFragment : MessagesView, MvpFragment<MessagesView, MessagesPres
     }
 
     override fun showLoading(msg: String) {
-        binding.fragmentLoading.root.isVisible = true
         binding.recyclerMessage.isGone = true
         binding.messageBox.isGone = true
         binding.messageBtn.isGone = true
-        binding.fragmentError.root.isGone = true
     }
 
     override fun showError(error: String?) {
-        binding.fragmentError.root.isVisible = true
-        binding.fragmentLoading.root.isGone = true
         binding.recyclerMessage.isGone = true
         binding.messageBox.isGone = true
         binding.messageBtn.isGone = true
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        (requireActivity() as AppCompatActivity).supportActionBar?.show()
     }
 
     override fun getLongClickedView(position: Int): Boolean {
@@ -185,8 +182,12 @@ class MvpMessagesFragment : MessagesView, MvpFragment<MessagesView, MessagesPres
         binding.recyclerMessage.isVisible = true
         binding.messageBox.isVisible = true
         binding.messageBtn.isVisible = true
-        binding.fragmentError.root.isGone = true
-        binding.fragmentLoading.root.isGone = true
+    }
+
+    override fun onStop() {
+        super.onStop()
+        (requireActivity() as AppCompatActivity).supportActionBar?.show()
+        (requireActivity() as AppCompatActivity).window.statusBarColor = ContextCompat.getColor(requireActivity(), R.color.component_color)
     }
 
     companion object {
