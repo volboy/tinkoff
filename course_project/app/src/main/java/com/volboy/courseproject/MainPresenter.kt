@@ -17,15 +17,16 @@ class MainPresenter : RxPresenter<MainView>(MainView::class.java) {
         val ownUser = loaderUsers.getOwnUser()
         ownUser.subscribe(
             { result ->
-                ownId = result.user_id
+                view.continueWork(result.user_id)
             },
             { error ->
-                //TODO Сообщение об ошибке
+                view.showError(error.toString())
             }
         ).disposeOnFinish()
     }
 
     companion object {
+        //TODO Переделать
         var ownId = 0
     }
 }
