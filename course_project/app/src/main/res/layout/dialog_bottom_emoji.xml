@@ -20,8 +20,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/ev_unselected"
-        app:itemIconTint="@color/icon_bottom_menu_color"
-        app:itemTextColor="@color/icon_bottom_menu_color"
+        app:itemIconTint="@drawable/navigation_tab_selector"
+        app:itemTextColor="@drawable/navigation_tab_selector"
         app:menu="@menu/message_menu" />
 
     <androidx.recyclerview.widget.RecyclerView

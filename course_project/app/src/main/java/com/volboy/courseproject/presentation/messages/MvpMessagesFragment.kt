@@ -50,19 +50,16 @@ class MvpMessagesFragment : MessagesView, MvpFragment<MessagesView, MessagesPres
             holderFactory,
             CommonDiffUtilCallback(),
             PaginationAdapterHelper { getPresenter().loadNextRemoteMessages(streamName, topicName) })
-        binding.recyclerMessage.adapter = adapter
-        return binding.root
-    }
-
-    override fun onStart() {
-        super.onStart()
         (requireActivity() as AppCompatActivity).supportActionBar?.hide()
         (requireActivity() as AppCompatActivity).window.statusBarColor = ContextCompat.getColor(requireActivity(), R.color.header_color)
+        binding.recyclerMessage.adapter = adapter
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.topicName.text = resources.getString(R.string.topic_name, topicName)
+        binding.streamName.text = resources.getString(R.string.stream_name, streamName)
         getPresenter().loadFirstRemoteMessages(streamName, topicName, streamId)
         setFragmentResultListener(EmojiBottomFragment.ACTION_EMOJI) { _, bundle ->
             val emojiList: ArrayList<String>? = bundle.getStringArrayList(EmojiBottomFragment.ARG_EMOJI)
@@ -106,6 +103,7 @@ class MvpMessagesFragment : MessagesView, MvpFragment<MessagesView, MessagesPres
                 }
             }
         })
+        binding.streamName.setOnClickListener { requireActivity().supportFragmentManager.popBackStack() }
     }
 
     override fun getPresenter(): MessagesPresenter = messagePresenter
@@ -184,8 +182,8 @@ class MvpMessagesFragment : MessagesView, MvpFragment<MessagesView, MessagesPres
         binding.messageBtn.isVisible = true
     }
 
-    override fun onStop() {
-        super.onStop()
+    override fun onDetach() {
+        super.onDetach()
         (requireActivity() as AppCompatActivity).supportActionBar?.show()
         (requireActivity() as AppCompatActivity).window.statusBarColor = ContextCompat.getColor(requireActivity(), R.color.component_color)
     }

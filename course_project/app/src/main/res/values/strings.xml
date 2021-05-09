@@ -8,7 +8,7 @@
     <string name="tab_channels_2">All streams</string>
     <string name="stream_str">#stream</string>
     <string name="messageCount">" mes"</string>
-    <string name="stream_name">#Testing</string>
+    <string name="stream_name">#%1$s</string>
     <string name="topic_name">Topic: #%1$s</string>
     <string name="status_mode">online</string>
     <string name="email_str">darell@company.com</string>

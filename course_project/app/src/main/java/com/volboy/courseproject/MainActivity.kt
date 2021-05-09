@@ -24,6 +24,7 @@ class MainActivity : MvpActivity<MainView, MainPresenter>(), MainView {
         binding = ActivityMainBinding.inflate(layoutInflater)
         val searchToolbar = binding.searchToolbar
         setSupportActionBar(searchToolbar)
+        supportActionBar?.hide()
         mainPresenter.getOwnId()
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
