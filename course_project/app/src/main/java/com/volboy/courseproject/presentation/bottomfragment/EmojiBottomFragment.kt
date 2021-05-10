@@ -1,5 +1,8 @@
 package com.volboy.courseproject.presentation.bottomfragment
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context.CLIPBOARD_SERVICE
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -57,6 +60,9 @@ class EmojiBottomFragment : BottomSheetDialogFragment(), EmojiHolderFactory.Bott
                     binding.dialogChange.root.isVisible = true
                 }
                 R.id.copy -> {
+                    val clipboard = requireContext().getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+                    val clip: ClipData = ClipData.newPlainText("simple text", requireArguments().getString(ARG_MESSAGE))
+                    clipboard.setPrimaryClip(clip)
                     setFragmentResult(ACTION_COPY, bundleOf())
                     dismiss()
                 }

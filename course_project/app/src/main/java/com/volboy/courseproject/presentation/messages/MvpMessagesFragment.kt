@@ -132,7 +132,7 @@ class MvpMessagesFragment : MessagesView, MvpFragment<MessagesView, MessagesPres
     override fun deleteMessage(data: List<ViewTyped>, msgPosition: Int) {
         adapter.items = data
         adapter.notifyItemRemoved(msgPosition)
-        Snackbar.make(binding.root, "Удалено", Snackbar.LENGTH_SHORT).show()
+        Snackbar.make(binding.root, "Успешно", Snackbar.LENGTH_SHORT).show()
     }
 
     override fun showInfo(title: String, msg: String) {
