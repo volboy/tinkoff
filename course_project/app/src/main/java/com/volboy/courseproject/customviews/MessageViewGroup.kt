@@ -64,7 +64,7 @@ class MessageViewGroup @JvmOverloads constructor(
         messageWidthMessage = message.measuredWidth + messageLayoutParams.leftMargin + messageLayoutParams.rightMargin
         messageHeight = message.measuredHeight + messageLayoutParams.topMargin + messageLayoutParams.bottomMargin
         //итого ширина и высота
-        widthResult = imageAvatarWidth + maxOf(messageWidthMessage, messageWidthHeader) + context.dpToPx(50.0F)
+        widthResult = imageAvatarWidth + maxOf(messageWidthMessage, messageWidthHeader) + context.dpToPx(DEFAULT_END_MARGIN)
         heightResult = headerHeight + messageHeight
         setMeasuredDimension(resolveSize(widthResult, widthMeasureSpec), resolveSize(heightResult, heightMeasureSpec))
     }
@@ -116,5 +116,6 @@ class MessageViewGroup @JvmOverloads constructor(
         const val RECT_MARGIN_LEFT = 13.0F
         const val RECT_MARGIN_RIGHT = 13.0F
         const val RECT_MARGIN_BOTTOM = 20.0F
+        const val DEFAULT_END_MARGIN = 50F
     }
 }

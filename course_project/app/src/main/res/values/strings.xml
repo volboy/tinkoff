@@ -52,5 +52,8 @@
     <string name="check_network_str">Проверьте интернет соединение</string>
     <string name="users_fragment_str">MvpUsersFragment</string>
     <string name="edit_message_str">Введите текст сообщения</string>
+    <string name="copy_done_str">Скопированно</string>
+    <string name="success_operation">Успешно</string>
+    <string name="stub_str">заглушка</string>
 
 </resources>

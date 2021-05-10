@@ -22,8 +22,13 @@ class UsersConverter {
         val listString = string.split(",")
         val listStringGrouped = listString.groupBy { "?" }
         listStringGrouped.forEach { (_, list) ->
-            listIdData.add(IdData(listOf(ProfileData(list[0], list[1]))))
+            listIdData.add(IdData(listOf(ProfileData(list[VALUE_INDEX], list[RENDERED_VALUE]))))
         }
         return listIdData
+    }
+
+    private companion object {
+        const val VALUE_INDEX = 0
+        const val RENDERED_VALUE = 1
     }
 }

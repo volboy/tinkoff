@@ -78,7 +78,7 @@ class MvpMessagesFragment : MessagesView, MvpFragment<MessagesView, MessagesPres
             getPresenter().changeTopicOfStream(messageId, positionMsgOnLongClick + 1, bundle.getString(ARG_NEW_TOPIC).toString())
         }
         setFragmentResultListener(EmojiBottomFragment.ACTION_COPY) { _, _ ->
-            Snackbar.make(binding.root, "Скопированно", Snackbar.LENGTH_SHORT).show()
+            Snackbar.make(binding.root, getString(R.string.copy_done_str), Snackbar.LENGTH_SHORT).show()
         }
         binding.recyclerMessage.addOnLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
             if (bottom < oldBottom) {
@@ -132,7 +132,7 @@ class MvpMessagesFragment : MessagesView, MvpFragment<MessagesView, MessagesPres
     override fun deleteMessage(data: List<ViewTyped>, msgPosition: Int) {
         adapter.items = data
         adapter.notifyItemRemoved(msgPosition)
-        Snackbar.make(binding.root, "Успешно", Snackbar.LENGTH_SHORT).show()
+        Snackbar.make(binding.root, getString(R.string.success_operation), Snackbar.LENGTH_SHORT).show()
     }
 
     override fun showInfo(title: String, msg: String) {

@@ -45,12 +45,16 @@ class LoaderUsers {
                     user.fullName,
                     user.email,
                     user.avatar_url,
-                    "",
+                    EMPTY_STATUS_STRING,
                     R.layout.item_people_list,
                     uid
                 )
             )
         }
         return viewTypedList
+    }
+
+    private companion object {
+        const val EMPTY_STATUS_STRING = ""
     }
 }

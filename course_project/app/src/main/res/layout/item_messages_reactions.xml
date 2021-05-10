@@ -3,6 +3,4 @@
     android:id="@+id/flex_box_layout"
     android:layout_width="@dimen/message_view_width"
     android:layout_height="wrap_content"
-    android:layout_marginStart="44dp">
-
-</com.volboy.courseproject.customviews.FlexBoxLayout>
+    android:layout_marginStart="44dp" />

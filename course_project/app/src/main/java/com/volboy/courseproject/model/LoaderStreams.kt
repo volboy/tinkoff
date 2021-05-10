@@ -149,12 +149,16 @@ class LoaderStreams {
                     topic.name,
                     false,
                     streamId,
-                    0,
+                    EMPTY_IMAGE_ID,
                     R.layout.item_expand,
                     uid.toString()
                 )
             )
         }
         return viewTypedList
+    }
+
+    private companion object {
+        const val EMPTY_IMAGE_ID = 0
     }
 }

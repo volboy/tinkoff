@@ -6,7 +6,7 @@ import com.volboy.courseproject.presentation.profile.MvpProfileFragment
 import com.volboy.courseproject.presentation.users.MvpUsersFragment
 
 class MainFragmentAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
-    override fun getItemCount(): Int = 3
+    override fun getItemCount(): Int = COUNT_OF_PAGE_IN_BOTTOM_NAVIGATION
 
     override fun createFragment(position: Int): Fragment {
         return when (position) {
@@ -15,5 +15,9 @@ class MainFragmentAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
             2 -> MvpProfileFragment()
             else -> ChannelsFragment()
         }
+    }
+
+    private companion object {
+        const val COUNT_OF_PAGE_IN_BOTTOM_NAVIGATION = 3
     }
 }

@@ -108,7 +108,6 @@ class MessageMapper {
                 users.add(it.userId)
             }
             reactions.add(Reaction(emojiCode, list[0].emojiName, list.size, list[0].reactionType, users))
-
         }
         return reactions
     }

@@ -34,7 +34,7 @@ class FlexBoxLayout @JvmOverloads constructor(
             val childrenLayoutParams = child.layoutParams as MarginLayoutParams
             currentWidth += child.measuredWidth + childrenLayoutParams.marginStart + childrenLayoutParams.marginEnd
             currentHeight = child.measuredHeight + childrenLayoutParams.topMargin + childrenLayoutParams.bottomMargin
-            if (currentWidth >= parentWidth - child.measuredWidth + context.dpToPx(20F)) {
+            if (currentWidth >= parentWidth - child.measuredWidth + context.dpToPx(DEFAULT_MARGIN_END_EMOJI)) {
                 resultWidth = currentWidth
                 currentWidth = 0
                 countRows++
@@ -66,10 +66,10 @@ class FlexBoxLayout @JvmOverloads constructor(
     }
 
     override fun generateDefaultLayoutParams(): LayoutParams {
-        layoutParams = MarginLayoutParams(LayoutParams.WRAP_CONTENT, context.dpToPx(30F))
-        layoutParams.marginStart = context.dpToPx(10F)
-        layoutParams.marginEnd = context.dpToPx(7F)
-        layoutParams.bottomMargin = context.dpToPx(7F)
+        layoutParams = MarginLayoutParams(LayoutParams.WRAP_CONTENT, context.dpToPx(DEFAULT_HEIGHT))
+        layoutParams.marginStart = context.dpToPx(DEFAULT_START_MARGIN)
+        layoutParams.marginEnd = context.dpToPx(DEFAULT_END_MARGIN)
+        layoutParams.bottomMargin = context.dpToPx(DEFAULT_BOTTOM_MARGIN)
         return layoutParams
     }
 
@@ -88,11 +88,20 @@ class FlexBoxLayout @JvmOverloads constructor(
     }
 
     fun addLastView(emojiView: EmojiView) {
-        layoutParams = MarginLayoutParams(context.dpToPx(45F), context.dpToPx(30F))
-        layoutParams.marginStart = context.dpToPx(10F)
-        layoutParams.marginEnd = context.dpToPx(7F)
-        layoutParams.bottomMargin = context.dpToPx(7F)
+        layoutParams = MarginLayoutParams(context.dpToPx(DEFAULT_WIDTH), context.dpToPx(DEFAULT_HEIGHT))
+        layoutParams.marginStart = context.dpToPx(DEFAULT_START_MARGIN)
+        layoutParams.marginEnd = context.dpToPx(DEFAULT_END_MARGIN)
+        layoutParams.bottomMargin = context.dpToPx(DEFAULT_BOTTOM_MARGIN)
         emojiView.layoutParams = layoutParams
         this.addView(emojiView)
+    }
+
+    private companion object {
+        const val DEFAULT_START_MARGIN = 10F
+        const val DEFAULT_END_MARGIN = 7F
+        const val DEFAULT_BOTTOM_MARGIN = 7F
+        const val DEFAULT_WIDTH = 45F
+        const val DEFAULT_HEIGHT = 30F
+        const val DEFAULT_MARGIN_END_EMOJI = 20F
     }
 }

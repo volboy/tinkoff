@@ -86,7 +86,7 @@ class MessagesPresenter : RxPresenter<MessagesView>(MessagesView::class.java) {
     fun deleteMessage(messageId: Int, position: Int) {
         loaderMessages.deleteMessage(messageId).subscribe(
             { response ->
-                if (response.result == "success") {
+                if (response.result == SUCCESS_RESULT) {
                     data.removeAt(position)
                     view.deleteMessage(data, position)
                 } else {
@@ -100,7 +100,7 @@ class MessagesPresenter : RxPresenter<MessagesView>(MessagesView::class.java) {
     fun editMessage(messageId: Int, position: Int, content: String) {
         loaderMessages.editMessage(messageId, content).subscribe(
             { response ->
-                if (response.result == "success") {
+                if (response.result == SUCCESS_RESULT) {
                     (data[position] as TextUi).message = content.toSpanned()
                     view.updateMessage(data, position)
                 } else {
@@ -114,7 +114,7 @@ class MessagesPresenter : RxPresenter<MessagesView>(MessagesView::class.java) {
     fun changeTopicOfStream(messageId: Int, position: Int, topic: String) {
         loaderMessages.changeTopicOfMessage(messageId, topic).subscribe(
             { response ->
-                if (response.result == "success") {
+                if (response.result == SUCCESS_RESULT) {
                     data.removeAt(position)
                     view.deleteMessage(data, position)
                 } else {
@@ -126,37 +126,37 @@ class MessagesPresenter : RxPresenter<MessagesView>(MessagesView::class.java) {
     }
 
     fun addOrDeleteReaction(indexMsg: Int, emojiList: ArrayList<String>) {
-        var positionEmoji = -1
+        var positionEmoji = NOT_FIND_EMOJI
         val msgID = (data[indexMsg + 1] as TextUi).uid.toInt()
-        val newReaction = Reaction(emojiList[1], emojiList[0], 1, UNICODE_EMOJI, mutableListOf(ownId))
+        val newReaction = Reaction(emojiList[EMOJI_CODE_INDEX], emojiList[EMOJI_NAME_INDEX], 1, UNICODE_EMOJI, mutableListOf(ownId))
         reactionsOfMessage = (data[indexMsg] as ReactionsUi).reactions
         //если список реакций пуск добавляем сразу
         if (reactionsOfMessage.isNullOrEmpty()) {
             reactionsOfMessage.add(newReaction)
-            addReaction(msgID, emojiList[0], UNICODE_EMOJI, indexMsg)
+            addReaction(msgID, emojiList[EMOJI_NAME_INDEX], UNICODE_EMOJI, indexMsg)
         } else {
             //ищем эмоджи который хотим добавить в списке реакций
             reactionsOfMessage.forEach { reaction ->
-                if (reaction.emojiCode == emojiList[1]) {
+                if (reaction.emojiCode == emojiList[EMOJI_CODE_INDEX]) {
                     positionEmoji = reactionsOfMessage.indexOf(reaction)
                 }
             }
             //если не нашли такого эмоджи, сразу добавляем
-            if (positionEmoji == -1) {
+            if (positionEmoji == NOT_FIND_EMOJI) {
                 reactionsOfMessage.add(newReaction)
-                addReaction(msgID, emojiList[0], UNICODE_EMOJI, indexMsg)
+                addReaction(msgID, emojiList[EMOJI_NAME_INDEX], UNICODE_EMOJI, indexMsg)
                 //если нашли такой
             } else {
                 //проверяем ставил ли пользователь такой эмоджи
                 if (ownId in reactionsOfMessage[positionEmoji].users) {
                     reactionsOfMessage[positionEmoji].users.remove(ownId)
-                    removeReaction(msgID, emojiList[0], UNICODE_EMOJI, indexMsg)
+                    removeReaction(msgID, emojiList[EMOJI_NAME_INDEX], UNICODE_EMOJI, indexMsg)
                     if (reactionsOfMessage[positionEmoji].users.size == 0) {
                         reactionsOfMessage.removeAt(positionEmoji)
                     }
                 } else {
                     reactionsOfMessage[positionEmoji].users.add(ownId)
-                    addReaction(msgID, emojiList[0], UNICODE_EMOJI, indexMsg)
+                    addReaction(msgID, emojiList[EMOJI_NAME_INDEX], UNICODE_EMOJI, indexMsg)
                 }
             }
         }
@@ -215,5 +215,9 @@ class MessagesPresenter : RxPresenter<MessagesView>(MessagesView::class.java) {
 
     private companion object {
         const val UNICODE_EMOJI = "unicode_emoji"
+        const val SUCCESS_RESULT = "success"
+        const val EMOJI_CODE_INDEX = 1
+        const val EMOJI_NAME_INDEX = 0
+        const val NOT_FIND_EMOJI = -1
     }
 }

@@ -45,7 +45,6 @@ class MvpStreamsFragment : AllStreamsView, MvpFragment<AllStreamsView, AllStream
         binding = FragmentStreamsBinding.inflate(inflater, container, false)
         val holderFactory = UiHolderFactory(this)
         adapter = CommonAdapter(holderFactory, CommonDiffUtilCallback(), null)
-        val searchEdit = requireActivity().findViewById<EditText>(R.id.searchEditText)
         val linearLayoutManager: LinearLayoutManager = object : LinearLayoutManager(requireContext()) {
             override fun scrollVerticallyBy(dx: Int, recycler: Recycler, state: RecyclerView.State): Int {
                 val scrollRange = super.scrollVerticallyBy(dx, recycler, state)
@@ -65,9 +64,14 @@ class MvpStreamsFragment : AllStreamsView, MvpFragment<AllStreamsView, AllStream
                 .addToBackStack(ARG_FROM_STREAM_TO_ADD_NEW)
                 .commit()
         }
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val searchEdit = requireActivity().findViewById<EditText>(R.id.searchEditText)
         getPresenter().getStreams()
         getPresenter().setSearchObservable(searchEdit)
-        return binding.root
     }
 
     override fun getPresenter(): AllStreamsPresenter = allStreamsPresenter

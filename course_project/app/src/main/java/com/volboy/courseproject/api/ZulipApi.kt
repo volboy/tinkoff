@@ -91,5 +91,4 @@ interface ZulipApi {
         @Path("message_id") messageId: Int,
         @Query("topic") topic: String
     ): Single<DeleteMessageResponse>
-
 }

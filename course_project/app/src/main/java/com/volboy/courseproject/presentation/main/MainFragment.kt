@@ -20,7 +20,7 @@ class MainFragment : Fragment() {
         val viewPager = binding.viewPager
         viewPager.isUserInputEnabled = false
         viewPager.adapter = viewPagerAdapter
-        savedInstanceState?.getInt("SAVED_STATE")?.let { viewPager.currentItem = it }
+        savedInstanceState?.getInt(SAVED_STATE_KEY)?.let { viewPager.currentItem = it }
         viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 when (position) {
@@ -51,9 +51,11 @@ class MainFragment : Fragment() {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putInt("SAVED_STATE", binding.viewPager.currentItem)
+        outState.putInt(SAVED_STATE_KEY, binding.viewPager.currentItem)
         super.onSaveInstanceState(outState)
+    }
 
+    private companion object {
+        const val SAVED_STATE_KEY = "SAVED_STATE"
     }
 }
-

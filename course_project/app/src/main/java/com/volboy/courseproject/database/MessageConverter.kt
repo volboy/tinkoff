@@ -22,7 +22,14 @@ class MessageConverter {
             val stringList = stringReactions.split(",")
             val stringListGrouped = stringList.groupBy { "?" }
             stringListGrouped.forEach { (_, list) ->
-                listReactions.add(ReactionsJSON(list[0].removePrefix("?"), list[1], list[2], list[3].toInt()))
+                listReactions.add(
+                    ReactionsJSON(
+                        list[EMOJI_CODE_INDEX].removePrefix("?"),
+                        list[EMOJI_NAME_INDEX],
+                        list[REACTION_TYPE_INDEX],
+                        list[USER_ID_INDEX].toInt()
+                    )
+                )
             }
         }
         return listReactions
@@ -41,5 +48,12 @@ class MessageConverter {
     fun toArrayString(string: String): Array<String> {
         val array = string.split("?")
         return array.toTypedArray()
+    }
+
+    private companion object {
+        const val EMOJI_CODE_INDEX = 0
+        const val EMOJI_NAME_INDEX = 1
+        const val REACTION_TYPE_INDEX = 2
+        const val USER_ID_INDEX = 3
     }
 }

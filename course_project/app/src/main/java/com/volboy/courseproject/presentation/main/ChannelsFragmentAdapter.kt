@@ -6,7 +6,7 @@ import com.volboy.courseproject.presentation.streams.allstreams.MvpStreamsFragme
 import com.volboy.courseproject.presentation.streams.mystreams.MvpSubscribedFragment
 
 class ChannelsFragmentAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
-    override fun getItemCount(): Int = 2
+    override fun getItemCount(): Int = COUNT_OF_FRAGMENT_IN_TAB
 
     override fun createFragment(position: Int): Fragment {
         return when (position) {
@@ -14,5 +14,9 @@ class ChannelsFragmentAdapter(fragment: Fragment) : FragmentStateAdapter(fragmen
             1 -> MvpStreamsFragment()
             else -> MvpSubscribedFragment()
         }
+    }
+
+    private companion object {
+        const val COUNT_OF_FRAGMENT_IN_TAB = 2
     }
 }

@@ -10,13 +10,13 @@
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:layout_margin="16dp"
+        android:autofillHints="@string/change_text_str"
         android:hint="@string/change_text_str"
         android:inputType="textMultiLine"
         android:padding="10dp"
         android:textColor="@color/white"
         android:textColorHint="@color/white"
-        android:textSize="18sp"
-        android:autofillHints="@string/change_text_str" />
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/btnChangeYes"

@@ -36,4 +36,3 @@ class MainPresenter : RxPresenter<MainView>(MainView::class.java) {
         var ownId = 0
     }
 }
-

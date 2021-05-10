@@ -140,12 +140,12 @@ class MessagesOfStream : MessagesOfStreamView, MvpFragment<MessagesOfStreamView,
     }
 
     override fun getLongClickedView(position: Int): Boolean {
-        Log.i(getString(R.string.log_string), "Лонг тап")
+        Log.i(getString(R.string.log_string), getString(R.string.stub_str))
         return true
     }
 
     override fun getClickedView(viewCode: String, viewName: String, position: Int) {
-        if (viewCode == "itIsTopic") {
+        if (viewCode == IS_TOPIC) {
             val messagesFragment = MvpMessagesFragment()
             messagesFragment.arguments = bundleOf(
                 MvpMessagesFragment.ARG_TOPIC to viewName,
@@ -176,5 +176,6 @@ class MessagesOfStream : MessagesOfStreamView, MvpFragment<MessagesOfStreamView,
     companion object {
         const val ARG_STREAM = "stream"
         const val ARG_STREAM_ID = "streamId"
+        const val IS_TOPIC = "itIsTopic"
     }
 }

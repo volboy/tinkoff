@@ -30,4 +30,3 @@ class StreamsViewHolder(val view: View, private val channelsInterface: UiHolderF
         image.setImageResource(item.imageId)
     }
 }
-

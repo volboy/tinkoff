@@ -4,6 +4,7 @@ import android.view.View
 import android.widget.TextView
 import com.volboy.courseproject.R
 import com.volboy.courseproject.databinding.ItemTopicDividerBinding
+import com.volboy.courseproject.presentation.msgstream.MessagesOfStream.Companion.IS_TOPIC
 import com.volboy.courseproject.recyclerview.BaseViewHolder
 import com.volboy.courseproject.recyclerview.MessageHolderFactory
 import com.volboy.courseproject.recyclerview.ViewTyped
@@ -19,7 +20,7 @@ class TopicViewHolder(view: View, private val messageInterface: MessageHolderFac
     private val topic: TextView = itemTopicDividerBinding.topic
 
     init {
-        topic.setOnClickListener { messageInterface.getClickedView("itIsTopic", topic.text.toString(), adapterPosition) }
+        topic.setOnClickListener { messageInterface.getClickedView(IS_TOPIC, topic.text.toString(), adapterPosition) }
     }
 
     override fun bind(item: TopicUi) {

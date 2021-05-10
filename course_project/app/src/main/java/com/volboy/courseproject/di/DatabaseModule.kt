@@ -15,7 +15,11 @@ class DatabaseModule(val context: Context) {
         return Room.databaseBuilder(
             context,
             AppDatabase::class.java,
-            "zulipAppDatabase"
+            DEFAULT_DATABASE_NAME
         ).build()
+    }
+
+    private companion object {
+        const val DEFAULT_DATABASE_NAME = "zulipAppDatabase"
     }
 }

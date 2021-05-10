@@ -26,7 +26,7 @@ class RetrofitModule {
             .build()
         val retrofit = Retrofit.Builder()
             .client(okHttpClient)
-            .baseUrl("https://tfs-android-2021-spring.zulipchat.com/api/v1/")
+            .baseUrl(APP_BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .build()
@@ -38,10 +38,17 @@ class RetrofitModule {
             val request: Request = chain.request()
             val authenticatedRequest: Request = request.newBuilder()
                 .header(
-                    "Authorization",
-                    Credentials.basic("volboy@yandex.ru", "qCqk5Jt7Hlcm2jd6hBxKab9CRbT0TgC5")
+                    APP_AUTH_REQ,
+                    Credentials.basic(APP_AUTH_LOGIN, APP_AUTH_KEY)
                 ).build()
             return chain.proceed(authenticatedRequest)
         }
+    }
+
+    private companion object {
+        const val APP_BASE_URL = "https://tfs-android-2021-spring.zulipchat.com/api/v1/"
+        const val APP_AUTH_REQ = "Authorization"
+        const val APP_AUTH_LOGIN = "volboy@yandex.ru"
+        const val APP_AUTH_KEY = "qCqk5Jt7Hlcm2jd6hBxKab9CRbT0TgC5"
     }
 }
