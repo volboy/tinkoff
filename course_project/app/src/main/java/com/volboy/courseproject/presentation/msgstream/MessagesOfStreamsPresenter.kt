@@ -70,7 +70,7 @@ class MessagesOfStreamsPresenter : RxPresenter<MessagesOfStreamView>(MessagesOfS
                     prevLastItemId = lastItemId
                     writeLog(res.getString(R.string.msg_network_ok))
                 },
-                { error ->
+                {
                     view.showMessage(data, msgIndex)
                     writeLog(res.getString(R.string.msg_network_error))
                 }
@@ -106,12 +106,12 @@ class MessagesOfStreamsPresenter : RxPresenter<MessagesOfStreamView>(MessagesOfS
                         view.sendMessage(data, 0)
                     },
                     { error ->
-                        //TODO отображаем сообщение с ошибкой
+                        view.showInfo(res.getString(R.string.something_wrong), error.message.toString())
                     }
                 ).disposeOnFinish()
             },
             { error ->
-                //TODO отображаем сообщение с ошибкой
+                view.showInfo(res.getString(R.string.something_wrong), error.message.toString())
             }
         ).disposeOnFinish()
     }

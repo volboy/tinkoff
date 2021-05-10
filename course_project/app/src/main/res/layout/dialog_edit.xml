@@ -10,6 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:layout_margin="16dp"
+        android:autofillHints="@string/edit_message_str"
+        android:hint="@string/edit_message_str"
         android:inputType="textMultiLine"
         android:padding="10dp"
         android:textColor="@color/white"
@@ -17,7 +19,7 @@
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/btnYes"
+        android:id="@+id/btnEditYes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
@@ -29,7 +31,7 @@
         android:textSize="22sp" />
 
     <TextView
-        android:id="@+id/btnCancel"
+        android:id="@+id/btnEditCancel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"

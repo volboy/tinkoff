@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class LoaderMessage {
-    private val gson = Gson()
+    private val converter = Gson()
     private val viewTypedMapper = MessageMapper()
 
     @Inject
@@ -30,7 +30,7 @@ class LoaderMessage {
     fun getMessages(streamName: String, topicName: String): Single<List<ViewTyped>> {
         val messagesDao = appDatabase.messagesDao()
         val narrows = listOf(Narrow("stream", streamName), Narrow("topic", topicName))
-        val narrowsJSON = gson.toJson(narrows)
+        val narrowsJSON = converter.toJson(narrows)
         return zulipApi.getMessages("newest", 20, 0, narrowsJSON)
             .subscribeOn(Schedulers.io())
             .flatMap { response ->
@@ -46,7 +46,7 @@ class LoaderMessage {
 
     fun getMessagesNext(startId: Int, streamName: String, topicName: String): Single<List<ViewTyped>> {
         val narrows = listOf(Narrow("stream", streamName), Narrow("topic", topicName))
-        val narrowsJSON = gson.toJson(narrows)
+        val narrowsJSON = converter.toJson(narrows)
         return zulipApi.getMessagesNext(startId, 20, 0, narrowsJSON)
             .subscribeOn(Schedulers.io())
             //TODO("Не забыть убрать, это для проверки пагинации)
@@ -73,7 +73,7 @@ class LoaderMessage {
     fun getStreamMessages(streamName: String): Single<List<ViewTyped>> {
         val messagesDao = appDatabase.messagesDao()
         val narrows = listOf(Narrow("stream", streamName))
-        val narrowsJSON = gson.toJson(narrows)
+        val narrowsJSON = converter.toJson(narrows)
         return zulipApi.getMessages("newest", 20, 0, narrowsJSON)
             .subscribeOn(Schedulers.io())
             .flatMap { response ->
@@ -89,7 +89,7 @@ class LoaderMessage {
 
     fun getStreamMessagesNext(startId: Int, streamName: String): Single<List<ViewTyped>> {
         val narrows = listOf(Narrow("stream", streamName))
-        val narrowsJSON = gson.toJson(narrows)
+        val narrowsJSON = converter.toJson(narrows)
         return zulipApi.getMessagesNext(startId, 20, 0, narrowsJSON)
             .subscribeOn(Schedulers.io())
             .map { response ->
@@ -112,8 +112,8 @@ class LoaderMessage {
 
     fun getLastMessage(startId: Int, streamName: String, topicName: String): Single<List<ViewTyped>> {
         val narrows = listOf(Narrow("stream", streamName), Narrow("topic", topicName))
-        val gson = Gson()
-        val narrowsJSON = gson.toJson(narrows)
+        val converter = Gson()
+        val narrowsJSON = converter.toJson(narrows)
         return zulipApi.getMessagesNext(startId, 0, 0, narrowsJSON)
             .subscribeOn(Schedulers.io())
             .map { response -> viewTypedMapper.groupedMessages(response.messages) }

@@ -46,7 +46,9 @@ class MvpAddStreamFragment : AddStreamView, MvpFragment<AddStreamView, AddStream
         binding.fragmentSuccess.root.isVisible = true
         binding.fragmentSuccess.successTitle.text = title
         binding.fragmentSuccess.successText.text = msg
-        binding.fragmentSuccess.okText.setOnClickListener { requireActivity().supportFragmentManager.popBackStack() }
+        binding.fragmentSuccess.okText.setOnClickListener {
+            requireActivity().supportFragmentManager.popBackStack()
+        }
     }
 
     override fun showLoading() {

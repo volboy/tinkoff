@@ -75,7 +75,7 @@ class MessagesPresenter : RxPresenter<MessagesView>(MessagesView::class.java) {
                     prevLastItemId = lastItemId
                     writeLog(res.getString(R.string.msg_network_ok))
                 },
-                { error ->
+                {
                     view.showMessage(data, msgIndex)
                     writeLog(res.getString(R.string.msg_network_error))
                 }
@@ -165,7 +165,7 @@ class MessagesPresenter : RxPresenter<MessagesView>(MessagesView::class.java) {
     private fun removeReaction(msgId: Int, emojiName: String, reactionType: String, indexMsg: Int) {
         val removeEmoji = loaderMessages.removeEmojiFromMessage(msgId, emojiName, reactionType)
         removeEmoji.subscribe(
-            { result ->
+            {
                 (data[indexMsg] as ReactionsUi).reactions = reactionsOfMessage
                 view.updateMessage(data, indexMsg)
             },
@@ -178,7 +178,7 @@ class MessagesPresenter : RxPresenter<MessagesView>(MessagesView::class.java) {
     private fun addReaction(msgId: Int, emojiName: String, reactionType: String, indexMsg: Int) {
         val addEmoji = loaderMessages.addEmojiToMessage(msgId, emojiName, reactionType)
         addEmoji.subscribe(
-            { result ->
+            {
                 (data[indexMsg] as ReactionsUi).reactions = reactionsOfMessage
                 view.updateMessage(data, indexMsg)
             },

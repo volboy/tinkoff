@@ -9,6 +9,8 @@ import androidx.appcompat.widget.SwitchCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.volboy.courseproject.App.Companion.component
 import com.volboy.courseproject.R
 import com.volboy.courseproject.databinding.FragmentSubscribedBinding
@@ -44,6 +46,17 @@ class MvpSubscribedFragment : SubStreamsView, MvpFragment<SubStreamsView, SubStr
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentSubscribedBinding.inflate(inflater, container, false)
         val holderFactory = UiHolderFactory(this)
+        val linearLayoutManager: LinearLayoutManager = object : LinearLayoutManager(requireContext()) {
+            override fun scrollVerticallyBy(dx: Int, recycler: RecyclerView.Recycler, state: RecyclerView.State): Int {
+                val scrollRange = super.scrollVerticallyBy(dx, recycler, state)
+                val overScroll = dx - scrollRange
+                if (overScroll < -10) {
+                    getPresenter().getStreams()
+                }
+                return scrollRange
+            }
+        }
+        binding.rwAllStreams.layoutManager = linearLayoutManager
         adapter = CommonAdapter(holderFactory, CommonDiffUtilCallback(), null)
         binding.rwAllStreams.adapter = adapter
         binding.rwAllStreams.addItemDecoration(StreamsItemDecoration(requireContext()))
@@ -52,15 +65,9 @@ class MvpSubscribedFragment : SubStreamsView, MvpFragment<SubStreamsView, SubStr
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        getPresenter().getStreams()
         val searchEdit = requireActivity().findViewById<EditText>(R.id.searchEditText)
-        getPresenter().setSearchObservable(searchEdit)
-
-    }
-
-    override fun onResume() {
-        super.onResume()
         getPresenter().getStreams()
+        getPresenter().setSearchObservable(searchEdit)
     }
 
     override fun getPresenter(): SubStreamsPresenter = subStreamsPresenter

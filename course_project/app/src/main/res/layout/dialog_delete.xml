@@ -16,7 +16,7 @@
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/btnYes"
+        android:id="@+id/btnDeleteYes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
@@ -28,7 +28,7 @@
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/btnCancel"
+        android:id="@+id/btnDeleteCancel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"

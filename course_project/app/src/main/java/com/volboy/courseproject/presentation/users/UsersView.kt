@@ -7,5 +7,5 @@ interface UsersView : LoadErrorView {
 
     fun showData(data: List<ViewTyped>)
 
-    fun showUsersStatus(userId:Int, status: String)
+    fun showUsersStatus(userId: Int, status: String)
 }

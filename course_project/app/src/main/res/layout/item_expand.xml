@@ -22,6 +22,4 @@
         android:layout_height="wrap_content"
         android:contentDescription="@string/error_str"
         android:visibility="gone" />
-
-
 </LinearLayout>

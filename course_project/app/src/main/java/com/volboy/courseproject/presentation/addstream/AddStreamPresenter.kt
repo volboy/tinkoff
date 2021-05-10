@@ -25,28 +25,32 @@ class AddStreamPresenter : RxPresenter<AddStreamView>(AddStreamView::class.java)
     fun createNewStream(name: String, description: String, inviteOnly: Boolean) {
         view.showLoading()
         val request = listOf(Request(name, description))
-        val gson = Gson()
-        val requestJSON = gson.toJson(request)
+        val converter = Gson()
+        val requestJSON = converter.toJson(request)
         val createNewStream = loaderStreams.subscribeToStream(requestJSON, inviteOnly)
         createNewStream.subscribe(
             { result ->
                 val countSubscribed = result.subscribed.keys.size
                 val countAlreadySub = result.alreadySubscribed.keys.size
-                if (countSubscribed != 0) {
-                    view.showData(
-                        res.getString(R.string.stream_was_created_str),
-                        res.getString(R.string.count_of_subs_str) + countSubscribed
-                    )
-                } else if (countAlreadySub != 0) {
-                    view.showData(
-                        res.getString(R.string.error_str),
-                        res.getString(R.string.stream_already_was_str)
-                    )
-                } else {
-                    view.showData(
-                        res.getString(R.string.something_wrong),
-                        res.getString(R.string.error_str)
-                    )
+                when {
+                    countSubscribed != 0 -> {
+                        view.showData(
+                            res.getString(R.string.stream_was_created_str),
+                            res.getString(R.string.count_of_subs_str) + countSubscribed
+                        )
+                    }
+                    countAlreadySub != 0 -> {
+                        view.showData(
+                            res.getString(R.string.error_str),
+                            res.getString(R.string.stream_already_was_str)
+                        )
+                    }
+                    else -> {
+                        view.showData(
+                            res.getString(R.string.something_wrong),
+                            res.getString(R.string.error_str)
+                        )
+                    }
                 }
             },
             { error ->

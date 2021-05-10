@@ -24,6 +24,5 @@
     <color name="profile_status_color_orange">#FF5722</color>
     <color name="profile_status_color_red">#D50000</color>
     <color name="email_text_color">#A1A1A1</color>
-    <color name="stream_divider_line">#282828</color>
     <color name="search_line_color">#323232</color>
 </resources>

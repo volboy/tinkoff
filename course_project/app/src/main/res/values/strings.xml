@@ -7,7 +7,6 @@
     <string name="tab_channels_1">Subscribed</string>
     <string name="tab_channels_2">All streams</string>
     <string name="stream_str">#stream</string>
-    <string name="messageCount">" mes"</string>
     <string name="stream_name">#%1$s</string>
     <string name="topic_name">Topic: #%1$s</string>
     <string name="status_mode">online</string>
@@ -16,15 +15,11 @@
     <string name="msg_network_error">Ошибка сети </string>
     <string name="msg_database_error">Ошибка базы данных :( </string>
     <string name="msg_network_ok">Данные загружены из сети </string>
-    <string name="msg_database_ok">Данные загружены из БД </string>
     <string name="last_emoji_str">002B</string>
     <string name="msg_database_empty">База данных пуста </string>
     <string name="log_string">zulipapptfsspring </string>
     <string name="error_str">Произошла ошибка :(</string>
     <string name="retry_str">Повторить</string>
-    <string name="active">active</string>
-    <string name="idle">idle</string>
-    <string name="offline">offline</string>
     <string name="empty_str">К сожалению ничего \n не найдено :(</string>
     <string name="you_str">You</string>
     <string name="channels_str">Channels</string>
@@ -36,7 +31,7 @@
     <string name="private_str">Private</string>
     <string name="create_str">Create</string>
     <string name="stream_was_created_str">Канал был успешно создан</string>
-    <string name="count_of_subs_str">Кол-во подписчиков \u0032</string>
+    <string name="count_of_subs_str">"Кол-во подписчиков "</string>
     <string name="stream_already_was_str">Стрим с таким именем уже есть</string>
     <string name="something_wrong">Что-то пошло не так</string>
     <string name="ok_str">OK</string>
@@ -51,12 +46,11 @@
     <string name="cancel_str">Отмена</string>
     <string name="change_ok_str">Перенести</string>
     <string name="change_text_str">Введите название другого или нового топика</string>
-    <string name="copy_done_str">Текст сообщения скопирован</string>
     <string name="save_str">Сохранить</string>
     <string name="first_run_str">При первом запуске приложения \n требуется подключение к сети Интернет</string>
     <string name="offline_run_str">Отсутсвует подключение к сети Интернет, данные могут быть устаревшими</string>
-    <string name="main_title">Курсовая работа TFS \n весна 2021 \n by Murtazaliev Michael \n при поддержке лекторов и менторов TFS)</string>
     <string name="check_network_str">Проверьте интернет соединение</string>
     <string name="users_fragment_str">MvpUsersFragment</string>
+    <string name="edit_message_str">Введите текст сообщения</string>
 
 </resources>

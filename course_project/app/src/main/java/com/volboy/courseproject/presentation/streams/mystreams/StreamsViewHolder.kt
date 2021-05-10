@@ -10,7 +10,6 @@ import com.volboy.courseproject.recyclerview.ViewTyped
 
 class TitleUi(
     val title: String,
-    var count: Int = 0,
     var isSelected: Boolean,
     var streamsId: Int?,
     var imageId: Int,

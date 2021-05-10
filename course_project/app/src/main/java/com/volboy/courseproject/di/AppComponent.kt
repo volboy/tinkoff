@@ -21,7 +21,6 @@ import com.volboy.courseproject.presentation.streams.allstreams.MvpStreamsFragme
 import com.volboy.courseproject.presentation.streams.mystreams.MvpSubscribedFragment
 import com.volboy.courseproject.presentation.streams.mystreams.SubStreamsPresenter
 import com.volboy.courseproject.presentation.users.MvpUsersFragment
-import com.volboy.courseproject.presentation.users.PeopleViewHolder
 import com.volboy.courseproject.presentation.users.UsersPresenter
 import dagger.Component
 

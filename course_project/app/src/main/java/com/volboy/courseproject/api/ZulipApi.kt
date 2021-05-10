@@ -2,7 +2,6 @@ package com.volboy.courseproject.api
 
 import com.volboy.courseproject.model.*
 import io.reactivex.Single
-import retrofit2.Call
 import retrofit2.http.*
 
 interface ZulipApi {
@@ -63,14 +62,6 @@ interface ZulipApi {
         @Field("content") content: String,
         @Field("topic") topic: String
     ): Single<SendMessageResponse>
-
-    @POST("messages/flags")
-    @FormUrlEncoded
-    fun updateMessageFlag(
-        @Field("messages") messages: String,
-        @Field("op") op: String,
-        @Field("flag") flag: String
-    ): Call<UpdateMessageFlag>
 
     @DELETE("users/me/subscriptions")
     fun unSubscribeToStream(

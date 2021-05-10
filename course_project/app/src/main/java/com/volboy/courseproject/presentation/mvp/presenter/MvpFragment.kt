@@ -1,7 +1,6 @@
 package com.volboy.courseproject.presentation.mvp.presenter
 
 import android.os.Bundle
-import android.view.View
 import androidx.fragment.app.Fragment
 import com.volboy.courseproject.presentation.mvp.presenter.base.Presenter
 

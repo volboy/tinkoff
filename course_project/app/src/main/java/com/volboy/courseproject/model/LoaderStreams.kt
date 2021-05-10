@@ -122,7 +122,6 @@ class LoaderStreams {
         .map { stream ->
             TitleUi(
                 stream.name,
-                0,
                 false,
                 null,
                 R.drawable.ic_arrow_down,
@@ -148,7 +147,6 @@ class LoaderStreams {
             viewTypedList.add(
                 TitleUi(
                     topic.name,
-                    0,
                     false,
                     streamId,
                     0,

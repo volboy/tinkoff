@@ -87,7 +87,7 @@ class SubStreamsPresenter : RxPresenter<SubStreamsView>(SubStreamsView::class.ja
                         view.showData(filteredStreams)
                     }
                 },
-                { error -> view.showData(data) }
+                { view.showData(data) }
             ).disposeOnFinish()
             if (text.isNullOrEmpty()) {
                 view.showData(data)

@@ -69,25 +69,25 @@ class EmojiBottomFragment : BottomSheetDialogFragment(), EmojiHolderFactory.Bott
             }
             true
         }
-        binding.dialogDelete.btnYes.setOnClickListener(this)
-        binding.dialogDelete.btnCancel.setOnClickListener(this)
-        binding.dialogEdit.btnYes.setOnClickListener(this)
-        binding.dialogEdit.btnCancel.setOnClickListener(this)
-        binding.dialogChange.btnYes.setOnClickListener(this)
-        binding.dialogChange.btnCancel.setOnClickListener(this)
+        binding.dialogDelete.btnDeleteYes.setOnClickListener(this)
+        binding.dialogDelete.btnDeleteCancel.setOnClickListener(this)
+        binding.dialogEdit.btnEditYes.setOnClickListener(this)
+        binding.dialogEdit.btnEditCancel.setOnClickListener(this)
+        binding.dialogChange.btnChangeYes.setOnClickListener(this)
+        binding.dialogChange.btnChangeCancel.setOnClickListener(this)
         return binding.root
     }
 
     override fun onClick(view: View?) {
         when (view) {
-            binding.dialogDelete.btnYes -> {
+            binding.dialogDelete.btnDeleteYes -> {
                 setFragmentResult(ACTION_DELETE, bundleOf())
                 dismiss()
             }
-            binding.dialogDelete.btnCancel -> {
+            binding.dialogDelete.btnDeleteCancel -> {
                 dismiss()
             }
-            binding.dialogEdit.btnYes -> {
+            binding.dialogEdit.btnEditYes -> {
                 setFragmentResult(
                     ACTION_EDIT, bundleOf(
                         ARG_MESSAGE to binding.dialogEdit.editMessage.text.toString()
@@ -95,10 +95,10 @@ class EmojiBottomFragment : BottomSheetDialogFragment(), EmojiHolderFactory.Bott
                 )
                 dismiss()
             }
-            binding.dialogEdit.btnCancel -> {
+            binding.dialogEdit.btnEditCancel -> {
                 dismiss()
             }
-            binding.dialogChange.btnYes -> {
+            binding.dialogChange.btnChangeYes -> {
                 if (prevTopic != binding.dialogChange.editNewTopic.text.toString()) {
                     setFragmentResult(
                         ACTION_CHANGE, bundleOf(
@@ -110,7 +110,7 @@ class EmojiBottomFragment : BottomSheetDialogFragment(), EmojiHolderFactory.Bott
                     dismiss()
                 }
             }
-            binding.dialogChange.btnCancel -> {
+            binding.dialogChange.btnChangeCancel -> {
                 dismiss()
             }
         }

@@ -24,7 +24,7 @@ class AllStreamsPresenter : RxPresenter<AllStreamsView>(AllStreamsView::class.ja
     private var allStreams = mutableListOf<ViewTyped>()
     private var allStreamsDB = mutableListOf<ViewTyped>()
     private var subStreams = mutableListOf<ViewTyped>()
-    val gson = Gson()
+    private val converter = Gson()
 
     @Inject
     lateinit var loaderStreams: LoaderStreams
@@ -75,7 +75,7 @@ class AllStreamsPresenter : RxPresenter<AllStreamsView>(AllStreamsView::class.ja
                         view.showData(filteredStreams)
                     }
                 },
-                { error -> view.showData(allStreams) }
+                { view.showData(allStreams) }
             ).disposeOnFinish()
             if (text.isNullOrEmpty()) {
                 view.showData(allStreams)
@@ -85,7 +85,7 @@ class AllStreamsPresenter : RxPresenter<AllStreamsView>(AllStreamsView::class.ja
 
     fun subscribeToStream(streamName: String) {
         val request = listOf(Request(streamName, ""))
-        val requestJSON = gson.toJson(request)
+        val requestJSON = converter.toJson(request)
         loaderStreams.subscribeToStream(requestJSON, false).subscribe(
             { Log.i(res.getString(R.string.log_string), res.getString(R.string.error_str)) },
             { view.showMessage(res.getString(R.string.error_str), res.getString(R.string.something_wrong)) }
@@ -94,7 +94,7 @@ class AllStreamsPresenter : RxPresenter<AllStreamsView>(AllStreamsView::class.ja
 
     fun unSubscribeToStream(streamName: String) {
 
-        loaderStreams.unSubscribeToStream(gson.toJson(listOf(streamName))).subscribe(
+        loaderStreams.unSubscribeToStream(converter.toJson(listOf(streamName))).subscribe(
             { Log.i(res.getString(R.string.log_string), res.getString(R.string.ok_str)) },
             { view.showMessage(res.getString(R.string.error_str), res.getString(R.string.something_wrong)) }
         ).disposeOnFinish()
@@ -165,7 +165,7 @@ class AllStreamsPresenter : RxPresenter<AllStreamsView>(AllStreamsView::class.ja
                 allStream as AllStreamsUi
                 if (subStreams.firstOrNull { subStreams -> subStreams.uid == allStream.uid } != null)
                     allStream.isChecked = true
-                allStream as ViewTyped
+                allStream
             }
 
     companion object {

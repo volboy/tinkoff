@@ -9,6 +9,9 @@ import androidx.appcompat.widget.SwitchCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.Recycler
 import com.volboy.courseproject.App.Companion.component
 import com.volboy.courseproject.R
 import com.volboy.courseproject.databinding.FragmentStreamsBinding
@@ -23,6 +26,7 @@ import com.volboy.courseproject.recyclerview.CommonAdapter
 import com.volboy.courseproject.recyclerview.CommonDiffUtilCallback
 import com.volboy.courseproject.recyclerview.ViewTyped
 import javax.inject.Inject
+
 
 class MvpStreamsFragment : AllStreamsView, MvpFragment<AllStreamsView, AllStreamsPresenter>(),
     UiHolderFactory.ChannelsInterface {
@@ -42,12 +46,23 @@ class MvpStreamsFragment : AllStreamsView, MvpFragment<AllStreamsView, AllStream
         val holderFactory = UiHolderFactory(this)
         adapter = CommonAdapter(holderFactory, CommonDiffUtilCallback(), null)
         val searchEdit = requireActivity().findViewById<EditText>(R.id.searchEditText)
+        val linearLayoutManager: LinearLayoutManager = object : LinearLayoutManager(requireContext()) {
+            override fun scrollVerticallyBy(dx: Int, recycler: Recycler, state: RecyclerView.State): Int {
+                val scrollRange = super.scrollVerticallyBy(dx, recycler, state)
+                val overScroll = dx - scrollRange
+                if (overScroll < -10) {
+                    getPresenter().getStreams()
+                }
+                return scrollRange
+            }
+        }
         binding.rwAllStreams.adapter = adapter
+        binding.rwAllStreams.layoutManager = linearLayoutManager
         binding.rwAllStreams.addItemDecoration(StreamsItemDecoration(requireContext()))
         binding.createStream.setOnClickListener {
             requireActivity().supportFragmentManager.beginTransaction()
                 .add(R.id.container, MvpAddStreamFragment())
-                .addToBackStack("MvpUsersFragment.FROM_USERS_TO_USERPROFILE")
+                .addToBackStack(ARG_FROM_STREAM_TO_ADD_NEW)
                 .commit()
         }
         getPresenter().getStreams()
@@ -120,5 +135,9 @@ class MvpStreamsFragment : AllStreamsView, MvpFragment<AllStreamsView, AllStream
         } else {
             allStreamsPresenter.unSubscribeToStream(streamName)
         }
+    }
+
+    companion object {
+        const val ARG_FROM_STREAM_TO_ADD_NEW = "ARG_FROM_STREAM_TO_ADD_NEW"
     }
 }

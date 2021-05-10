@@ -5,7 +5,6 @@
     <dimen name="message_text_size">14sp</dimen>
     <dimen name="avatar_width">37dp</dimen>
     <dimen name="avatar_height">37dp</dimen>
-    <dimen name="message_width">199dp</dimen>
     <dimen name="headerMarginTop">8dp</dimen>
     <dimen name="headerMarginLeft">22dp</dimen>
     <dimen name="headerMarginBottom">4dp</dimen>

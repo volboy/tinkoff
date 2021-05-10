@@ -72,7 +72,6 @@ class MvpUsersFragment : UsersView, MvpFragment<UsersView, UsersPresenter>(), Ui
         binding.fragmentLoading.root.isGone = true
         binding.fragmentError.errorText.text = error
         binding.fragmentError.retryText.setOnClickListener { getPresenter().getUsers() }
-
     }
 
     override fun showLoading(msg: String) {

@@ -85,7 +85,7 @@ class UsersPresenter : RxPresenter<UsersView>(UsersView::class.java) {
                         view.showData(filteredStreams)
                     }
                 },
-                { error -> view.showData(data) }
+                { view.showData(data) }
             ).disposeOnFinish()
             if (text.isNullOrEmpty()) {
                 view.showData(data)

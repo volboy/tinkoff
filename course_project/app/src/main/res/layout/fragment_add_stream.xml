@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/main_background">
+    android:background="@color/main_background"
+    android:clickable="true"
+    android:focusable="true">
 
     <TextView
         android:id="@+id/txtName"
@@ -23,6 +25,7 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
+        android:autofillHints="@string/name_str"
         android:hint="@string/name_str"
         android:inputType="text"
         android:textColor="@color/white"
@@ -49,6 +52,7 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
+        android:autofillHints="@string/description_str"
         android:hint="@string/description_str"
         android:inputType="text"
         android:textColor="@color/white"
