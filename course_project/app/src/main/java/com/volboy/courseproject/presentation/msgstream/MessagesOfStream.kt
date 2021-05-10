@@ -19,7 +19,6 @@ import com.volboy.courseproject.presentation.bottominfo.BottomInfoFragment
 import com.volboy.courseproject.presentation.messages.MvpMessagesFragment
 import com.volboy.courseproject.presentation.mvp.presenter.MvpFragment
 import com.volboy.courseproject.recyclerview.*
-import com.volboy.courseproject.recyclerview.simpleitems.EmptyView
 import javax.inject.Inject
 
 class MessagesOfStream : MessagesOfStreamView, MvpFragment<MessagesOfStreamView, MessagesOfStreamsPresenter>(), MessageHolderFactory.MessageInterface {

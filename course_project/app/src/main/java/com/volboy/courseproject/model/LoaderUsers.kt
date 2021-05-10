@@ -45,6 +45,7 @@ class LoaderUsers {
                     user.fullName,
                     user.email,
                     user.avatar_url,
+                    "",
                     R.layout.item_people_list,
                     uid
                 )

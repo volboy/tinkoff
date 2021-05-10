@@ -88,7 +88,7 @@ class MvpDetailsFragment : DetailsView, MvpFragment<DetailsView, DetailsPresente
     }
 
 
-    private companion object {
+    companion object {
         var ACTIVE = "active"
         var IDLE = "idle"
         var OFFLINE = "offline"

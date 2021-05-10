@@ -12,6 +12,7 @@ import com.volboy.courseproject.recyclerview.ViewTyped
 import com.volboy.courseproject.recyclerview.simpleitems.EmptyView
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.functions.BiFunction
 import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -34,6 +35,30 @@ class UsersPresenter : RxPresenter<UsersView>(UsersView::class.java) {
     fun getUsers() {
         view.showLoading("")
         loadRemoteUsers()
+    }
+
+    fun setStatusObservable() {
+        val userForGetStatus = Observable.fromIterable(data)
+        userForGetStatus
+            .zipWith(
+                Observable.interval(TIME_STATUS_DELAY, TimeUnit.MILLISECONDS),
+                BiFunction { item: ViewTyped, _: Long -> item })
+            .subscribeOn(Schedulers.single())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                { user -> getUserStatus(user.uid.toInt()) },
+                { error -> Log.i(res.getString(R.string.log_string), error.message.toString()) },
+            )
+            .disposeOnFinish()
+    }
+
+    private fun getUserStatus(userId: Int) {
+        loaderUsers.getUserStatus(userId).subscribe(
+            { result ->
+                view.showUsersStatus(userId, result.presence.aggregated.status)
+            },
+            { error -> Log.i(res.getString(R.string.log_string), error.message.toString()) },
+        ).disposeOnFinish()
     }
 
     fun setSearchObservable(searchEdit: EditText) {
@@ -89,5 +114,6 @@ class UsersPresenter : RxPresenter<UsersView>(UsersView::class.java) {
 
     companion object {
         private const val TIME_SEARCH_DELAY = 500L
+        private const val TIME_STATUS_DELAY = 300L
     }
 }

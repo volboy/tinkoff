@@ -6,4 +6,6 @@ import com.volboy.courseproject.recyclerview.ViewTyped
 interface UsersView : LoadErrorView {
 
     fun showData(data: List<ViewTyped>)
+
+    fun showUsersStatus(userId:Int, status: String)
 }

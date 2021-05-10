@@ -53,5 +53,10 @@
     <string name="change_text_str">Введите название другого или нового топика</string>
     <string name="copy_done_str">Текст сообщения скопирован</string>
     <string name="save_str">Сохранить</string>
+    <string name="first_run_str">При первом запуске приложения \n требуется подключение к сети Интернет</string>
+    <string name="offline_run_str">Отсутсвует подключение к сети Интернет, данные могут быть устаревшими</string>
+    <string name="main_title">Курсовая работа TFS \n весна 2021 \n by Murtazaliev Michael \n при поддержке лекторов и менторов TFS)</string>
+    <string name="check_network_str">Проверьте интернет соединение</string>
+    <string name="users_fragment_str">MvpUsersFragment</string>
 
 </resources>

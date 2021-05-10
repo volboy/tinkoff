@@ -1,6 +1,7 @@
 package com.volboy.courseproject.presentation.users
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -51,6 +52,18 @@ class MvpUsersFragment : UsersView, MvpFragment<UsersView, UsersPresenter>(), Ui
         binding.fragmentError.root.isGone = true
         binding.fragmentLoading.root.isGone = true
         adapter.items = data
+        if (data.isNotEmpty()) {
+            getPresenter().setStatusObservable()
+        }
+    }
+
+    override fun showUsersStatus(userId: Int, status: String) {
+        val item = adapter.items.firstOrNull { item -> item.uid == userId.toString() }
+        if (item != null) {
+            val index = adapter.items.indexOf(item)
+            (adapter.items[index] as PeopleUi).statusString = status
+            adapter.notifyItemChanged(adapter.items.indexOf(item))
+        }
     }
 
     override fun showError(error: String?) {
@@ -84,7 +97,7 @@ class MvpUsersFragment : UsersView, MvpFragment<UsersView, UsersPresenter>(), Ui
     }
 
     override fun getClickedSwitch(view: SwitchCompat, streamName: String) {
-        TODO("Not yet implemented")
+        Log.i(getString(R.string.log_string), getString(R.string.users_fragment_str))
     }
 
     companion object {

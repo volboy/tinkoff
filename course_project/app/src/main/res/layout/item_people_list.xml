@@ -17,6 +17,14 @@
         app:layout_constraintTop_toTopOf="parent"
         app:shapeAppearanceOverlay="@style/circle" />
 
+    <View
+        android:id="@+id/userStatus"
+        android:layout_width="21dp"
+        android:layout_height="21dp"
+        android:background="@drawable/user_status_on_drw"
+        app:layout_constraintBottom_toBottomOf="@id/profileImage"
+        app:layout_constraintEnd_toEndOf="@id/profileImage" />
+
     <TextView
         android:id="@+id/name"
         android:layout_width="wrap_content"
