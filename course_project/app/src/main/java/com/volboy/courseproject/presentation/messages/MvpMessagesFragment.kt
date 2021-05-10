@@ -18,6 +18,7 @@ import com.volboy.courseproject.R
 import com.volboy.courseproject.databinding.FragmentMessagesBinding
 import com.volboy.courseproject.presentation.bottomfragment.EmojiBottomFragment
 import com.volboy.courseproject.presentation.bottomfragment.EmojiBottomFragment.Companion.ARG_MESSAGE
+import com.volboy.courseproject.presentation.bottomfragment.EmojiBottomFragment.Companion.ARG_NEW_TOPIC
 import com.volboy.courseproject.presentation.bottominfo.BottomInfoFragment
 import com.volboy.courseproject.presentation.mvp.presenter.MvpFragment
 import com.volboy.courseproject.recyclerview.*
@@ -73,8 +74,8 @@ class MvpMessagesFragment : MessagesView, MvpFragment<MessagesView, MessagesPres
         setFragmentResultListener(EmojiBottomFragment.ACTION_EDIT) { _, bundle ->
             getPresenter().editMessage(messageId, positionMsgOnLongClick + 1, bundle.getString(ARG_MESSAGE).toString())
         }
-        setFragmentResultListener(EmojiBottomFragment.ACTION_CHANGE) { _, _ ->
-            Snackbar.make(binding.root, "Перенесено", Snackbar.LENGTH_SHORT).show()
+        setFragmentResultListener(EmojiBottomFragment.ACTION_CHANGE) { _, bundle ->
+            getPresenter().changeTopicOfStream(messageId, positionMsgOnLongClick + 1, bundle.getString(ARG_NEW_TOPIC).toString())
         }
         setFragmentResultListener(EmojiBottomFragment.ACTION_COPY) { _, _ ->
             Snackbar.make(binding.root, "Скопированно", Snackbar.LENGTH_SHORT).show()
@@ -160,7 +161,8 @@ class MvpMessagesFragment : MessagesView, MvpFragment<MessagesView, MessagesPres
         positionMsgOnLongClick = position - 1 //+1 потому, что реакции отдельным ViewType и находятся ниже сообщения
         val emojiBottomFragment = EmojiBottomFragment()
         emojiBottomFragment.arguments = bundleOf(
-            ARG_MESSAGE to (adapter.items[position] as TextUi).message.toString()
+            ARG_MESSAGE to (adapter.items[position] as TextUi).message.toString(),
+            ARG_TOPIC to topicName
         )
         emojiBottomFragment.show(parentFragmentManager, emojiBottomFragment.tag)
         return true

@@ -95,4 +95,10 @@ interface ZulipApi {
         @Query("content") content: String,
     ): Single<DeleteMessageResponse>
 
+    @PATCH("messages/{message_id}")
+    fun changeTopicOfMessage(
+        @Path("message_id") messageId: Int,
+        @Query("topic") topic: String
+    ): Single<DeleteMessageResponse>
+
 }

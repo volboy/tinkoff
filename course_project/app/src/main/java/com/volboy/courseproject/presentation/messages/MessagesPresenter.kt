@@ -111,6 +111,20 @@ class MessagesPresenter : RxPresenter<MessagesView>(MessagesView::class.java) {
         ).disposeOnFinish()
     }
 
+    fun changeTopicOfStream(messageId: Int, position: Int, topic: String) {
+        loaderMessages.changeTopicOfMessage(messageId, topic).subscribe(
+            { response ->
+                if (response.result == "success") {
+                    data.removeAt(position)
+                    view.deleteMessage(data, position)
+                } else {
+                    view.showInfo(res.getString(R.string.something_wrong), response.msg)
+                }
+            },
+            { error -> view.showInfo(res.getString(R.string.something_wrong), error.message.toString()) }
+        ).disposeOnFinish()
+    }
+
     fun addOrDeleteReaction(indexMsg: Int, emojiList: ArrayList<String>) {
         var positionEmoji = -1
         val msgID = (data[indexMsg + 1] as TextUi).uid.toInt()
@@ -156,7 +170,7 @@ class MessagesPresenter : RxPresenter<MessagesView>(MessagesView::class.java) {
                 view.updateMessage(data, indexMsg)
             },
             { error ->
-                //TODO отображаем сообщение с ошибкой
+                view.showInfo(res.getString(R.string.something_wrong), error.message.toString())
             }
         ).disposeOnFinish()
     }
@@ -169,7 +183,7 @@ class MessagesPresenter : RxPresenter<MessagesView>(MessagesView::class.java) {
                 view.updateMessage(data, indexMsg)
             },
             { error ->
-                //TODO отображаем сообщение с ошибкой
+                view.showInfo(res.getString(R.string.something_wrong), error.message.toString())
             }
         ).disposeOnFinish()
     }
@@ -185,12 +199,12 @@ class MessagesPresenter : RxPresenter<MessagesView>(MessagesView::class.java) {
                         view.sendMessage(data, 0)
                     },
                     { error ->
-                        //TODO отображаем сообщение с ошибкой
+                        view.showInfo(res.getString(R.string.something_wrong), error.message.toString())
                     }
                 ).disposeOnFinish()
             },
             { error ->
-                //TODO отображаем сообщение с ошибкой
+                view.showInfo(res.getString(R.string.something_wrong), error.message.toString())
             }
         ).disposeOnFinish()
     }

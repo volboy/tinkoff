@@ -37,33 +37,35 @@ class MainActivity : MvpActivity<MainView, MainPresenter>(), MainView {
         setSupportActionBar(searchToolbar)
         supportActionBar?.hide()
         setContentView(binding.root)
-        val pref: SharedPreferences = getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE)
-        val editor: SharedPreferences.Editor = pref.edit()
-        val isFirstRun = pref.getBoolean(FIRST_RUN_APP, true)
-        val ownUserId = pref.getInt(USER_PREF_KEY, EMPTY_USER_OWN_ID)
-        if (isFirstRun) {
-            if (network) {
-                getPresenter().getOwnId()
-            } else {
-                showError(getString(R.string.something_wrong), getString(R.string.first_run_str))
-            }
-        } else {
-            if (network) {
-                getPresenter().getOwnId()
-            } else {
-                if (ownUserId == EMPTY_USER_OWN_ID) {
-                    showInfo(getString(R.string.something_wrong), getString(R.string.first_run_str))
+        if (savedInstanceState == null) {
+            val pref: SharedPreferences = getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE)
+            val editor: SharedPreferences.Editor = pref.edit()
+            val isFirstRun = pref.getBoolean(FIRST_RUN_APP, true)
+            val ownUserId = pref.getInt(USER_PREF_KEY, EMPTY_USER_OWN_ID)
+            if (isFirstRun) {
+                if (network) {
+                    getPresenter().getOwnId()
                 } else {
-                    showInfo(getString(R.string.msg_network_error), getString(R.string.offline_run_str))
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.container, mainFragment)
-                        .commit()
+                    showError(getString(R.string.something_wrong), getString(R.string.first_run_str))
+                }
+            } else {
+                if (network) {
+                    getPresenter().getOwnId()
+                } else {
+                    if (ownUserId == EMPTY_USER_OWN_ID) {
+                        showInfo(getString(R.string.something_wrong), getString(R.string.first_run_str))
+                    } else {
+                        showInfo(getString(R.string.msg_network_error), getString(R.string.offline_run_str))
+                        supportFragmentManager.beginTransaction()
+                            .replace(R.id.container, mainFragment)
+                            .commit()
+                    }
                 }
             }
+            editor.putBoolean(FIRST_RUN_APP, false)
+            editor.apply()
+            editor.commit()
         }
-        editor.putBoolean(FIRST_RUN_APP, false)
-        editor.apply()
-        editor.commit()
     }
 
     override fun continueWork(ownId: Int) {

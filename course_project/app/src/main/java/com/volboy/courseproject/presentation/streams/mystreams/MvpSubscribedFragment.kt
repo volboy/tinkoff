@@ -58,6 +58,11 @@ class MvpSubscribedFragment : SubStreamsView, MvpFragment<SubStreamsView, SubStr
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        getPresenter().getStreams()
+    }
+
     override fun getPresenter(): SubStreamsPresenter = subStreamsPresenter
 
     override fun getMvpView(): SubStreamsView = this

@@ -17,10 +17,13 @@ import com.volboy.courseproject.recyclerview.ViewTyped
 class EmojiBottomFragment : BottomSheetDialogFragment(), EmojiHolderFactory.BottomEmojiInterface, View.OnClickListener {
     private lateinit var binding: DialogBottomEmojiBinding
     private var emojiList = mutableListOf<Emoji>()
+    private var prevTopic = ""
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = DialogBottomEmojiBinding.inflate(inflater, container, false)
         binding.dialogEdit.editMessage.setText(requireArguments().getString(ARG_MESSAGE))
+        prevTopic = requireArguments().getString(ARG_TOPIC).toString()
+        binding.dialogChange.editNewTopic.setText(prevTopic)
         val emojiName = resources.getStringArray(R.array.emojiName)
         val emojiCode = resources.getStringArray(R.array.emojiCode)
         for (i in 0 until emojiCode.size.coerceAtMost(emojiName.size)) {
@@ -90,12 +93,16 @@ class EmojiBottomFragment : BottomSheetDialogFragment(), EmojiHolderFactory.Bott
                 dismiss()
             }
             binding.dialogChange.btnYes -> {
-                setFragmentResult(
-                    ACTION_CHANGE, bundleOf(
-                        ARG_NEW_TOPIC to binding.dialogChange.editNewTopic.text.toString()
+                if (prevTopic != binding.dialogChange.editNewTopic.text.toString()) {
+                    setFragmentResult(
+                        ACTION_CHANGE, bundleOf(
+                            ARG_NEW_TOPIC to binding.dialogChange.editNewTopic.text.toString()
+                        )
                     )
-                )
-                dismiss()
+                    dismiss()
+                } else {
+                    dismiss()
+                }
             }
             binding.dialogChange.btnCancel -> {
                 dismiss()
@@ -125,6 +132,7 @@ class EmojiBottomFragment : BottomSheetDialogFragment(), EmojiHolderFactory.Bott
         const val ACTION_COPY = "action_copy"
         const val ARG_EMOJI = "emoji"
         const val ARG_MESSAGE = "message"
+        const val ARG_TOPIC = "topic"
         const val ARG_NEW_TOPIC = "new_topic_for_message"
     }
 }

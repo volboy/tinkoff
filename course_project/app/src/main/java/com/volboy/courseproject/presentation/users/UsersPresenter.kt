@@ -114,6 +114,6 @@ class UsersPresenter : RxPresenter<UsersView>(UsersView::class.java) {
 
     companion object {
         private const val TIME_SEARCH_DELAY = 500L
-        private const val TIME_STATUS_DELAY = 300L
+        private const val TIME_STATUS_DELAY = 150L
     }
 }

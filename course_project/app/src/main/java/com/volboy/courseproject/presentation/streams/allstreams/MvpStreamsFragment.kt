@@ -18,6 +18,7 @@ import com.volboy.courseproject.presentation.messages.MvpMessagesFragment
 import com.volboy.courseproject.presentation.msgstream.MessagesOfStream
 import com.volboy.courseproject.presentation.mvp.presenter.MvpFragment
 import com.volboy.courseproject.presentation.streams.UiHolderFactory
+import com.volboy.courseproject.presentation.streams.mystreams.StreamsItemDecoration
 import com.volboy.courseproject.recyclerview.CommonAdapter
 import com.volboy.courseproject.recyclerview.CommonDiffUtilCallback
 import com.volboy.courseproject.recyclerview.ViewTyped
@@ -42,6 +43,7 @@ class MvpStreamsFragment : AllStreamsView, MvpFragment<AllStreamsView, AllStream
         adapter = CommonAdapter(holderFactory, CommonDiffUtilCallback(), null)
         val searchEdit = requireActivity().findViewById<EditText>(R.id.searchEditText)
         binding.rwAllStreams.adapter = adapter
+        binding.rwAllStreams.addItemDecoration(StreamsItemDecoration(requireContext()))
         binding.createStream.setOnClickListener {
             requireActivity().supportFragmentManager.beginTransaction()
                 .add(R.id.container, MvpAddStreamFragment())

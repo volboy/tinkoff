@@ -142,6 +142,11 @@ class LoaderMessage {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
 
+    fun changeTopicOfMessage(messageId: Int, topic: String) =
+        zulipApi.changeTopicOfMessage(messageId, topic)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+
     fun sendMessage(str: String, streamName: String, topicName: String): Single<SendMessageResponse> =
         zulipApi.sendMessage("stream", streamName, str, topicName)
             .subscribeOn(Schedulers.io())
